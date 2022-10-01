@@ -8,6 +8,7 @@ import {
   Vector3,
 } from "three";
 
+import Iput from './input';
 import { terrainColor } from "./constants";
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
@@ -66,13 +67,17 @@ export default class Map {
     }
   }
 
-  private getPosition(x: number, y: number) {
+  private getLocalFromCell(x: number, y: number) {
     const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
     const yc =
       Math.ceil(y / 2) * triangleHeightFromSide +
       (y % 2 == 0 ? 1 / 6 : -1 / 6) * triangleHeightFromSide;
     return [xc, yc];
   }
+
+private getCellFromLocal(x:number,y:number){
+  const yc = null;
+}
 
   private getVertices(x: number, y: number) {
     const [xc, yc] = this.getPosition(x, y);
@@ -90,6 +95,10 @@ export default class Map {
       return [xc + x3, yc - y3, xc + x2, yc - y2, xc + x1, yc - y1];
     }
   }
+
+update(dt:number){
+  
+}
 
   destructor() {
     this.group.removeFromParent();
