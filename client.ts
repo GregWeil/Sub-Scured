@@ -7,6 +7,7 @@ import {
   Mesh,
   Vector3,
 } from "three";
+			import Stats from 'three/addons/libs/stats.module.js';
 import Game from "./game";
 import Input from "./game/input";
 
@@ -15,6 +16,9 @@ const resize = () => renderer.setSize(window.innerWidth, window.innerHeight);
 window.addEventListener("resize", resize);
 resize();
 document.body.insertBefore(renderer.domElement, document.body.firstChild);
+
+const stats = new Stats();
+document.body.appendChild(stats.domElement);
 
 const input = new Input();
 const game = new Game();
@@ -26,6 +30,7 @@ renderer.setAnimationLoop((time) => {
   }
   timeLast = time;
   game.render(renderer);
+  stats.update();
 });
 
 console.log("Hello world!");

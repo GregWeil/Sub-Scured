@@ -9,6 +9,14 @@ import {
 } from "three";
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
+const triangleVertices: ReadonlyArray<number> = [
+      1 / 2,
+      triangleHeightFromSide  / 3,
+      0,
+      triangleHeightFromSide  * 2 / 3,
+      1 / 2,
+      triangleHeightFromSide  / 3,
+    ]
 
 export default class Map {
   private width: number;
@@ -41,6 +49,8 @@ export default class Map {
 
   private generateMesh() {
     this.mesh.clear();
+    
+    const [x1, y1, x2, y2, x3, y3]=triangleVertices.map(z=>z*t)
 
     const vertices = [];
     for (let i = 0; i < this.width; ++i) {
@@ -63,17 +73,6 @@ export default class Map {
       const material = new MeshBasicMaterial({ color: 0x777777 });
       this.mesh.add(new Mesh(geometry, material));
     }
-  }
-
-  private getVertices(x: number, y: number) {
-    return [
-      x + this.size / 2,
-      y + (triangleHeightFromSide * this.size) / 3,
-      x,
-      y - (triangleHeightFromSide * this.size * 2) / 3,
-      x - this.size / 2,
-      y + (triangleHeightFromSide * this.size) / 3,
-    ];
   }
 
   destructor() {
