@@ -10,6 +10,7 @@ export const intersect = (a: Segment, b: Segment) => {
 };
 
 export const raycast = (ray: Segment, ...segments: Segment[]) => {
+  debugger;
   return segments
     .map((segment) => intersect(ray, segment))
     .filter((hits) => !!hits)

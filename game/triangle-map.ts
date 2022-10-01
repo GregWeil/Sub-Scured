@@ -149,12 +149,20 @@ export default class TriangleMap {
         [xc, yc, xa, ya]
       );
       if (!hits.length) continue;
+      
+      if(this.grid[cx*this.height+cy]>0){
+        console.log(hits)
+        for(const hit of hits){
       const mesh = new Mesh(
         new SphereGeometry(0.1),
         new MeshBasicMaterial({ color: 0xff0000 })
       );
-      [mesh.position.x, mesh.position.y] = this.cellToTriangle(cx,cy);
+      [mesh.position.x, mesh.position.y] = hit;
       this.group.add(mesh);
+        }
+        return true;
+      }
+      
       for (const [acx, acy] of this.getAdjacent(cx, cy)) {
         const key = `${acx}_${acy}`;
         if (checked.has(key)) continue;
