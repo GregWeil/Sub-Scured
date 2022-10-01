@@ -136,25 +136,25 @@ export default class TriangleMap {
     if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1];
     const [tx2, ty2] = this.worldToTriangle(x2, y2);
 
-    const checked = new Set([`${cx}_${cy}`]);
+    const checked = new Set([`${cx1}_${cy1}`]);
     const queue = this.getAdjacent(cx1, cy1);
     while (queue.length) {
       const [cx, cy] = queue.pop();
-      const mesh = new Mesh(
-        new SphereGeometry(0.1),
-        new MeshBasicMaterial({ color: 0xff0000 })
-      );
-      [mesh.position.x, mesh.position.y] = this.cellToTriangle(cx, cy);
-      this.group.add(mesh);
 
       const [xa, ya, xb, yb, xc, yc] = this.getTriangleVertices(cx, cy);
       const hits = raycast(
-        [x1, y1, x2, y2],
+        [tx1, ty1, tx2, ty2],
         [xa, ya, xb, yb],
         [xb, yb, xc, yc],
         [xc, yc, xa, ya]
       );
-      if (!hits) continue;
+      if (!hits.length) continue;
+      const mesh = new Mesh(
+        new SphereGeometry(0.1),
+        new MeshBasicMaterial({ color: 0xff0000 })
+      );
+      [mesh.position.x, mesh.position.y] = this.cellToTriangle(cx,cy);
+      this.group.add(mesh);
       for (const [acx, acy] of this.getAdjacent(cx, cy)) {
         const key = `${acx}_${acy}`;
         if (checked.has(key)) continue;
