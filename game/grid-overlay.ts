@@ -7,7 +7,7 @@ import {
   Vector3,
 } from "three";
 
-export default class Grid {
+export default class GridOverlay {
   private mesh: Mesh;
   private spacing: number;
 

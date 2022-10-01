@@ -1,6 +1,6 @@
 import { OrthographicCamera, Scene, Vector2, WebGLRenderer } from "three";
 import Player from "./player";
-import Grid from "./grid";
+import GridOverlay from "./grid-overlay";
 import Input from "./input";
 import { getLerpFactor } from "../util/math";
 
