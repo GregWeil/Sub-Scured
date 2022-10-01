@@ -82,9 +82,9 @@ export default class Map {
   }
 
   private triangleToCell(x: number, y: number) {
-    const j = (y/triangleHeightFromSide)
-    console.log(j)
-    return[0,0];
+    const j = Math.round(y / triangleHeightFromSide);
+    console.log(j);
+    return [0, 0];
   }
 
   private worldToTriangle(x: number, y: number) {
@@ -122,10 +122,12 @@ export default class Map {
   }
 
   update(dt: number, input: Input) {
-    const cellPos = this.triangleToCell(...this.worldToTriangle(...input.getMouse()));
-    const[x,y]=this.triangleToWorld(...this.cellToTriangle(...cellPos));
-    this.picker.position.x = x;
-    this.picker.position.y = y;
+    const cellPos = this.triangleToCell(
+      ...this.worldToTriangle(...input.getMouse())
+    );
+    const [x, y] = this.triangleToWorld(...this.cellToTriangle(...cellPos));
+    this.picker.position.x = input.getMouse()[0];
+    this.picker.position.y = input.getMouse()[1];
     this.picker.position.z = 1;
   }
 
