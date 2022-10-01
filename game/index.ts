@@ -1,6 +1,7 @@
 import { OrthographicCamera, Scene, Vector2, WebGLRenderer } from "three";
 import Player from "./player";
 import Input from "./input";
+import { getLerpFactor } from "../util/math";
 
 export default class Game {
   scene: Scene;
@@ -16,6 +17,10 @@ export default class Game {
 
   update(dt: number, input: Input) {
     this.player.update(dt, input);
+    this.camera.position.lerp(
+      this.player.getPosition(),
+      getLerpFactor(0.8, dt / 1000)
+    );
   }
 
   render(renderer: WebGLRenderer) {

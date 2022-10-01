@@ -14,10 +14,14 @@ export default class Player {
   update(dt: number, input: Input) {
     this.mesh.rotateOnAxis(new Vector3(0, 0, 1), dt / 1000);
     const horizontal = input.getHorizontal();
-    this.mesh.position.x += (horizontal * 10 * dt) / 1000;
+    this.mesh.position.x += (horizontal * 50 * dt) / 1000;
     const vertical = input.getVertical();
-    this.mesh.position.y += (vertical * 10 * dt) / 1000;
+    this.mesh.position.y += (vertical * 50 * dt) / 1000;
   }
+
+getPosition(){
+  return this.mesh.position;
+}
 
   destructor() {
     this.mesh.removeFromParent();
