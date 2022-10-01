@@ -11,16 +11,20 @@ export default class Input {
     window.addEventListener("keyup", this.keyup);
   }
 
-  get(key: string) {
-    return this.state.has(key);
+  get(...keys: string[]) {
+    return keys.any((key) => this.state.has(key));
   }
 
   getHorizontal() {
-    return Number(this.get("ArrowRight")) - Number(this.get("ArrowLeft"));
+    return (
+      Number(this.get("ArrowRight", "D")) - Number(this.get("ArrowLeft", "A"))
+    );
   }
 
   getVertical() {
-    return Number(this.get("ArrowDown")) - Number(this.get("ArrowUp"));
+    return (
+      Number(this.get("ArrowDown", "S")) - Number(this.get("ArrowUp", "W"))
+    );
   }
 
   destructor() {
