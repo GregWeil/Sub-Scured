@@ -14,7 +14,7 @@ const renderer = new WebGLRenderer({ antialias: true });
 const resize = () => renderer.setSize(window.innerWidth, window.innerHeight);
 window.addEventListener("resize", resize);
 resize();
-document.body.appendChild(renderer.domElement);
+document.body.insertBefore(renderer.domElement, document.body.firstChild);
 
 const input = new Input();
 const game = new Game();

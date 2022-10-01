@@ -1,25 +1,26 @@
-const path = require("path");
-const fastifyStatic = require("@fastify/static");
+import { join } from "path";
+import * as fastify from "fastify";
+import * as fastifyStatic from "@fastify/static";
 
 // Require the fastify framework and instantiate it
-const fastify = require("fastify")({
+const server = fastify({
   // set this to true for detailed logging:
   logger: false,
 });
 
 // Setup our static files
-fastify.register(fastifyStatic, {
-  root: path.join(__dirname, "public"),
+server.register(fastifyStatic, {
+  root: join(process.cwd(), "public"),
   prefix: "/",
 });
-fastify.register(fastifyStatic, {
-  root: path.join(__dirname, "build"),
+server.register(fastifyStatic, {
+  root: join(process.cwd(), "build"),
   prefix: "/build",
   decorateReply: false,
 });
 
 // Run the server and report out to the logs
-fastify.listen(
+server.listen(
   { port: process.env.PORT, host: "0.0.0.0" },
   function (err, address) {
     if (err) {
