@@ -82,7 +82,8 @@ export default class Map {
   }
 
   private triangleToCell(x: number, y: number) {
-    
+    const j = (y/triangleHeightFromSide)
+    console.log(j)
     return[0,0];
   }
 
