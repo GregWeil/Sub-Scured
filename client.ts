@@ -17,7 +17,7 @@ document.body.appendChild(renderer.domElement);
 
 const game = new Game();
 
-let timeLast = null;
+let timeLast = 0;
 renderer.setAnimationLoop((time) => {
   if (timeLast) {
     game.update(time - timeLast);
