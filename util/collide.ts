@@ -3,15 +3,18 @@ import { Vector2 } from "three";
 
 type Segment = [number, number, number, number];
 
-export const intersect = (a: Segment, b: Segment) => {
+export const intersect = (a: Segment, b: Segment): [number, number][] => {
   const count = findIntersection(...a, ...b);
   if (!count) return null;
-  return result.slice(0, count).map(point=>point.slice());
+  return result.slice(0, count).map(([x, y]) => [x, y]);
 };
 
-export const raycast = (ray: Segment, ...segments: Segment[]) => {
+export const raycast = (
+  ray: Segment,
+  ...segments: Segment[]
+): [number, number][] => {
   return segments
     .map((segment) => intersect(ray, segment))
-    .filter((hits) => !!hits)
+    .filter((hits): hits is [number, number] => !!hits)
     .flat();
 };

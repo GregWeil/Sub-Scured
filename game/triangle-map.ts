@@ -9,7 +9,7 @@ import {
   Vector3,
 } from "three";
 
-import Iput from "./input";
+import Input from "./input";
 import { terrainColor } from "./constants";
 import { lerp, unlerp, distance } from "../util/math";
 import { raycast } from "../util/collide";
@@ -130,7 +130,7 @@ export default class TriangleMap {
     return [[x, y - 1], [x, y + 1], adjacent];
   }
 
-  raycast(x1:number, y1:number, x2:number, y2:number) {
+  raycast(x1: number, y1: number, x2: number, y2: number) {
     const [tx1, ty1] = this.worldToTriangle(x1, y1);
     const [cx1, cy1] = this.triangleToCell(tx1, ty1);
     if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1];
