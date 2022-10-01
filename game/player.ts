@@ -1,4 +1,5 @@
 import { BoxGeometry, MeshNormalMaterial, Mesh, Scene, Vector3 } from "three";
+import Input from "./input";
 
 export default class Player {
   private mesh: Mesh;
@@ -10,8 +11,12 @@ export default class Player {
     scene.add(this.mesh);
   }
 
-  update(dt: number) {
-    this.mesh.rotateOnAxis(new Vector3(0, 0, 1), (1 * dt) / 1000);
+  update(dt: number, input: Input) {
+    this.mesh.rotateOnAxis(new Vector3(0, 0, 1), dt / 1000);
+    const horizontal = input.get("Right") - input.get("Left");
+    this.mesh.translateX((horizontal * 1 * dt) / 1000);
+    const vertical = input.get("Down") - input.get("Up");
+    this.mesh.translateY((vertical * 1 * dt) / 1000);
   }
 
   destructor() {

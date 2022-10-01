@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "esbuild client.ts --bundle --outfile=build/client.js",
-    "start": "tsc --noEmit --skipLibCheck & (npm run build && node server.js)"
+    "start": "npm run build && node server.js"
   },
   "dependencies": {
     "fastify": "^4.7.0",

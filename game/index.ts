@@ -1,5 +1,6 @@
 import { OrthographicCamera, Scene, Vector2, WebGLRenderer } from "three";
 import Player from "./player";
+import Input from "./input";
 
 export default class Game {
   scene: Scene;
@@ -13,8 +14,8 @@ export default class Game {
     this.player = new Player(this.scene);
   }
 
-  update(dt: number) {
-    this.player.update(dt);
+  update(dt: number, input: Input) {
+    this.player.update(dt, input);
   }
 
   render(renderer: WebGLRenderer) {

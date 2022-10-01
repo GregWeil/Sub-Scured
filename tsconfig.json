@@ -2,5 +2,6 @@
   "skipLibCheck": true,
   "compilerOptions": {
     "strict": true
-  }
+  },
+  "files": ["client.ts"]
 }
