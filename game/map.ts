@@ -19,7 +19,7 @@ export default class Map {
   private width: number;
   private height: number;
   private size: number;
-  private grid: Int8Array;
+  private grid: Uint8Array;
   private group: Group;
   private picker: Mesh;
 
@@ -27,7 +27,7 @@ export default class Map {
     this.width = width;
     this.height = height;
     this.size = size;
-    this.grid = new Int8Array(width * height);
+    this.grid = new Uint8Array(this.width * this.height);
     this.group = new Group();
     [this.group.position.x, this.group.position.y] = this.getWorldOrigin();
     this.group.scale.x = this.size;
@@ -38,15 +38,16 @@ export default class Map {
       new SphereGeometry(3),
       new MeshBasicMaterial({ color: 0xff0000 })
     );
-    scene.add(this.picker);
+    // scene.add(this.picker);
   }
 
   private generateMap() {
     this.grid.fill(1);
-    for (let i = 0; i < this.width; ++i) {
-      for (let j = 0; j < this.height; ++j) {
-        if (Math.random() < 0.4) this.grid[i * this.width + j] = 0;
-      }
+    for (let i = 10; i < this.width - 10; ++i) {
+      //for (let j = 10; j < this.height - 10; ++j) {
+      const j = 0
+        if (Math.random() < 1.4) this.grid[i * this.height + j] = 0;
+      //}
     }
     this.generateMesh();
   }
@@ -55,7 +56,7 @@ export default class Map {
     const vertices = [];
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
-        if (this.grid[i * this.width + j] === 0) continue;
+        if (this.grid[i * this.height + j] === 0) continue;
         const [x1, y1, x2, y2, x3, y3] = this.getVertices(i, j);
         vertices.push(x1, y1, 0, x2, y2, 0, x3, y3, 0);
       }
