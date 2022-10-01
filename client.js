@@ -5,6 +5,7 @@ import {
   BoxGeometry,
   MeshNormalMaterial,
   Mesh,
+  Vector3,
 } from "three";
 
 const camera = new OrthographicCamera(-1, 1, -1, 1, 1, 1000);
@@ -30,8 +31,13 @@ window.addEventListener("resize", resize);
 resize();
 document.body.appendChild(renderer.domElement);
 
+let timeLast = null;
 renderer.setAnimationLoop((time) => {
-  mesh.rotateOnAxis(,1 * time);
+  if (timeLast) {
+    const dt = time - timeLast;
+    mesh.rotateOnAxis(new Vector3(0, 0, 1), (1 * dt) / 1000);
+  }
+  timeLast = time;
   renderer.render(scene, camera);
 });
 
