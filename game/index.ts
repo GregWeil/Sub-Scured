@@ -15,7 +15,7 @@ export default class Game {
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
     this.camera.position.z = 1;
     this.player = new Player(this.scene);
-    this.grid = new Grid(this.scene, 100, 100, 10);
+    this.grid = new Grid(this.scene, 1000, 1000, 15);
   }
 
   update(dt: number, input: Input) {
@@ -24,6 +24,7 @@ export default class Game {
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
     );
+    this.camera.position.z = 1;
     this.grid.update(this.camera.position);
   }
 
