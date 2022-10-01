@@ -44,7 +44,8 @@ export default class Map {
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
         if (this.grid[i * this.width + j] === 0) continue;
-        vertices.push(...this.getVertices(i, j));
+        const [x1, y1, x2, y2, x3, y3] = this.getVertices(i, j);
+        vertices.push(x1, y1, 0, x2, y2, 0, x3, y3, 0);
       }
     }
 
@@ -53,12 +54,12 @@ export default class Map {
       const geometry = new BufferGeometry();
       geometry.setAttribute(
         "position",
-        new BufferAttribute(new Float32Array(vertices), 2)
+        new BufferAttribute(new Float32Array(vertices), 3)
       );
       const material = new MeshBasicMaterial({ color: terrainColor });
       const mesh = new Mesh(geometry, material);
       mesh.position.x = (-this.width / 2 + 0.5) * this.size;
-      mesh.position.y = (-this.height / 2 + 0.5) * this.size;
+      mesh.position.y = (-this.height / 4 + 0.25) * this.size;
       mesh.scale.x = this.size;
       mesh.scale.y = this.size;
       this.group.add(mesh);
