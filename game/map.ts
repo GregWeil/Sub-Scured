@@ -86,8 +86,8 @@ export default class Map {
     const j = y / triangleHeightFromSide + 0.5;
     const jf = j % 2 < 1 ? j - Math.floor(j) : Math.ceil(j) - j;
     const xo = x - lerp(0, -0.5, jf);
-    //j%2<2?xo>jf:xo<jf
-    return [Math.floor(xo), Math.floor(j) * 2 + (xo < jf ? 1 : 0)];
+    const jo = j % 2 < 1 ? xo - Math.floor(xo) > jf : xo - Math.floor(xo) < jf;
+    return [Math.floor(xo), Math.floor(j) * 2 + (jo ? -1 : 0)];
   }
 
   private worldToTriangle(x: number, y: number) {

@@ -1,14 +1,17 @@
-import { BoxGeometry, MeshNormalMaterial, Mesh, Scene, Vector3 } from "three";
+import { BoxGeometry, MeshNormalMaterial, Mesh, Vector3 } from "three";
+import Game from './game';
 import Input from "./input";
 
 export default class Player {
+  private game:Game;
   private mesh: Mesh;
 
-  constructor(scene: Scene) {
+  constructor(game: Game) {
+    this.game=game;
     const geometry = new BoxGeometry(10, 10, 10);
     const material = new MeshNormalMaterial();
     this.mesh = new Mesh(geometry, material);
-    scene.add(this.mesh);
+    this.game.scene.add(this.mesh);
   }
 
   update(dt: number, input: Input) {
