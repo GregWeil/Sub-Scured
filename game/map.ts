@@ -3,12 +3,13 @@ import {
   BufferAttribute,
   Mesh,
   MeshBasicMaterial,
+  SphereGeometry,
   Scene,
   Group,
   Vector3,
 } from "three";
 
-import Iput from './input';
+import Iput from "./input";
 import { terrainColor } from "./constants";
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
@@ -19,7 +20,7 @@ export default class Map {
   private size: number;
   private grid: Int8Array;
   private group: Group;
-private picker: Mesh;
+  private picker: Mesh;
 
   constructor(scene: Scene, width: number, height: number, size: number) {
     this.width = width;
@@ -27,9 +28,17 @@ private picker: Mesh;
     this.size = size;
     this.grid = new Int8Array(width * height);
     this.group = new Group();
+    this.group.position.x = (-this.width / 2 + 0.5) * this.size;
+    this.group.position.y = (-this.height / 4 + 0.25) * this.size;
+    this.group.scale.x = this.size;
+    this.group.scale.y = this.size;
     scene.add(this.group);
     this.generateMap();
-    this.picker = 
+    this.picker = new Mesh(
+      new SphereGeometry(3),
+      new MeshBasicMaterial({ color: 0xff0000 })
+    );
+    scene.add(this.picker);
   }
 
   private generateMap() {
@@ -61,15 +70,11 @@ private picker: Mesh;
       );
       const material = new MeshBasicMaterial({ color: terrainColor });
       const mesh = new Mesh(geometry, material);
-      mesh.position.x = (-this.width / 2 + 0.5) * this.size;
-      mesh.position.y = (-this.height / 4 + 0.25) * this.size;
-      mesh.scale.x = this.size;
-      mesh.scale.y = this.size;
       this.group.add(mesh);
     }
   }
 
-  private toTriangleSpace(x: number, y: number) {
+  private cellToTriangle(x: number, y: number) {
     const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
     const yc =
       Math.ceil(y / 2) * triangleHeightFromSide +
@@ -77,8 +82,16 @@ private picker: Mesh;
     return [xc, yc];
   }
 
-private fromTriangleSpace(x:number,y:number){
-}
+  private triangleToCell(x: number, y: number) {}
+
+  private worldToTriangle(x: number, y: number) {
+    return [
+      x-(-this.width / 2 + 0.5) * this.size;
+    y-(-this.height / 4 + 0.25) * this.size
+    ];
+  }
+
+private triangleToWorld(x:number,y:number){}
 
   private getVertices(x: number, y: number) {
     const [xc, yc] = this.toTriangleSpace(x, y);
@@ -97,9 +110,12 @@ private fromTriangleSpace(x:number,y:number){
     }
   }
 
-update(dt:number,input:Input){
-  
-}
+  update(dt: number, input: Input) {
+    const [x, y] = input.getMouse();
+    this.picker.position.x = x;
+    this.picker.position.y = y;
+    this.picker.position.z = 1;
+  }
 
   destructor() {
     this.group.removeFromParent();
