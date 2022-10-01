@@ -1,5 +1,6 @@
 import { OrthographicCamera, Scene, Vector2, WebGLRenderer } from "three";
 import Player from "./player";
+import Map from "./map";
 import GridOverlay from "./grid-overlay";
 import Input from "./input";
 import { getLerpFactor } from "../util/math";
@@ -7,12 +8,14 @@ import { getLerpFactor } from "../util/math";
 export default class Game {
   scene: Scene;
   camera: OrthographicCamera;
+  map: Map;
   player: Player;
   overlay: GridOverlay;
 
   constructor() {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
+    this.map = new Map(this.scene, 10, 10, 10);
     this.player = new Player(this.scene);
     this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
   }
