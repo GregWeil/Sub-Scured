@@ -21,13 +21,15 @@ document.body.insertBefore(renderer.domElement, document.body.firstChild);
 const stats = Stats();
 document.body.appendChild(stats.domElement);
 
-const input = new Input();
+const input = new Input(renderer.domElement);
 const game = new Game();
 
 let timeLast = 0;
 renderer.setAnimationLoop((time) => {
   if (timeLast) {
+    input.before(game.camera);
     game.update(time - timeLast, input);
+    input.after();
   }
   timeLast = time;
   game.render(renderer);

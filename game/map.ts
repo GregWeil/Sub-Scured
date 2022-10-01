@@ -67,7 +67,7 @@ export default class Map {
     }
   }
 
-  private getLocalFromCell(x: number, y: number) {
+  private toTriangleSpace(x: number, y: number) {
     const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
     const yc =
       Math.ceil(y / 2) * triangleHeightFromSide +
@@ -75,12 +75,11 @@ export default class Map {
     return [xc, yc];
   }
 
-private getCellFromLocal(x:number,y:number){
-  const yc = null;
+private fromTriangleSpace(x:number,y:number){
 }
 
   private getVertices(x: number, y: number) {
-    const [xc, yc] = this.getPosition(x, y);
+    const [xc, yc] = this.toTriangleSpace(x, y);
 
     const x1 = 0.5;
     const y1 = triangleHeightFromSide / 3;
