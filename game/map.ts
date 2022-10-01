@@ -66,11 +66,16 @@ export default class Map {
     }
   }
 
-  private getVertices(x: number, y: number) {
+  private getPosition(x: number, y: number) {
     const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
     const yc =
       Math.ceil(y / 2) * triangleHeightFromSide +
       (y % 2 == 0 ? 1 / 6 : -1 / 6) * triangleHeightFromSide;
+    return [xc, yc];
+  }
+
+  private getVertices(x: number, y: number) {
+    const [xc, yc] = this.getPosition(x, y);
 
     const x1 = 0.5;
     const y1 = triangleHeightFromSide / 3;
