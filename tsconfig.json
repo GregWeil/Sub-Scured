@@ -4,7 +4,7 @@
     "target": "es6",
     "strict": true
   },
-  "files": ["client.ts"],
+  "files": ["client.ts", "server.ts"],
   "exclude": ["node_modules"],
   "skipLibCheck": true
 }
