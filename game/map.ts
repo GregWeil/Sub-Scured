@@ -11,6 +11,7 @@ import {
 
 import Iput from "./input";
 import { terrainColor } from "./constants";
+import{lerp,unlerp}from '../'
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
 
@@ -82,9 +83,10 @@ export default class Map {
   }
 
   private triangleToCell(x: number, y: number) {
-    const j = Math.round(y / triangleHeightFromSide);
-    console.log(j);
-    return [0, 0];
+    const j = y / triangleHeightFromSide+0.5;
+    x+0.5
+    lerp()
+    return [0, Math.floor(j)*2];
   }
 
   private worldToTriangle(x: number, y: number) {
@@ -127,7 +129,7 @@ export default class Map {
     );
     const [x, y] = this.triangleToWorld(...this.cellToTriangle(...cellPos));
     this.picker.position.x = input.getMouse()[0];
-    this.picker.position.y = input.getMouse()[1];
+    this.picker.position.y = y;
     this.picker.position.z = 1;
   }
 
