@@ -1,7 +1,11 @@
-import { OrthographicCamera, Scene, Vector2 } from "three";
+import { OrthographicCamera, Scene, Vector2, WebGLRenderer } from "three";
 import Player from "./player";
 
 export default class Game {
+  scene: Scene;
+  camera: OrthographicCamera;
+  player: Player;
+
   constructor() {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
@@ -9,11 +13,11 @@ export default class Game {
     this.player = new Player(this.scene);
   }
 
-  update(dt) {
+  update(dt: number) {
     this.player.update(dt);
   }
 
-  render(renderer) {
+  render(renderer: WebGLRenderer) {
     const size = renderer.getSize(new Vector2()).divideScalar(2);
     const scale = Math.max(100 / size.x, 100 / size.y);
     this.camera.left = -scale * size.x;
