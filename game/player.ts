@@ -1,6 +1,9 @@
 import { BoxGeometry, MeshNormalMaterial, Mesh, Vector3 } from "three";
 
 export default class Player {
+  private mesh: Mesh;
+  private asdf: string;
+
   constructor(scene) {
     const geometry = new BoxGeometry(10, 10, 10);
     const material = new MeshNormalMaterial();
@@ -8,7 +11,7 @@ export default class Player {
     scene.add(this.mesh);
   }
 
-  update(dt) {
+  update(dt:number) {
     this.mesh.rotateOnAxis(new Vector3(0, 0, 1), (1 * dt) / 1000);
   }
 
