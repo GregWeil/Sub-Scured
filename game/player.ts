@@ -19,9 +19,9 @@ export default class Player {
     this.mesh.position.y += (vertical * 50 * dt) / 1000;
   }
 
-getPosition(){
-  return this.mesh.position;
-}
+  getPosition() {
+    return this.mesh.position;
+  }
 
   destructor() {
     this.mesh.removeFromParent();
