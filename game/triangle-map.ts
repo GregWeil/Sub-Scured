@@ -11,7 +11,7 @@ import {
 
 import Iput from "./input";
 import { terrainColor } from "./constants";
-import { lerp, unlerp } from "../util/math";
+import { lerp, unlerp, distance } from "../util/math";
 import { raycast } from "../util/collide";
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
@@ -46,7 +46,7 @@ export default class TriangleMap {
     this.grid.fill(1);
     for (let i = 1; i < this.width - 1; ++i) {
       for (let j = 1; j < this.height - 1; ++j) {
-        if (Math.random() < 0.9) this.grid[i * this.height + j] = 0;
+        if (Math.random() < 0.7) this.grid[i * this.height + j] = 0;
       }
     }
     this.generateMesh();
@@ -149,20 +149,19 @@ export default class TriangleMap {
         [xc, yc, xa, ya]
       );
       if (!hits.length) continue;
-      
-      if(this.grid[cx*this.height+cy]>0){
-        console.log(hits)
-        for(const hit of hits){
-      const mesh = new Mesh(
-        new SphereGeometry(0.1),
-        new MeshBasicMaterial({ color: 0xff0000 })
-      );
-      [mesh.position.x, mesh.position.y] = hit;
-      this.group.add(mesh);
+
+      if (this.grid[cx * this.height + cy] > 0) {
+        let hit = hits[0];
+        let hitDist = distance(tx1, ty1, ...hit);
+        for (let i = 1; i < hits.length; ++i) {
+          const dist = distance(tx1, ty1, ...hits[i]);
+          if (dist >= hitDist) continue;
+          hit = hits[i];
+          hitDist = dist;
         }
-        return true;
+        return hit;
       }
-      
+
       for (const [acx, acy] of this.getAdjacent(cx, cy)) {
         const key = `${acx}_${acy}`;
         if (checked.has(key)) continue;
