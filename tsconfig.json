@@ -1,7 +1,9 @@
 {
-  "skipLibCheck": true,
   "compilerOptions": {
+    "target": "es6",
     "strict": true
   },
-  "files": ["client.ts"]
+  "files": ["client.ts"],
+  "exclude": ["node_modules"],
+  "skipLibCheck": true
 }

@@ -6,7 +6,7 @@ export default class Input {
   constructor() {
     this.state = new Set();
     this.keydown = (event) => this.state.add(event.key);
-    this.keyup = (event) => this.state.remove(event.key);
+    this.keyup = (event) => this.state.delete(event.key);
     window.addEventListener("keydown", this.keydown);
     window.addEventListener("keyup", this.keyup);
   }
