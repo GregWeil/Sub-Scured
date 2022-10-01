@@ -12,6 +12,7 @@ import {
 import Iput from "./input";
 import { terrainColor } from "./constants";
 import { lerp, unlerp } from "../util/math";
+import { raycast } from "../util/collide";
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
 
@@ -135,7 +136,7 @@ export default class TriangleMap {
     if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1];
     const [tx2, ty2] = this.worldToTriangle(x2, y2);
 
-    const checked = new Map([[cx1, new Set([cy1])]]);
+    const checked = new Set([`${cx}_${cy}`]);
     const queue = this.getAdjacent(cx1, cy1);
     while (queue.length) {
       const [cx, cy] = queue.pop();
@@ -145,7 +146,21 @@ export default class TriangleMap {
       );
       [mesh.position.x, mesh.position.y] = this.cellToTriangle(cx, cy);
       this.group.add(mesh);
-      
+
+      const [xa, ya, xb, yb, xc, yc] = this.getTriangleVertices(cx, cy);
+      const hits = raycast(
+        [x1, y1, x2, y2],
+        [xa, ya, xb, yb],
+        [xb, yb, xc, yc],
+        [xc, yc, xa, ya]
+      );
+      if (!hits) continue;
+      for (const [acx, acy] of this.getAdjacent(cx, cy)) {
+        const key = `${acx}_${acy}`;
+        if (checked.has(key)) continue;
+        checked.add(key);
+        queue.push([acx, acy]);
+      }
     }
 
     return null;
