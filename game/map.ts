@@ -8,6 +8,8 @@ import {
   Vector3,
 } from "three";
 
+import { terrainColor } from "./constants";
+
 const triangleHeightFromSide = Math.sqrt(3) / 2;
 
 export default class Map {
@@ -23,6 +25,8 @@ export default class Map {
     this.size = size;
     this.grid = new Int8Array(width * height);
     this.mesh = new Object3D();
+    this.mesh.position.x = (-this.width/2 + 0.5)*this.size;
+    this.mesh.position.y = (-this.height/2 + 0.5)*this.size;
     scene.add(this.mesh);
     this.generateMap();
   }
@@ -44,7 +48,7 @@ export default class Map {
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
         if (this.grid[i * this.width + j] === 0) continue;
-        vertices.push(...this.getVertices(i,j))
+        vertices.push(...this.getVertices(i, j));
       }
     }
 
@@ -52,28 +56,28 @@ export default class Map {
       const geometry = new BufferGeometry();
       geometry.setAttribute(
         "position",
-        new BufferAttribute(new Float32Array(vertices), 3)
+        new BufferAttribute(new Float32Array(vertices), 2)
       );
-      const material = new MeshBasicMaterial({ color: 0x777777 });
+      const material = new MeshBasicMaterial({ color: terrainColor });
       this.mesh.add(new Mesh(geometry, material));
     }
   }
 
   private getVertices(x: number, y: number) {
-    const xc = -this.width / 2 + x + 0.5;
-    const yc = (-this.height / 2 + y + 0.5) * triangleHeightFromSide;
-
+    const xc = 0;
+    const yc = 0;
+  
     const x1 = (xc + 0.5) * this.size;
     const y1 = (yc + triangleHeightFromSide / 3) * this.size;
-    const x2 = xc;
+    const x2 = xc * this.size;
     const y2 = (yc - (2 / 3) * triangleHeightFromSide) * this.size;
     const x3 = (xc - 0.5) * this.size;
     const y3 = (yc + triangleHeightFromSide / 3) * this.size;
-    
-    if (y%2==0){
-      return [x1,y1,x2,y2,x3,y3];
+
+    if (y % 2 == 0) {
+      return [x1, y1, x2, y2, x3, y3];
     } else {
-      return [x3,y3,x2,t2,x1,y1];
+      return [x3, y3, x2, y2, x1, y1];
     }
   }
 
