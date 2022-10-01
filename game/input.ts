@@ -1,5 +1,7 @@
 import { OrthographicCamera } from "three";
 
+import { lerp } from "../util/math";
+
 export default class Input {
   private element: HTMLElement;
 
@@ -17,21 +19,26 @@ export default class Input {
     this.keyState = new Set();
     this.keyDown = (event) => this.keyState.add(event.key);
     this.keyUp = (event) => this.keyState.delete(event.key);
-    this.element.addEventListener("keydown", this.keyDown);
-    this.element.addEventListener("keyup", this.keyUp);
+    window.addEventListener("keydown", this.keyDown);
+    window.addEventListener("keyup", this.keyUp);
 
     this.mouseScreen = [0, 0];
     this.mouseWorld = [0, 0];
     this.mouseMove = (event) => {
-      this.mouseScreen = [event.offsetX, event.offsetY];
-      console.log(this.mouseScreen);
+      this.mouseScreen = [
+        event.offsetX / element.clientWidth,
+        event.offsetY / element.clientHeight,
+      ];
     };
     this.element.addEventListener("mousemove", this.mouseMove);
   }
 
   before(camera: OrthographicCamera) {
-    const [x,y]=this.mouseScreen;
-  this.mouseWorld
+    const [x, y] = this.mouseScreen;
+    this.mouseWorld = [
+      camera.position.x + lerp(camera.left, camera.right, x),
+      camera.position.y + lerp(camera.top, camera.bottom, y),
+    ];
   }
 
   after() {
@@ -56,13 +63,13 @@ export default class Input {
     );
   }
 
-getMouse(){
-  return this.mouseWorld;
-}
+  getMouse() {
+    return this.mouseWorld;
+  }
 
   destructor() {
-    this.element.removeEventListener("keydown", this.keyDown);
-    this.element.removeEventListener("keyup", this.keyUp);
+    window.removeEventListener("keydown", this.keyDown);
+    window.removeEventListener("keyup", this.keyUp);
     this.element.removeEventListener("mousemove", this.mouseMove);
   }
 }

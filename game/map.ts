@@ -19,6 +19,7 @@ export default class Map {
   private size: number;
   private grid: Int8Array;
   private group: Group;
+private picker: Mesh;
 
   constructor(scene: Scene, width: number, height: number, size: number) {
     this.width = width;
@@ -28,6 +29,7 @@ export default class Map {
     this.group = new Group();
     scene.add(this.group);
     this.generateMap();
+    this.picker = 
   }
 
   private generateMap() {
@@ -95,7 +97,7 @@ private fromTriangleSpace(x:number,y:number){
     }
   }
 
-update(dt:number){
+update(dt:number,input:Input){
   
 }
 
