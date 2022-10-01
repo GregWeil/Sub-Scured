@@ -38,16 +38,15 @@ export default class Map {
       new SphereGeometry(3),
       new MeshBasicMaterial({ color: 0xff0000 })
     );
-    // scene.add(this.picker);
+    //scene.add(this.picker);
   }
 
   private generateMap() {
     this.grid.fill(1);
-    for (let i = 10; i < this.width - 10; ++i) {
-      //for (let j = 10; j < this.height - 10; ++j) {
-      const j = 0
-        if (Math.random() < 1.4) this.grid[i * this.height + j] = 0;
-      //}
+    for (let i = 1; i < this.width - 1; ++i) {
+      for (let j = 1; j < this.height - 1; ++j) {
+        if (Math.random() < 0.9) this.grid[i * this.height + j] = 0;
+      }
     }
     this.generateMesh();
   }
@@ -125,6 +124,14 @@ export default class Map {
     }
   }
 
+raycast(x1,y1,x2,y2){
+  const [tx1,ty2] = this.worldToTriangle(x1,y1);
+  const [cx1,cy1]=this.triangleToGrid(tx1,ty1);
+  if(this.grid[cx1*this.height+cy1]>0)return [x1,y1];
+  const [tx2,ty2]=this.worldToTriangle(x2,y2);
+  return null;
+}
+
   update(dt: number, input: Input) {
     const cellPos = this.triangleToCell(
       ...this.worldToTriangle(...input.getMouse())
@@ -137,5 +144,6 @@ export default class Map {
 
   destructor() {
     this.group.removeFromParent();
+    this.picker.removeFromParent();
   }
 }

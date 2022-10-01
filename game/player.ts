@@ -1,4 +1,4 @@
-import { BoxGeometry, MeshNormalMaterial, Mesh, Group,Vector3 } from "three";
+import { BoxGeometry,SphereGeometry, MeshNormalMaterial, Mesh, Group,Vector3 } from "three";
 import Game from "./game";
 import Input from "./input";
 
@@ -23,6 +23,11 @@ private debug: Group
     this.mesh.position.x += (horizontal * 50 * dt) / 1000;
     const vertical = input.getVertical();
     this.mesh.position.y += (vertical * 50 * dt) / 1000;
+    
+    this.debug.clear();
+    const pointer = new Mesh(new SphereGeometry(5),new MeshNormalMaterial());
+    [pointer.position.x,pointer.position.y]=input.getMouse();
+    this.debug.add(pointer);
   }
 
   getPosition() {
@@ -31,5 +36,6 @@ private debug: Group
 
   destructor() {
     this.mesh.removeFromParent();
+    this.debug.removeFromParent();
   }
 }
