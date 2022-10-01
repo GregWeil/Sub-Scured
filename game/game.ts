@@ -8,14 +8,13 @@ export default class Game {
   scene: Scene;
   camera: OrthographicCamera;
   player: Player;
-  grid: Grid;
+  overlay: GridOverlay;
 
   constructor() {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
-    this.camera.position.z = 1;
     this.player = new Player(this.scene);
-    this.grid = new Grid(this.scene, 1000, 1000, 15, 1);
+    this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
   }
 
   update(dt: number, input: Input) {
@@ -24,13 +23,13 @@ export default class Game {
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
     );
-    this.camera.position.z = 1;
-    this.grid.update(this.camera.position);
+    this.camera.position.z = 10;
+    this.overlay.update(this.camera.position);
   }
 
   render(renderer: WebGLRenderer) {
     const size = renderer.getSize(new Vector2()).divideScalar(2);
-    const scale = Math.max(150 / size.x, 100 / size.y);
+    const scale = Math.max(250 / size.x, 200 / size.y);
     this.camera.left = -scale * size.x;
     this.camera.right = scale * size.x;
     this.camera.top = -scale * size.y;

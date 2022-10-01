@@ -51,7 +51,7 @@ export default class GridOverlay {
       Math.round(cameraPosition.x / this.spacing) * this.spacing;
     this.mesh.position.y =
       Math.round(cameraPosition.y / this.spacing) * this.spacing;
-    this.mesh.position.z = -10;
+    this.mesh.position.z = -25;
   }
 
   destructor() {

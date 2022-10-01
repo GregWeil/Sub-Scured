@@ -7,6 +7,8 @@ import {
   Vector3,
 } from "three";
 
+const triangleHeightFromSide = Math.sqrt(3)/2;
+
 export default class Map {
   private width: number;
   private height: number;
@@ -53,7 +55,9 @@ export default class Map {
     );
   }
 
-private getVertices(x:number,y:number,
+private getVertices(x:number,y:number) {
+  
+}
 
   destructor() {
     this.mesh.removeFromParent();
