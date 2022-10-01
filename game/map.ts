@@ -28,8 +28,7 @@ export default class Map {
     this.size = size;
     this.grid = new Int8Array(width * height);
     this.group = new Group();
-    this.group.position.x = (-this.width / 2 + 0.5) * this.size;
-    this.group.position.y = (-this.height / 4 + 0.25) * this.size;
+    [this.group.position.x, this.group.position.y] = this.getWorldOrigin();
     this.group.scale.x = this.size;
     this.group.scale.y = this.size;
     scene.add(this.group);
@@ -82,19 +81,30 @@ export default class Map {
     return [xc, yc];
   }
 
-  private triangleToCell(x: number, y: number) {}
+  private triangleToCell(x: number, y: number) {
+    
+    return[0,0];
+  }
 
   private worldToTriangle(x: number, y: number) {
+    const [xo, yo] = this.getWorldOrigin();
+    return [(x - xo) / this.size, (y - yo) / this.size];
+  }
+
+  private triangleToWorld(x: number, y: number) {
+    const [xo, yo] = this.getWorldOrigin();
+    return [xo + x * this.size, yo + y * this.size];
+  }
+
+  private getWorldOrigin() {
     return [
-      x-(-this.width / 2 + 0.5) * this.size;
-    y-(-this.height / 4 + 0.25) * this.size
+      (-this.width / 2 + 0.5) * this.size,
+      (-this.height / 4 + 0.5) * this.size,
     ];
   }
 
-private triangleToWorld(x:number,y:number){}
-
   private getVertices(x: number, y: number) {
-    const [xc, yc] = this.toTriangleSpace(x, y);
+    const [xc, yc] = this.cellToTriangle(x, y);
 
     const x1 = 0.5;
     const y1 = triangleHeightFromSide / 3;
@@ -111,7 +121,8 @@ private triangleToWorld(x:number,y:number){}
   }
 
   update(dt: number, input: Input) {
-    const [x, y] = input.getMouse();
+    const cellPos = this.triangleToCell(...this.worldToTriangle(...input.getMouse()));
+    const[x,y]=this.triangleToWorld(...this.cellToTriangle(...cellPos));
     this.picker.position.x = x;
     this.picker.position.y = y;
     this.picker.position.z = 1;
