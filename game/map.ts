@@ -40,8 +40,6 @@ export default class Map {
   }
 
   private generateMesh() {
-    this.mesh.clear();
-
     const vertices = [];
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
@@ -50,6 +48,7 @@ export default class Map {
       }
     }
 
+    this.mesh.clear();
     if (vertices.length > 0) {
       const geometry = new BufferGeometry();
       geometry.setAttribute(
@@ -70,7 +69,7 @@ export default class Map {
     const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
     const yc =
       Math.ceil(y / 2) * triangleHeightFromSide +
-      ((y % 2 == 0 ? 1 : -1) * triangleHeightFromSide) / 6;
+      (y % 2 == 0 ? 1 / 6 : -1 / 6) * triangleHeightFromSide;
 
     const x1 = 0.5;
     const y1 = triangleHeightFromSide / 3;
