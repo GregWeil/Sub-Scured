@@ -1,5 +1,6 @@
 import { OrthographicCamera, Scene, Vector2, WebGLRenderer } from "three";
 import Player from "./player";
+import Grid from "./grid";
 import Input from "./input";
 import { getLerpFactor } from "../util/math";
 
@@ -7,12 +8,14 @@ export default class Game {
   scene: Scene;
   camera: OrthographicCamera;
   player: Player;
+  grid: Grid;
 
   constructor() {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
     this.camera.position.z = 1;
     this.player = new Player(this.scene);
+    this.grid = new Grid(this.scene, 100, 100, 10);
   }
 
   update(dt: number, input: Input) {
@@ -21,6 +24,7 @@ export default class Game {
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
     );
+    this.grid.update(this.camera.position);
   }
 
   render(renderer: WebGLRenderer) {
