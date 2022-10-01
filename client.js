@@ -7,7 +7,7 @@ import {
   Mesh,
 } from "three";
 
-const camera = new OrthographicCamera(-100, 100, -100, 100, 1, 1000);
+const camera = new OrthographicCamera(-1, 1, -1, 1, 1, 1000);
 camera.position.z = 1;
 
 const scene = new Scene();
@@ -17,22 +17,21 @@ const mesh = new Mesh(geometry, material);
 scene.add(mesh);
 
 const renderer = new WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
 const resize = () => {
-  const scale = (100 * 100) / (window.innerWidth * window.innerHeight);
+  const scale = Math.max(100 / window.innerWidth, 100 / window.innerHeight);
   camera.left = (-scale * window.innerWidth) / 2;
-  camera.right = (-scale * window.innerWidth) / 2;
+  camera.right = (scale * window.innerWidth) / 2;
   camera.top = (-scale * window.innerHeight) / 2;
-  camera.bottom = (-scale * window.innerHeight) / 2;
+  camera.bottom = (scale * window.innerHeight) / 2;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 };
 window.addEventListener("resize", resize);
 resize();
+document.body.appendChild(renderer.domElement);
 
 renderer.setAnimationLoop((time) => {
+  mesh.rotateOnAxis(,1 * time);
   renderer.render(scene, camera);
 });
 
