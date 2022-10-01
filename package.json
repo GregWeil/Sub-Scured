@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "esbuild client.ts --bundle --outfile=build/client.js",
-    "start": "concurrently \"\" npm:build \"node server.js\""
+    "start": "concurrently --names=tsc,build,server \"tsc --noEmit\" npm:build \"node server.js\" --kill-others-on-fail"
   },
   "dependencies": {
     "fastify": "^4.7.0",

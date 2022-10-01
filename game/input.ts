@@ -16,11 +16,11 @@ export default class Input {
   }
 
   getHorizontal() {
-    return Number(input.get("ArrowRight")) - Number(input.get("ArrowLeft"));
+    return Number(this.get("ArrowRight")) - Number(this.get("ArrowLeft"));
   }
 
   getVertical() {
-    return Number(input.get("ArrowDown")) - Number(input.get("ArrowUp"));
+    return Number(this.get("ArrowDown")) - Number(this.get("ArrowUp"));
   }
 
   destructor() {
