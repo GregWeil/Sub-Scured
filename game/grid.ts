@@ -36,7 +36,6 @@ export default class Grid {
       vertices.push(-width / 2, y + thickness / 2, 0);
       vertices.push(width / 2, y + thickness / 2, 0);
     }
-    console.log(vertices)
     const geometry = new BufferGeometry();
     geometry.setAttribute(
       "position",

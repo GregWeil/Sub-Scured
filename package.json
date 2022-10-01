@@ -4,7 +4,7 @@
   "description": "A simple Node app built on fastify, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "build": "esbuild client.ts --bundle --outfile=build/client.js",
+    "build": "esbuild client.ts --bundle --outdir=build",
     "start": "npm run build && node server.js"
   },
   "dependencies": {

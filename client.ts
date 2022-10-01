@@ -28,4 +28,4 @@ renderer.setAnimationLoop((time) => {
   game.render(renderer);
 });
 
-console.log("Hello world!");
+console.log("Hello world?");
