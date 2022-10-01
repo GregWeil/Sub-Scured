@@ -5,13 +5,14 @@
   "main": "server.js",
   "scripts": {
     "build": "esbuild client.js --bundle --outfile=build/client.js",
-    "start": "npm run build -- --watch & node server.js"
+    "start": "concurrently \"npm run build -- --watch\" \"node server.js\" --kill-others"
   },
   "dependencies": {
     "fastify": "^4.7.0",
     "handlebars": "^4.7.7",
     "@fastify/static": "^6.5.0",
-    "esbuild": "^0.15.10"
+    "esbuild": "^0.15.10",
+    "concurrently": "^7.4.0"
   },
   "engines": {
     "node": "14.x"
