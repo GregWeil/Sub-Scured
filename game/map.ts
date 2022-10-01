@@ -56,7 +56,7 @@ export default class Map {
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
         if (this.grid[i * this.height + j] === 0) continue;
-        const [x1, y1, x2, y2, x3, y3] = this.getVertices(i, j);
+        const [x1, y1, x2, y2, x3, y3] = this.getTriangleVertices(i, j);
         vertices.push(x1, y1, 0, x2, y2, 0, x3, y3, 0);
       }
     }
@@ -107,7 +107,7 @@ export default class Map {
     ];
   }
 
-  private getVertices(x: number, y: number) {
+  private getTriangleVertices(x: number, y: number) {
     const [xc, yc] = this.cellToTriangle(x, y);
 
     const x1 = 0.5;
@@ -124,13 +124,22 @@ export default class Map {
     }
   }
 
-raycast(x1,y1,x2,y2){
-  const [tx1,ty2] = this.worldToTriangle(x1,y1);
-  const [cx1,cy1]=this.triangleToGrid(tx1,ty1);
-  if(this.grid[cx1*this.height+cy1]>0)return [x1,y1];
-  const [tx2,ty2]=this.worldToTriangle(x2,y2);
-  return null;
-}
+  private getAdjacent(x: number, y: number) {
+    const adjacent = [y % 4 < 2 ? x - 1 : x + 1, y % 2 === 0 ? y - 1 : y + 1];
+    return [[x, y - 1], [x, y + 1], adjacent];
+  }
+
+  raycast(x1, y1, x2, y2) {
+    const [tx1, ty2] = this.worldToTriangle(x1, y1);
+    const [cx1, cy1] = this.triangleToGrid(tx1, ty1);
+    if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1];
+    const [tx2, ty2] = this.worldToTriangle(x2, y2);
+    
+    const checked = new Map<Set<number>>();
+    const queue = this.getAdjacent
+    
+    return null;
+  }
 
   update(dt: number, input: Input) {
     const cellPos = this.triangleToCell(
