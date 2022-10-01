@@ -25,8 +25,6 @@ export default class Map {
     this.size = size;
     this.grid = new Int8Array(width * height);
     this.mesh = new Object3D();
-    this.mesh.position.x = (-this.width/2 + 0.5)*this.size;
-    this.mesh.position.y = (-this.height/2 + 0.5)*this.size;
     scene.add(this.mesh);
     this.generateMap();
   }
@@ -59,25 +57,32 @@ export default class Map {
         new BufferAttribute(new Float32Array(vertices), 2)
       );
       const material = new MeshBasicMaterial({ color: terrainColor });
-      this.mesh.add(new Mesh(geometry, material));
+      const model = new Mesh(geometry, material);
+      model.position.x = (-this.width / 2 + 0.5) * this.size;
+      model.position.y = (-this.height / 2 + 0.5) * this.size;
+      model.scale.x = this.size;
+      model.scale.y = this.size;
+      this.mesh.add(model);
     }
   }
 
   private getVertices(x: number, y: number) {
-    const xc = 0;
-    const yc = 0;
-  
-    const x1 = (xc + 0.5) * this.size;
-    const y1 = (yc + triangleHeightFromSide / 3) * this.size;
-    const x2 = xc * this.size;
-    const y2 = (yc - (2 / 3) * triangleHeightFromSide) * this.size;
-    const x3 = (xc - 0.5) * this.size;
-    const y3 = (yc + triangleHeightFromSide / 3) * this.size;
+    const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
+    const yc =
+      Math.floor(y / 2) * triangleHeightFromSide +
+      ((y % 2 == 0 ? 1 : -1) * triangleHeightFromSide) / 6;
+
+    const x1 = 0.5;
+    const y1 = triangleHeightFromSide / 3;
+    const x2 = 0;
+    const y2 = -(2 / 3) * triangleHeightFromSide;
+    const x3 = -0.5;
+    const y3 = triangleHeightFromSide / 3;
 
     if (y % 2 == 0) {
-      return [x1, y1, x2, y2, x3, y3];
+      return [xc + x1, yc + y1, xc + x2, yc + y2, xc + x3, yc + y3];
     } else {
-      return [x3, y3, x2, y2, x1, y1];
+      return [xc + x3, yc - y3, xc + x2, yc - y2, xc + x1, yc - y1];
     }
   }
 
