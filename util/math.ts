@@ -6,5 +6,5 @@ export const unlerp = (a: number, b: number, val: number) =>
 export const getLerpFactor = (val: number, dt: number) =>
   1 - Math.pow(1 - val, dt);
 
-export const distance = (x1, y1, x2, y2) =>
+export const distance = (x1: number, y1: number, x2: number, y2: number) =>
   Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
