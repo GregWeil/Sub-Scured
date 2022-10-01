@@ -19,7 +19,7 @@ export default class Game {
     this.player.update(dt, input);
     this.camera.position.lerp(
       this.player.getPosition(),
-      getLerpFactor(0.8, dt / 1000)
+      getLerpFactor(0.9, dt / 1000)
     );
   }
 
