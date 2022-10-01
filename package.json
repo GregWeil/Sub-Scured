@@ -4,12 +4,14 @@
   "description": "A simple Node app built on fastify, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "build": "esbuild client.js --bundle --outfile=build/client.js",
+    "start": "npm run build -- --watch & node server.js"
   },
   "dependencies": {
     "fastify": "^4.7.0",
     "handlebars": "^4.7.7",
-    "@fastify/static": "^6.5.0"
+    "@fastify/static": "^6.5.0",
+    "esbuild": "^0.15.10"
   },
   "engines": {
     "node": "14.x"
