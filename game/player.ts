@@ -13,10 +13,11 @@ export default class Player {
 
   update(dt: number, input: Input) {
     this.mesh.rotateOnAxis(new Vector3(0, 0, 1), dt / 1000);
-    const horizontal = input.get("Right") - input.get("Left");
+    const horizontal =input.getHorizontal();
     this.mesh.translateX((horizontal * 1 * dt) / 1000);
-    const vertical = input.get("Down") - input.get("Up");
+    const vertical =input.getVertical();
     this.mesh.translateY((vertical * 1 * dt) / 1000);
+    console.log(horizontal, vertical);
   }
 
   destructor() {

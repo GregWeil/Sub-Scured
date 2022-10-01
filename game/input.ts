@@ -15,6 +15,14 @@ export default class Input {
     return this.state.has(key);
   }
 
+  getHorizontal() {
+    return Number(input.get("ArrowRight")) - Number(input.get("ArrowLeft"));
+  }
+
+  getVertical() {
+    return Number(input.get("ArrowDown")) - Number(input.get("ArrowUp"));
+  }
+
   destructor() {
     window.removeEventListener("keydown", this.keydown);
     window.removeEventListener("keyup", this.keyup);
