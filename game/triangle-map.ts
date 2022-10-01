@@ -75,7 +75,7 @@ export default class TriangleMap {
     }
   }
 
-  private cellToTriangle(x: number, y: number) {
+  private cellToTriangle(x: number, y: number): [number, number] {
     const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
     const yc =
       Math.ceil(y / 2) * triangleHeightFromSide +
@@ -83,7 +83,7 @@ export default class TriangleMap {
     return [xc, yc];
   }
 
-  private triangleToCell(x: number, y: number) {
+  private triangleToCell(x: number, y: number): [number, number] {
     const j = y / triangleHeightFromSide + 0.5;
     const jf = j % 2 < 1 ? j - Math.floor(j) : Math.ceil(j) - j;
     const xo = x - lerp(0, -0.5, jf);
@@ -91,17 +91,17 @@ export default class TriangleMap {
     return [Math.floor(xo), Math.floor(j) * 2 + (jo ? -1 : 0)];
   }
 
-  private worldToTriangle(x: number, y: number) {
+  private worldToTriangle(x: number, y: number): [number, number] {
     const [xo, yo] = this.getWorldOrigin();
     return [(x - xo) / this.size, (y - yo) / this.size];
   }
 
-  private triangleToWorld(x: number, y: number) {
+  private triangleToWorld(x: number, y: number): [number, number] {
     const [xo, yo] = this.getWorldOrigin();
     return [xo + x * this.size, yo + y * this.size];
   }
 
-  private getWorldOrigin() {
+  private getWorldOrigin(): [number, number] {
     return [
       (-this.width / 2 + 0.5) * this.size,
       (-this.height / 4 + 0.5) * this.size,
@@ -139,7 +139,7 @@ export default class TriangleMap {
     const checked = new Set([`${cx1}_${cy1}`]);
     const queue = this.getAdjacent(cx1, cy1);
     while (queue.length) {
-      const [cx, cy] = queue.pop();
+      const [cx, cy] = queue.pop()!;
 
       const [xa, ya, xb, yb, xc, yc] = this.getTriangleVertices(cx, cy);
       const hits = raycast(

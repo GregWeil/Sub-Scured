@@ -63,7 +63,7 @@ export default class Input {
     );
   }
 
-  getMouse() {
+  getMouse(): [number, number] {
     return this.mouseWorld;
   }
 
