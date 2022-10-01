@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "esbuild client.js --bundle --outfile=build/client.js",
-    "start": "concurrently \"npm run build -- --watch\" \"node server.js\" --kill-others"
+    "start": "npm run build && node server.js"
   },
   "dependencies": {
     "fastify": "^4.7.0",

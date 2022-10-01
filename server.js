@@ -1,4 +1,5 @@
 const path = require("path");
+const fastifyStatic = require("@fastify/static");
 
 // Require the fastify framework and instantiate it
 const fastify = require("fastify")({
@@ -7,13 +8,14 @@ const fastify = require("fastify")({
 });
 
 // Setup our static files
-fastify.register(require("@fastify/static"), {
+fastify.register(fastifyStatic, {
   root: path.join(__dirname, "public"),
-  prefix: "/", // optional: default '/'
+  prefix: "/",
 });
-fastify.register(require("@fastify/static"), {
+fastify.register(fastifyStatic, {
   root: path.join(__dirname, "build"),
-  prefix: "/", // optional: default '/'
+  prefix: "/build",
+  decorateReply: false,
 });
 
 // Run the server and report out to the logs
@@ -21,10 +23,9 @@ fastify.listen(
   { port: process.env.PORT, host: "0.0.0.0" },
   function (err, address) {
     if (err) {
-      fastify.log.error(err);
+      console.error(err);
       process.exit(1);
     }
     console.log(`Your app is listening on ${address}`);
-    fastify.log.info(`server listening on ${address}`);
   }
 );
