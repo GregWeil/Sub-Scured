@@ -15,7 +15,7 @@ export default class Game {
   constructor() {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
-    this.map = new Map(this.scene, 10, 10, 10);
+    this.map = new Map(this.scene, 100, 100, 15);
     this.player = new Player(this.scene);
     this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
   }
