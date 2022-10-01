@@ -50,17 +50,16 @@ export default class Map {
   private generateMesh() {
     this.mesh.clear();
     
-    const [x1, y1, x2, y2, x3, y3]=triangleVertices.map(z=>z*t)
+    const [x1, y1, x2, y2, x3, y3]=triangleVertices.map(z=>z*this.size);
 
     const vertices = [];
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
         if (this.grid[i * this.width + j] === 0) continue;
-        const [x1, y1, x2, y2, x3, y3] = this.getVertices(
-          (-this.width / 2 + i + 0.5) * this.size,
-          (-this.height / 2 + j + 0.5) * triangleHeightFromSide * this.size
-        );
-        vertices.push(x1, y1, 0, x2, y2, 0, x3, y3, 0);
+        const x = (-this.width / 2 + i + 0.5) * this.size;
+        const y = (-this.height / 2 + j + 0.5) * triangleHeightFromSide * this.size;
+        
+        vertices.push(x+x1, y+y1, 0, x+x2, y+y2, 0, x+x3, y+y3, 0);
       }
     }
 

@@ -7,6 +7,8 @@ import {
   Vector3,
 } from "three";
 
+import { overlayColor } from "./constants";
+
 export default class GridOverlay {
   private mesh: Mesh;
   private spacing: number;
@@ -41,7 +43,7 @@ export default class GridOverlay {
       "position",
       new BufferAttribute(new Float32Array(vertices), 3)
     );
-    const material = new MeshBasicMaterial({ color: 0x113322 });
+    const material = new MeshBasicMaterial({ color: overlayColor });
     this.mesh = new Mesh(geometry, material);
     scene.add(this.mesh);
   }

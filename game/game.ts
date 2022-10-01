@@ -3,6 +3,7 @@ import Player from "./player";
 import Map from "./map";
 import GridOverlay from "./grid-overlay";
 import Input from "./input";
+import { backgroundColor } from "./constants.ts";
 import { getLerpFactor } from "../util/math";
 
 export default class Game {
@@ -38,6 +39,7 @@ export default class Game {
     this.camera.top = -scale * size.y;
     this.camera.bottom = scale * size.y;
     this.camera.updateProjectionMatrix();
+    renderer.setClearColor(backgroundColor, 1);
     renderer.render(this.scene, this.camera);
   }
 }
