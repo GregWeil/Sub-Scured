@@ -17,15 +17,15 @@ export default class Map {
   private height: number;
   private size: number;
   private grid: Int8Array;
-  private mesh: Group;
+  private group: Group;
 
   constructor(scene: Scene, width: number, height: number, size: number) {
     this.width = width;
     this.height = height;
     this.size = size;
     this.grid = new Int8Array(width * height);
-    this.mesh = new Group();
-    scene.add(this.mesh);
+    this.group = new Group();
+    scene.add(this.group);
     this.generateMap();
   }
 
@@ -48,7 +48,7 @@ export default class Map {
       }
     }
 
-    this.mesh.clear();
+    this.group.clear();
     if (vertices.length > 0) {
       const geometry = new BufferGeometry();
       geometry.setAttribute(
@@ -56,12 +56,12 @@ export default class Map {
         new BufferAttribute(new Float32Array(vertices), 2)
       );
       const material = new MeshBasicMaterial({ color: terrainColor });
-      const model = new Mesh(geometry, material);
-      model.position.x = (-this.width / 2 + 0.5) * this.size;
-      model.position.y = (-this.height / 2 + 0.5) * this.size;
-      model.scale.x = this.size;
-      model.scale.y = this.size;
-      this.mesh.add(model);
+      const mesh = new Mesh(geometry, material);
+      mesh.position.x = (-this.width / 2 + 0.5) * this.size;
+      mesh.position.y = (-this.height / 2 + 0.5) * this.size;
+      mesh.scale.x = this.size;
+      mesh.scale.y = this.size;
+      this.group.add(mesh);
     }
   }
 
@@ -86,6 +86,6 @@ export default class Map {
   }
 
   destructor() {
-    this.mesh.removeFromParent();
+    this.group.removeFromParent();
   }
 }

@@ -7,7 +7,8 @@ import {
   Mesh,
   Vector3,
 } from "three";
-			import Stats from 'three/addons/libs/stats.module.js';
+import Stats from "three/examples/jsm/libs/stats.module.js";
+
 import Game from "./game";
 import Input from "./game/input";
 
@@ -17,7 +18,7 @@ window.addEventListener("resize", resize);
 resize();
 document.body.insertBefore(renderer.domElement, document.body.firstChild);
 
-const stats = new Stats();
+const stats = Stats();
 document.body.appendChild(stats.domElement);
 
 const input = new Input();
