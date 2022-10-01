@@ -28,7 +28,7 @@ private debug: Group
     const pointer = new Mesh(new SphereGeometry(5),new MeshNormalMaterial());
     [pointer.position.x,pointer.position.y]=input.getMouse();
     this.debug.add(pointer);
-    this.game.map.raycast(this.mesh.position.x,this.mesh.position.y,)
+    this.game.map.raycast(this.mesh.position.x,this.mesh.position.y,pointer.position.x,pointer.position.y)
   }
 
   getPosition() {

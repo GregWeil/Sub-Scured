@@ -15,7 +15,7 @@ import { lerp, unlerp } from "../util/math";
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
 
-export default class Map {
+export default class TriangleMap {
   private width: number;
   private height: number;
   private size: number;
@@ -131,22 +131,23 @@ export default class Map {
 
   raycast(x1, y1, x2, y2) {
     const [tx1, ty1] = this.worldToTriangle(x1, y1);
-    const [cx1, cy1] = this.triangleToGrid(tx1, ty1);
+    const [cx1, cy1] = this.triangleToCell(tx1, ty1);
     if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1];
     const [tx2, ty2] = this.worldToTriangle(x2, y2);
-    
-    const checked = new Map([cx1,new Set([cy1])]);
-    const queue = this.getAdjacent(cx1,cx2);
-    while(queue.length){
+
+    const checked = new Map([[cx1, new Set([cy1])]]);
+    const queue = this.getAdjacent(cx1, cy1);
+    while (queue.length) {
       const [cx, cy] = queue.pop();
-      const mesh=new Mesh(
-      new SphereGeometry(1),
-      new MeshBasicMaterial({ color: 0xff0000 })
-    );
-      mesh.position=this.cellToTriangle(cx,cy)
+      const mesh = new Mesh(
+        new SphereGeometry(0.1),
+        new MeshBasicMaterial({ color: 0xff0000 })
+      );
+      [mesh.position.x, mesh.position.y] = this.cellToTriangle(cx, cy);
       this.group.add(mesh);
+      
     }
-    
+
     return null;
   }
 

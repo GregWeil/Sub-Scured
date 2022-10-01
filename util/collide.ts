@@ -9,6 +9,9 @@ export const intersect = (a: Segment, b: Segment) => {
   return intersection.slice(0, count);
 };
 
-export const raycast=(ray:Segment, ...segments:Segments)=>{
-  
-}
+export const raycast = (ray: Segment, ...segments: Segment[]) => {
+  return segments
+    .map((segment) => intersect(ray, segment))
+    .filter((hits) => !!hits)
+    .flat();
+};
