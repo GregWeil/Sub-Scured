@@ -15,7 +15,7 @@ export default class Game {
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
     this.camera.position.z = 1;
     this.player = new Player(this.scene);
-    this.grid = new Grid(this.scene, 1000, 1000, 15);
+    this.grid = new Grid(this.scene, 1000, 1000, 15, 1);
   }
 
   update(dt: number, input: Input) {
@@ -30,7 +30,7 @@ export default class Game {
 
   render(renderer: WebGLRenderer) {
     const size = renderer.getSize(new Vector2()).divideScalar(2);
-    const scale = Math.max(100 / size.x, 100 / size.y);
+    const scale = Math.max(150 / size.x, 100 / size.y);
     this.camera.left = -scale * size.x;
     this.camera.right = scale * size.x;
     this.camera.top = -scale * size.y;

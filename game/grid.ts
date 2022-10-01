@@ -11,23 +11,38 @@ export default class Grid {
   private mesh: Mesh;
   private spacing: number;
 
-  constructor(scene: Scene, width: number, height: number, spacing: number,width:number) {
+  constructor(
+    scene: Scene,
+    width: number,
+    height: number,
+    spacing: number,
+    thickness: number
+  ) {
     this.spacing = spacing;
     const vertices = [];
     for (let x = -width / 2; x <= width / 2; x += spacing) {
-      vertices.push(x, -height / 2, 0);
-      vertices.push(x, height / 2, 0);
+      vertices.push(x - thickness / 2, -height / 2, 0);
+      vertices.push(x - thickness / 2, height / 2, 0);
+      vertices.push(x + thickness / 2, height / 2, 0);
+      vertices.push(x + thickness / 2, -height / 2, 0);
+      vertices.push(x - thickness / 2, -height / 2, 0);
+      vertices.push(x + thickness / 2, height / 2, 0);
     }
     for (let y = -height / 2; y <= height / 2; y += spacing) {
-      vertices.push(-width / 2, y, 0);
-      vertices.push(width / 2, y, 0);
+      vertices.push(-width / 2, y - thickness / 2, 0);
+      vertices.push(width / 2, y + thickness / 2, 0);
+      vertices.push(width / 2, y - thickness / 2, 0);
+      vertices.push(-width / 2, y - thickness / 2, 0);
+      vertices.push(-width / 2, y + thickness / 2, 0);
+      vertices.push(width / 2, y + thickness / 2, 0);
     }
+    console.log(vertices)
     const geometry = new BufferGeometry();
     geometry.setAttribute(
       "position",
       new BufferAttribute(new Float32Array(vertices), 3)
     );
-    const material = new MeshBasicMaterial({color: 0x555555});
+    const material = new MeshBasicMaterial({ color: 0x113322 });
     this.mesh = new Mesh(geometry, material);
     scene.add(this.mesh);
   }
