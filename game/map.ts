@@ -4,7 +4,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   Scene,
-  Object3D,
+  Group,
   Vector3,
 } from "three";
 
@@ -17,14 +17,14 @@ export default class Map {
   private height: number;
   private size: number;
   private grid: Int8Array;
-  private mesh: Object3D;
+  private mesh: Group;
 
   constructor(scene: Scene, width: number, height: number, size: number) {
     this.width = width;
     this.height = height;
     this.size = size;
     this.grid = new Int8Array(width * height);
-    this.mesh = new Object3D();
+    this.mesh = new Group();
     scene.add(this.mesh);
     this.generateMap();
   }
@@ -69,7 +69,7 @@ export default class Map {
   private getVertices(x: number, y: number) {
     const xc = x + ((y + 2) % 4 < 2 ? 0.5 : 0);
     const yc =
-      Math.floor(y / 2) * triangleHeightFromSide +
+      Math.ceil(y / 2) * triangleHeightFromSide +
       ((y % 2 == 0 ? 1 : -1) * triangleHeightFromSide) / 6;
 
     const x1 = 0.5;
