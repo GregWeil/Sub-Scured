@@ -159,7 +159,7 @@ export default class TriangleMap {
           hit = hits[i];
           hitDist = dist;
         }
-        return hit;
+        return this.triangleToWorld(...hit);
       }
 
       for (const [acx, acy] of this.getAdjacent(cx, cy)) {
@@ -174,8 +174,6 @@ export default class TriangleMap {
   }
 
   update(dt: number, input: Input) {
-    this.group.clear();
-    this.generateMesh();
     const cellPos = this.triangleToCell(
       ...this.worldToTriangle(...input.getMouse())
     );

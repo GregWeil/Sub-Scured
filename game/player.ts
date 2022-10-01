@@ -1,11 +1,18 @@
-import { BoxGeometry,SphereGeometry, MeshNormalMaterial, Mesh, Group,Vector3 } from "three";
+import {
+  BoxGeometry,
+  SphereGeometry,
+  MeshNormalMaterial,
+  Mesh,
+  Group,
+  Vector3,
+} from "three";
 import Game from "./game";
 import Input from "./input";
 
 export default class Player {
   private game: Game;
   private mesh: Mesh;
-private debug: Group
+  private debug: Group;
 
   constructor(game: Game) {
     this.game = game;
@@ -13,7 +20,7 @@ private debug: Group
     const material = new MeshNormalMaterial();
     this.mesh = new Mesh(geometry, material);
     this.game.scene.add(this.mesh);
-    this.debug=new Group();
+    this.debug = new Group();
     this.game.scene.add(this.debug);
   }
 
@@ -23,12 +30,25 @@ private debug: Group
     this.mesh.position.x += (horizontal * 50 * dt) / 1000;
     const vertical = input.getVertical();
     this.mesh.position.y += (vertical * 50 * dt) / 1000;
-    
+
     this.debug.clear();
-    const pointer = new Mesh(new SphereGeometry(5),new MeshNormalMaterial());
-    [pointer.position.x,pointer.position.y]=input.getMouse();
+    const pointer = new Mesh(new SphereGeometry(5), new MeshNormalMaterial());
+    [pointer.position.x, pointer.position.y] = input.getMouse();
     this.debug.add(pointer);
-    this.game.map.raycast(this.mesh.position.x,this.mesh.position.y,pointer.position.x,pointer.position.y)
+    const hit = this.game.map.raycast(
+      this.mesh.position.x,
+      this.mesh.position.y,
+      pointer.position.x,
+      pointer.position.y
+    );
+    if (hit) {
+      const mesh = new Mesh(
+        new SphereGeometry(3),
+        new MeshNormalMaterial()
+      );
+      [mesh.position.x, mesh.position.y] = hit;
+      this.debug.add(mesh);
+    }
   }
 
   getPosition() {
