@@ -12,7 +12,7 @@
     "handlebars": "^4.7.7",
     "@fastify/static": "^6.5.0",
     "esbuild": "^0.15.10",
-    "concurrently": "^7.4.0"
+    "three": "^0.145.0"
   },
   "engines": {
     "node": "14.x"

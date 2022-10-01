@@ -17,9 +17,8 @@ body {
   line-height: 1.5;
 }
 
-/* images and videos max out at full width */
-img,
-video {
-  height: auto;
-  max-width: 100%;
+canvas {
+  position:absolute;
+  top:0;
+  left:0;
 }
