@@ -12,18 +12,18 @@ export default class Input {
   }
 
   get(...keys: string[]) {
-    return keys.any((key) => this.state.has(key));
+    return keys.some((key) => this.state.has(key));
   }
 
   getHorizontal() {
     return (
-      Number(this.get("ArrowRight", "D")) - Number(this.get("ArrowLeft", "A"))
+      Number(this.get("ArrowRight", "d")) - Number(this.get("ArrowLeft", "a"))
     );
   }
 
   getVertical() {
     return (
-      Number(this.get("ArrowDown", "S")) - Number(this.get("ArrowUp", "W"))
+      Number(this.get("ArrowDown", "s")) - Number(this.get("ArrowUp", "w"))
     );
   }
 

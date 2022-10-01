@@ -10,13 +10,13 @@ import {
 
 const triangleHeightFromSide = Math.sqrt(3) / 2;
 const triangleVertices: ReadonlyArray<number> = [
-      1 / 2,
-      triangleHeightFromSide  / 3,
-      0,
-      triangleHeightFromSide  * 2 / 3,
-      1 / 2,
-      triangleHeightFromSide  / 3,
-    ]
+  1 / 2,
+  triangleHeightFromSide / 3,
+  0,
+  -(2 / 3) * triangleHeightFromSide,
+  -1 / 2,
+  triangleHeightFromSide / 3,
+];
 
 export default class Map {
   private width: number;
@@ -39,27 +39,37 @@ export default class Map {
     this.grid.fill(1);
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
-        if (Math.random() < 0.3) this.grid[i * this.width + j] = 0;
+        if (Math.random() < 0.4) this.grid[i * this.width + j] = 0;
       }
     }
-    const t = performance.now();
     this.generateMesh();
-    console.log(performance.now() - t);
   }
 
   private generateMesh() {
     this.mesh.clear();
-    
-    const [x1, y1, x2, y2, x3, y3]=triangleVertices.map(z=>z*this.size);
 
     const vertices = [];
+    const [x1, y1, x2, y2, x3, y3] = triangleVertices.map((z) => z * this.size);
     for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
         if (this.grid[i * this.width + j] === 0) continue;
         const x = (-this.width / 2 + i + 0.5) * this.size;
-        const y = (-this.height / 2 + j + 0.5) * triangleHeightFromSide * this.size;
-        
-        vertices.push(x+x1, y+y1, 0, x+x2, y+y2, 0, x+x3, y+y3, 0);
+        const y =
+          (-this.height / 2 + j + 0.5) * triangleHeightFromSide * this.size;
+        if(j % 2 === 0) {
+          
+        }
+        vertices.push(
+          x + x1,
+          y + flip * y1,
+          0,
+          x + x2,
+          y + flip * y2,
+          0,
+          x + x3,
+          y + flip * y3,
+          0
+        );
       }
     }
 
