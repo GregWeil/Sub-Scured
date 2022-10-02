@@ -6,6 +6,7 @@ import {
   SphereGeometry,
   Scene,
   Group,
+  Vector2,
   Vector3,
 } from "three";
 
@@ -42,9 +43,29 @@ export default class TriangleMap {
   private generateMap() {
     this.grid.fill(1);
     
-    const [left, top] = this.worldToTriangle(...this.getWorldOrigin());
-    let x = lerp(left, -left, Math.random());
-    let y = lerp(top, -top, Math.random());
+    let x = Math.floor(Math.random() * this.width);
+    let y = Math.floor(Math.random()*this.height);
+    let position = new Vector2(x,y);
+    let direction = new Vector2(0,1);
+    for(let i = 0; i < 3;++i){
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * 25;
+      direction.rotateAround(new Vector2(),angle)
+      
+      let nextX = x;
+      let nextY= y;
+      do{
+      let hit = this.raycast(
+        this.triangleToWorld(...this.cellToTriangle(x,y)),
+        this.triangleToWorld(...this.cellToTriangle(nextX,nextY)));
+        if (hit){
+          const [hitX,hitY]=hit;
+          this.grid[hitX*this.height+hitY]=0;
+        }
+      }while (hit);
+      x=nextX;
+      y=nextY;
+    }
     
     this.generateMesh();
   }
