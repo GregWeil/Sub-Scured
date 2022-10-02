@@ -59,14 +59,16 @@ export default class TriangleMap {
       const next = direction.clone().multiplyScalar(distance).add(position);
       if (next.x < 0 || next.x >= this.width) continue;
       if (next.y < 0 || next.y >= this.height) continue;
-      for (let j = 0; j < 25; ++j) {
+      for (let j = 0; j < 50; ++j) {
         const hit = this.raycast(
           ...this.cellToWorld(position.x, position.y),
           ...this.cellToWorld(next.x, next.y)
         );
         if (!hit) break;
-        const [x, y] = this.worldToCell(hit);
-        this.grid[x * this.height + y] = 0;
+        const [x, y] = this.worldToCell(...hit);
+        [[x, y], ...this.getAdjacent(x, y)].forEach(([x, y]) => {
+          this.grid[x * this.height + y] = 0;
+        });
       }
       position = next;
     }
