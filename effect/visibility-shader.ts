@@ -1,17 +1,32 @@
 import { Vector2, Vector4 } from "three";
 
 const uniforms = {
-  SourceBounds: { value: new Vector4() },
-  TargetBounds: { value: new Vector4() },
+  SourceImage: { value: null },
+  PositionBounds: { value: new Vector4() },
   PlayerPosition: { value: new Vector2() },
 };
 
 const vertexShader = `
-// help
-`;
+varying vec2 vUv;
 
+void main() {
+	vUv = uv;
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+as
 const fragmentShader = `
-// eee
+precision highp float;
+
+uniform sampler2D SourceImage;
+uniform vec4 PositionBounds;
+uniform vec2 PlayerPosition;
+
+varying vec2 vUv;
+
+void main() {
+  gl_FragColor = vec4(vUv, 0.5, 1);
+}
 `;
 
 export const VisibilityShader = {
