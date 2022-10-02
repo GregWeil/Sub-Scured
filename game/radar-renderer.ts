@@ -23,12 +23,6 @@ export default class RadarRenderer {
   private pulseX: number;
   private pulseY: number;
 
-  private scratchTarget: WebGLRenderTarget;
-
-  private renderScene: Scene;
-  private renderPlane: Mesh;
-  private renderCamera: OrthographicCamera;
-
   private sceneComposer: EffectComposer;
 
   private sound: Howl;
@@ -38,25 +32,17 @@ export default class RadarRenderer {
     this.timer = 10;
     this.pulseX = 0;
     this.pulseY = 0;
-
-    this.scratchTarget = new WebGLRenderTarget(100, 100);
-
-    this.renderScene = new Scene();
-    this.renderPlane = new Mesh(
-      new PlaneGeometry(2, 2),
-      new MeshBasicMaterial({ map: this.scratchTarget.texture })
-    );
-    this.renderPlane.rotation.y = Math.PI;
-    this.renderPlane.rotation.z = Math.PI;
-    this.renderScene.add(this.renderPlane);
-    this.renderCamera = new OrthographicCamera(-1, 1, -1, 1, 1, 10);
-    this.renderCamera.position.z = 5;
+    
     this.sceneComposer = new EffectComposer(renderer);
-    const renderPass = new TAARenderPass(this.game.scene, this.game.camera,backgroundColor,1)
-    renderPass.
-    this.sceneComposer.addPass(renderPass
-      
+    const renderPass = new TAARenderPass(
+      this.game.scene,
+      this.game.camera,
+      backgroundColor,
+      1
     );
+    renderPass.sampleLevel = 2;
+    this.sceneComposer.addPass(renderPass);
+    this.sceneComposer.addPass(new GlitchPass());
 
     this.sound = new Howl({ src: [radarPing] });
   }
@@ -71,31 +57,13 @@ export default class RadarRenderer {
     }
   }
 
-resize(renderer:WebGLRenderer){
-  const size=renderer.getSize(new Vector2())
-      this.sceneComposer.setSize(size.x,size.y);
-      this.sceneComposer.setPixelRatio(renderer.getPixelRatio());
-}
+  resize(renderer: WebGLRenderer) {
+    const size = renderer.getSize(new Vector2());
+    this.sceneComposer.setSize(size.x, size.y);
+    this.sceneComposer.setPixelRatio(renderer.getPixelRatio());
+  }
 
   render(renderer: WebGLRenderer, dt: number) {
-    /*
-    const resolution = renderer.getDrawingBufferSize(new Vector2());
-    if (
-      this.scratchTarget.width !== resolution.x ||
-      this.scratchTarget.height !== resolution.y
-    ) {
-      this.scratchTarget.setSize(resolution.x, resolution.y);
-    }
-    renderer.setRenderTarget(this.scratchTarget);
-    renderer.setClearColor(backgroundColor);
-    renderer.clear();
-    renderer.render(this.game.scene, this.game.camera);
-
-    renderer.setRenderTarget(null);
-    renderer.setClearColor(0x000000);
-    renderer.clear();
-    renderer.render(this.renderScene, this.renderCamera);
-    */
     this.sceneComposer.render(dt / 1000);
   }
 
