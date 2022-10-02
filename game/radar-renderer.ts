@@ -1,10 +1,6 @@
 import {
-  DoubleSide,
-  Mesh,
-  PlaneGeometry,
-  MeshBasicMaterial,
+  NearestFilter,
   OrthographicCamera,
-  Scene,
   WebGLRenderTarget,
   WebGLRenderer,
   Vector2,
@@ -51,12 +47,14 @@ export default class RadarRenderer {
     );
     this.overviewCamera.position.z = 10;
     this.overviewCamera.updateProjectionMatrix();
-    this.overviewTarget = new WebGLRenderTarget(16, 16);
+    this.overviewTarget = new WebGLRenderTarget(512, 512, {
+      magFilter: NearestFilter,
+    });
     this.overviewComposer = new EffectComposer(renderer, this.overviewTarget);
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
-    this.overviewComposer.addPass(new FilmPass(0.35, 0.025, 648, false))
+    this.overviewComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
 
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new TAARenderPass(
@@ -67,7 +65,7 @@ export default class RadarRenderer {
     );
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
-    this.sceneComposer.addPass(new FilmPass(0.35, 0.025, 648, false))
+    this.sceneComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
 
     this.sound = new Howl({ src: [radarPing] });
   }
@@ -89,8 +87,8 @@ export default class RadarRenderer {
   }
 
   render(renderer: WebGLRenderer, dt: number) {
-    //this.sceneComposer.render(dt / 1000);
-    this.overviewComposer.render(dt / 1000);
+    this.sceneComposer.render(dt / 1000);
+    //this.overviewComposer.render(dt / 1000);
   }
 
   destructor() {
