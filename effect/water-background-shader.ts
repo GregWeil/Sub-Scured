@@ -1,5 +1,6 @@
 import { Vector2, Vector4 } from "three";
 
+import PerlinNoise from './perlin-noise';
 import {} from "../game/assets.ts";
 
 const defines = {};
@@ -26,6 +27,8 @@ uniform vec4 PositionBounds;
 
 varying vec2 vUv;
 
+${PerlinNoise}
+
 vec4 blend(vec4 source, vec4 target) {
   float alpha = source.a + target.a * (1.0 - source.a);
   vec3 color = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / alpha;
@@ -34,7 +37,8 @@ vec4 blend(vec4 source, vec4 target) {
 
 void main() {
   vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
-  vec3 waterColor = vec3(0.05, 0.1, 0.3) + 0.1 * vec3(vUv, 0.0);
+  float noise = psrdnoise(worldPos, vec2(100.0, 100.0), 0);
+  vec3 waterColor = vec3(0.03, 0.05, 0.1 + noise) + 0.1 * vec3(vUv, 0.0);
   gl_FragColor = blend(texture2D(tDiffuse, vUv), vec4(waterColor, 1.0));
 }
 `;
