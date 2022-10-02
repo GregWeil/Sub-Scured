@@ -30,7 +30,7 @@ const stats = Stats();
 document.body.appendChild(stats.domElement);
 
 const input = new Input(renderer.domElement);
-const game = new Game();
+const game = new Game(renderer);
 
 let timeLast = 0;
 renderer.setAnimationLoop((time) => {
@@ -38,9 +38,9 @@ renderer.setAnimationLoop((time) => {
     input.before(game.camera);
     game.update(time - timeLast, input);
     input.after();
+    game.render(renderer, time - timeLast);
   }
   timeLast = time;
-  game.render(renderer);
   stats.update();
 });
 

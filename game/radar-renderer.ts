@@ -10,6 +10,7 @@ import {
   Vector2,
   Vector3,
 } from "three";
+import {EffectComposer}from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -26,6 +27,8 @@ export default class RadarRenderer {
   private renderScene: Scene;
   private renderPlane: Mesh;
   private renderCamera: OrthographicCamera;
+
+private sceneComposer: EffectComposer;
 
   private sound: Howl;
 
@@ -47,6 +50,7 @@ export default class RadarRenderer {
     this.renderScene.add(this.renderPlane);
     this.renderCamera = new OrthographicCamera(-1, 1, -1, 1, 1, 10);
     this.renderCamera.position.z = 5;
+    this.sceneComposer = new EffectComposer(renderer);
 
     this.sound = new Howl({ src: [radarPing] });
   }
@@ -61,7 +65,8 @@ export default class RadarRenderer {
     }
   }
 
-  render(renderer: WebGLRenderer) {
+  render(renderer: WebGLRenderer,dt:number) {
+    /*
     const resolution = renderer.getDrawingBufferSize(new Vector2());
     if (
       this.scratchTarget.width !== resolution.x ||
@@ -78,6 +83,8 @@ export default class RadarRenderer {
     renderer.setClearColor(0x000000);
     renderer.clear();
     renderer.render(this.renderScene, this.renderCamera);
+    */
+    this.sceneComposer.render(dt/1000)
   }
 
   destructor() {

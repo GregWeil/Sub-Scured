@@ -14,10 +14,10 @@ export default class Game {
   player: Player;
   overlay: GridOverlay;
 
-  constructor() {
+  constructor(renderer:WebGLRenderer) {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
-    this.radar = new RadarRenderer(this);
+    this.radar = new RadarRenderer(this,renderer);
     this.map = new TriangleMap(this.scene, 100, 200, 15);
     this.player = new Player(this);
     this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
@@ -35,7 +35,7 @@ export default class Game {
     this.radar.update(dt, this.player.getPosition());
   }
 
-  render(renderer: WebGLRenderer) {
+  render(renderer: WebGLRenderer,dt:number) {
     const size = renderer.getSize(new Vector2()).divideScalar(2);
     const scale = Math.max(250 / size.x, 200 / size.y);
     this.camera.left = -scale * size.x;
@@ -43,6 +43,6 @@ export default class Game {
     this.camera.top = -scale * size.y;
     this.camera.bottom = scale * size.y;
     this.camera.updateProjectionMatrix();
-    this.radar.render(renderer);
+    this.radar.render(renderer,dt);
   }
 }
