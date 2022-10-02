@@ -1,4 +1,4 @@
-import { OrthographicCamera, Scene, Vector2, WebGLRenderer } from "three";
+import { OrthographicCamera, Scene, DirectionalLight, Vector2, WebGLRenderer } from "three";
 import Player from "./player";
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
@@ -16,6 +16,9 @@ export default class Game {
 
   constructor(renderer: WebGLRenderer) {
     this.scene = new Scene();
+    const light = new DirectionalLight(0xffffff, 0.5);
+    this.scene.add(light);
+    light.position.set(1, 1, -0.5);
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);

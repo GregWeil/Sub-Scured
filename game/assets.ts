@@ -11,7 +11,7 @@ const assetPath =
 
 export const playerModel = assetPath + "/submarine.gltf";
 
-export const playerVisibilityOuterRadius = 50;
+export const playerVisibilityOuterRadius = 60;
 export const playerVisibilityInnerRadius = 30;
 
 export const radarPingSound = assetPath + "/bleepfinal.wav";
