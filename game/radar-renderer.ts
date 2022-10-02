@@ -84,7 +84,7 @@ export default class RadarRenderer {
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
-    this.overviewComposer.addPass(new FilmPass(0.5, 0, 0, true));
+    this.overviewComposer.addPass(new FilmPass(0.6, 0, 0, false));
     this.overviewComposer.renderToScreen = false;
     this.overviewTargetQuad = new FullScreenQuad(
       new ShaderMaterial({

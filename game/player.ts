@@ -12,7 +12,6 @@ import Input from "./input";
 export default class Player {
   private game: Game;
   private mesh: Mesh;
-  private debug: Group;
 
   constructor(game: Game) {
     this.game = game;
@@ -20,8 +19,6 @@ export default class Player {
     const material = new MeshNormalMaterial();
     this.mesh = new Mesh(geometry, material);
     this.game.scene.add(this.mesh);
-    this.debug = new Group();
-    this.game.scene.add(this.debug);
   }
 
   update(dt: number, input: Input) {
@@ -29,27 +26,9 @@ export default class Player {
     //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
     const turn = this.mesh.rotateOnAxis(new Vector3(0, 0, 1).normalize(), (horizontal * dt) / 1000);
     const vertical = input.getVertical();
-    this.mesh.position.y += (vertical * 50 * dt) / 1000;
+    this.mesh.position.y += turn*(vertical * 50 * dt) / 1000;
+    //this.mesh.translateOnAxis(axis : turn, distance : vertical) {}
 
-    this.debug.children.forEach(mesh => mesh.geometry.dispose());
-    this.debug.clear();
-    const pointer = new Mesh(new SphereGeometry(5), new MeshNormalMaterial());
-    [pointer.position.x, pointer.position.y] = input.getMouse();
-    this.debug.add(pointer);
-    const hit = this.game.map.raycast(
-      this.mesh.position.x,
-      this.mesh.position.y,
-      pointer.position.x,
-      pointer.position.y
-    );
-    if (hit) {
-      const mesh = new Mesh(
-        new SphereGeometry(3),
-        new MeshNormalMaterial()
-      );
-      [mesh.position.x, mesh.position.y] = hit;
-      this.debug.add(mesh);
-    }
   }
 
   getPosition() {
@@ -58,6 +37,5 @@ export default class Player {
 
   destructor() {
     this.mesh.removeFromParent();
-    this.debug.removeFromParent();
   }
 }

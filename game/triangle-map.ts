@@ -31,7 +31,7 @@ export default class TriangleMap {
     this.grid = new Uint8Array(this.width * this.height);
     this.group = new Group();
     [this.group.position.x, this.group.position.y] = this.getWorldOrigin();
-    this.group.position.z = 1;
+    this.group.position.z = -5;
     this.group.scale.x = this.size;
     this.group.scale.y = this.size;
     scene.add(this.group);
@@ -41,6 +41,10 @@ export default class TriangleMap {
 
   private generateMap() {
     this.grid.fill(1);
+    
+    const [left, top] = this.worldToTriangle(...this.getWorldOrigin());
+    let x = lerp(left, -left, Math.random());
+    let y = lerp(top, -top, Math.random());
     
     this.generateMesh();
   }
