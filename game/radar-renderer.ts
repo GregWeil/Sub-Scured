@@ -9,6 +9,7 @@ import {
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
 import { Howl } from "howler";
 
@@ -26,6 +27,9 @@ export default class RadarRenderer {
   private overviewComposer: EffectComposer;
 
   private sceneComposer: EffectComposer;
+
+private screenTexture: TexturePass
+private screenComposer: EffectComposer;
 
   private sound: Howl;
 
@@ -54,7 +58,7 @@ export default class RadarRenderer {
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
-    this.overviewComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
+    this.overviewComposer.renderToScreen = false;
 
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new TAARenderPass(
@@ -65,7 +69,12 @@ export default class RadarRenderer {
     );
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
-    this.sceneComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
+    this.sceneComposer.renderToScreen = false;
+    
+    this.screenComposer = new EffectComposer(renderer);
+    this.screenTexture = new TexturePass(this.sceneComposer.readBuffer.texture);
+    this.screenComposer.addPass(this.screenTexture);
+    this.screenComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
 
     this.sound = new Howl({ src: [radarPing] });
   }
@@ -85,16 +94,21 @@ export default class RadarRenderer {
     const size = renderer.getSize(new Vector2());
     this.sceneComposer.setSize(size.x, size.y);
     this.sceneComposer.setPixelRatio(renderer.getPixelRatio());
+    this.screenComposer.setSize(size.x, size.y);
+    this.screenComposer.setPixelRatio(renderer.getPixelRatio());
   }
 
   render(renderer: WebGLRenderer, dt: number) {
-    //this.overviewComposer.render(dt / 1000);
+    this.overviewComposer.render(dt / 1000);
     this.sceneComposer.render(dt / 1000);
+    this.screenTexture.map = this.sceneComposer.readBuffer.texture;
+    this.screenComposer.render(dt/1000);
   }
 
   destructor() {
     this.overviewTarget.dispose();
     this.overviewComposer.dispose();
     this.sceneComposer.dispose();
+    this.screenComposer.dispose();
   }
 }
