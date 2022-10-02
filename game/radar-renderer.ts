@@ -50,7 +50,7 @@ export default class RadarRenderer {
     this.overviewTarget = new WebGLRenderTarget(512, 512, {
       magFilter: NearestFilter,
     });
-    this.overviewComposer = new EffectComposer(renderer, this.overviewTarget);
+    this.overviewComposer = new EffectComposer(renderer, this.overviewTarget.clone());
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
@@ -61,7 +61,7 @@ export default class RadarRenderer {
       this.game.scene,
       this.game.camera,
       backgroundColor,
-      1
+      0
     );
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
@@ -87,11 +87,12 @@ export default class RadarRenderer {
   }
 
   render(renderer: WebGLRenderer, dt: number) {
-    this.sceneComposer.render(dt / 1000);
     //this.overviewComposer.render(dt / 1000);
+    this.sceneComposer.render(dt / 1000);
   }
 
   destructor() {
+    this.overviewTarget.dispose();
     this.overviewComposer.dispose();
     this.sceneComposer.dispose();
   }
