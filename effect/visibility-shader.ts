@@ -6,6 +6,8 @@ import {
   radarPingSpeed,
   radarPingInnerThickness,
   radarPingOuterThickness,
+  radarPingFadeStart,
+  radarPingFadeEnd
 } from "../game/assets.ts";
 
 const defines = {
@@ -14,6 +16,8 @@ const defines = {
   RADAR_SPEED: radarPingSpeed,
   RADAR_INNER_THICKNESS: radarPingInnerThickness,
   RADAR_OUTER_THICKNESS: radarPingOuterThickness,
+  RADAR_FADE_START: radarPingFadeStart,
+  RADAR_FADE_END: radarPingFadeEnd,
 };
 
 const uniforms = {
@@ -56,11 +60,13 @@ void main() {
   vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
   float distFromPlayer = distance(PlayerPosition, worldPos);
   float playerVisibility = smoothstep(float(PLAYER_OUTER_RADIUS), float(PLAYER_INNER_RADIUS), distFromPlayer);
-  float distFromRadar = distance(RadarPosition, worldPos);
-  float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(, abs(distFromRadar - (float(RADAR_SPEED) * RadarTime)));
+  float radarRadius = float(RADAR_SPEED) * RadarTime;
+  float distFromRadar = abs(distance(RadarPosition, worldPos) - radarRadius);
+  float radarFade = smoothstep(float(RADAR_FADE_END), float(RADAR_FADE_START), RadarTime);
+  float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(RADAR_INNER_THICKNESS) * radarFade, distFromRadar);
   vec4 target = texture2D(tDiffuse, vUv);
   vec4 source = texture2D(SourceImage, vUv);
-  gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility));
+  gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility * radarFade));
 }
 `;
 
