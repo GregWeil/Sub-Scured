@@ -5,6 +5,7 @@ import {} from "../game/assets.ts";
 const defines = {};
 
 const uniforms = {
+  tDiffuse: { value: null },
   PositionBounds: { value: new Vector4() },
 };
 
@@ -20,13 +21,20 @@ void main() {
 const fragmentShader = `
 precision highp float;
 
+uniform sampler2D tDiffuse;
 uniform vec4 PositionBounds;
 
 varying vec2 vUv;
 
+vec4 blend(vec4 source, vec4 target) {
+  float alpha = source.a + target.a * (1.0 - source.a);
+  vec3 color = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / alpha;
+  return vec4(color, alpha);
+}
+
 void main() {
   vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
-  gl_FragColor = vec4(vUv.x, vUv.y, 1.0, 1.0);
+  gl_FragColor = blend(tDiffuse, vec4(vUv.x, vUv.y, 1.0, 1.0));
 }
 `;
 

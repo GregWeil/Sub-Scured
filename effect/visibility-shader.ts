@@ -54,12 +54,6 @@ uniform float TransitionAmount;
 
 varying vec2 vUv;
 
-vec4 blend(vec4 source, vec4 target) {
-  float alpha = source.a + target.a * (1.0 - source.a);
-  vec3 color = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / alpha;
-  return vec4(color, alpha);
-}
-
 void main() {
   vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
   float distFromPlayer = distance(PlayerPosition, worldPos);

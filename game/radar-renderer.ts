@@ -117,18 +117,14 @@ export default class RadarRenderer {
     this.sceneComposer.renderToScreen = false;
 
     this.screenComposer = new EffectComposer(renderer);
-    this.screenBackground = new ShaderPass(WaterBackgroundShader);
-    this.screenComposer.addPass(this.screenBackground);
-    const screenOverviewPass = new RenderPass(
-      this.overviewScene,
-      this.game.camera
+    this.screenComposer.addPass(
+      new RenderPass(this.overviewScene, this.game.camera)
     );
-    screenOverviewPass.clear = false;
-    screenOverviewPass.clearDepth = true;
-    this.screenComposer.addPass(screenOverviewPass);
     this.screenComposer.addPass(new FilmPass(0.8, 0.2, 648, false));
     this.screenVisibility = new ShaderPass(VisibilityShader);
     this.screenComposer.addPass(this.screenVisibility);
+    this.screenBackground = new ShaderPass(WaterBackgroundShader);
+    this.screenComposer.addPass(this.screenBackground);
     this.screenComposer.addPass(new FilmPass(0.35, 0.05, 648, false));
 
     this.sound = new Howl({ src: [radarPingSound] });
@@ -176,7 +172,7 @@ export default class RadarRenderer {
     const tempOverviewTarget1 = this.overviewTarget1;
     this.overviewTarget1 = this.overviewTarget2;
     this.overviewTarget2 = tempOverviewTarget1;
-    
+
     renderer.setRenderTarget(this.overviewTarget1);
     renderer.clear();
     this.overviewTargetQuad.material.uniforms.tDiffuse.value =
