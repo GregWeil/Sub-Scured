@@ -57,7 +57,7 @@ private turnAcc: number;
     let direc = 0;
     if (go === 1) {
         direc = 1;
-      }else {
+      }else if(go === -1) {
         direc = -1;
       }
     if (this.turnAcc < 5 && go) {
