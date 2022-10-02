@@ -75,7 +75,7 @@ export default class RadarRenderer {
         this.overviewCamera.right - this.overviewCamera.left,
         this.overviewCamera.bottom - this.overviewCamera.top
       ),
-      new MeshBasicMaterial({ map: this.overviewComposer.readBuffer.texture })
+      new MeshBasicMaterial({ map: this.overviewTarget.texture })
     );
     this.overviewQuad.rotation.set(0, Math.PI, Math.PI);
     this.overviewScene.add(this.overviewQuad);
@@ -128,7 +128,6 @@ export default class RadarRenderer {
 
     this.sceneComposer.render(dt / 1000);
 
-    this.overviewQuad.material.map = this.overviewComposer.readBuffer.texture;
     this.screenTexture.uniforms.SourceImage.value =
       this.sceneComposer.readBuffer.texture;
     this.screenTexture.uniforms.PositionBounds.value.set(

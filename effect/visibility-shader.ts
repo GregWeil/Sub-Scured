@@ -4,6 +4,7 @@ import {
   playerVisibilityInnerRadius,
   playerVisibilityOuterRadius,
   radarPingSpeed,
+  radarPingAcceleration,
   radarPingInnerThickness,
   radarPingOuterThickness,
   radarPingFadeStart,
@@ -14,6 +15,7 @@ const defines = {
   PLAYER_INNER_RADIUS: playerVisibilityInnerRadius,
   PLAYER_OUTER_RADIUS: playerVisibilityOuterRadius,
   RADAR_SPEED: radarPingSpeed,
+  RADAR_ACCELERATION: radarPingAcceleration,
   RADAR_INNER_THICKNESS: radarPingInnerThickness,
   RADAR_OUTER_THICKNESS: radarPingOuterThickness,
   RADAR_FADE_START: radarPingFadeStart,
@@ -60,7 +62,7 @@ void main() {
   vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
   float distFromPlayer = distance(PlayerPosition, worldPos);
   float playerVisibility = smoothstep(float(PLAYER_OUTER_RADIUS), float(PLAYER_INNER_RADIUS), distFromPlayer);
-  float radarRadius = float(RADAR_SPEED) * RadarTime;
+  float radarRadius = (float(RADAR_SPEED) + float(RADAR_ACCELERATION) * RadarTime / 2.0) * RadarTime;
   float distFromRadar = abs(distance(RadarPosition, worldPos) - radarRadius);
   float radarFade = smoothstep(float(RADAR_FADE_END), float(RADAR_FADE_START), RadarTime);
   float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(RADAR_INNER_THICKNESS) * radarFade, distFromRadar);
