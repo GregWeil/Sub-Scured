@@ -24,9 +24,9 @@ export default class RadarRenderer {
   private pulseX: number;
   private pulseY: number;
 
-private overviewCamera:OrthographicCamera;
-private overviewTarget:WebGLRenderTarget;
-private overviewComposer: EffectComposer;
+  private overviewCamera: OrthographicCamera;
+  private overviewTarget: WebGLRenderTarget;
+  private overviewComposer: EffectComposer;
 
   private sceneComposer: EffectComposer;
 
@@ -37,14 +37,17 @@ private overviewComposer: EffectComposer;
     this.timer = 10;
     this.pulseX = 0;
     this.pulseY = 0;
-    
-    const [x,y] = this.game.map.getWorldOrigin();
-    this.overviewCamera = new OrthographicCamera(x,y,-x,-y,0,100)
+
+    const [x, y] = this.game.map.getWorldOrigin();
+    this.overviewCamera = new OrthographicCamera(x, -x, y, -y, 0, 100);
     this.overviewCamera.position.z = 10;
-    this.overviewTarget = new WebGLRenderTarget(512,512);
-    this.overviewComposer = new EffectComposer(renderer,this.overviewTarget);
-    this.sceneComposer.addPass(new RenderPass(this.game.scene, this.overviewCamera));
-    
+    this.overviewCamera.updateProjectionMatrix();
+    this.overviewTarget = new WebGLRenderTarget(512, 512);
+    this.overviewComposer = new EffectComposer(renderer, this.overviewTarget);
+    this.overviewComposer.addPass(
+      new RenderPass(this.game.scene, this.overviewCamera)
+    );
+
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new TAARenderPass(
       this.game.scene,
@@ -75,7 +78,8 @@ private overviewComposer: EffectComposer;
   }
 
   render(renderer: WebGLRenderer, dt: number) {
-    this.sceneComposer.render(dt / 1000);
+    //this.sceneComposer.render(dt / 1000);
+    this.overviewComposer.render(dt / 1000);
   }
 
   destructor() {
