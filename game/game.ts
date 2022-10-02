@@ -3,12 +3,13 @@ import Player from "./player";
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
 import Input from "./input";
-import { backgroundColor } from "./constants";
+import RadarRenderer from './radar-renderer'
 import { getLerpFactor } from "../util/math";
 
 export default class Game {
   scene: Scene;
   camera: OrthographicCamera;
+  radar:RadarRenderer;
   map: TriangleMap;
   player: Player;
   overlay: GridOverlay;
@@ -16,6 +17,7 @@ export default class Game {
   constructor() {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
+    this.radar=new RadarRenderer(this);
     this.map = new TriangleMap(this.scene, 100, 200, 15);
     this.player = new Player(this);
     this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
@@ -30,6 +32,7 @@ export default class Game {
     );
     this.camera.position.z = 10;
     this.overlay.update(this.camera.position);
+    this.radar.update(dt, this.player.getPosition());
   }
 
   render(renderer: WebGLRenderer) {
@@ -40,7 +43,6 @@ export default class Game {
     this.camera.top = -scale * size.y;
     this.camera.bottom = scale * size.y;
     this.camera.updateProjectionMatrix();
-    renderer.setClearColor(backgroundColor, 1);
-    renderer.render(this.scene, this.camera);
+    this.radar.render(renderer);
   }
 }
