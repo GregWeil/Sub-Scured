@@ -106,7 +106,12 @@ export default class RadarRenderer {
     this.overviewScene.add(this.overviewQuad);
 
     this.sceneComposer = new EffectComposer(renderer);
-    const renderPass = new TAARenderPass(this.game.scene, this.game.camera);
+    const renderPass = new TAARenderPass(
+      this.game.scene,
+      this.game.camera,
+      0x000000,
+      0
+    );
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
     this.sceneComposer.renderToScreen = false;
@@ -171,7 +176,9 @@ export default class RadarRenderer {
     const tempOverviewTarget1 = this.overviewTarget1;
     this.overviewTarget1 = this.overviewTarget2;
     this.overviewTarget2 = tempOverviewTarget1;
+    
     renderer.setRenderTarget(this.overviewTarget1);
+    renderer.clear();
     this.overviewTargetQuad.material.uniforms.tDiffuse.value =
       this.overviewTarget2.texture;
     this.applyShaderUniforms(
