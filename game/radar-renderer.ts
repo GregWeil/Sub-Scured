@@ -106,7 +106,7 @@ export default class RadarRenderer {
     this.overviewScene.add(this.overviewQuad);
 
     this.sceneComposer = new EffectComposer(renderer);
-    const renderPass = new TAARenderPass(
+    const renderPass = new RenderPass(
       this.game.scene,
       this.game.camera
     );

@@ -34,7 +34,8 @@ vec4 blend(vec4 source, vec4 target) {
 
 void main() {
   vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
-  gl_FragColor = blend(texture2D(tDiffuse, vUv), vec4(0.0, 0.0, 1.0, 1.0));
+  vec3 waterColor = vec3(0.05, 0.1, 0.3) + 0.1 * vec3(vUv, 0.0);
+  gl_FragColor = blend(texture2D(tDiffuse, vUv), vec4(waterColor, 1.0));
 }
 `;
 
