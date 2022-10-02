@@ -16,7 +16,14 @@ private turnAcc: number;
   constructor(game: Game) {
     this.game = game;
     this.mesh = new Group();
-    ModelLoader.load(playerModel,gltf=>this.mesh.add(gltf.scene));
+    ModelLoader.load(playerModel,gltf=>{
+      const group = new Group();
+      group.add(gltf.scene);
+      this.mesh.add(group);
+      group.position.set(0, 0, 0);
+      group.scale.set(5, 5, 5)
+      group.rotation.set(-Math.PI/2,Math.PI,0)
+    });
     this.game.scene.add(this.mesh);
     this.impulseAcc=0;
     this.turnAcc=0;
