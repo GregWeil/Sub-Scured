@@ -19,7 +19,7 @@ export default class Game {
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 100, 200, 15);
     this.player = new Player(this);
-    this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
+    //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
   }
 
@@ -30,7 +30,7 @@ export default class Game {
       getLerpFactor(0.9, dt / 1000)
     );
     this.camera.position.z = 10;
-    this.overlay.update(this.camera.position);
+    //this.overlay.update(this.camera.position);
     this.radar.update(dt, this.player.getPosition());
   }
 

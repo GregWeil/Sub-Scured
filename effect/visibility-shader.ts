@@ -38,12 +38,16 @@ vec4 blend(vec4 source, vec4 target) {
   return vec4(color, alpha);
 }
 
+vec2 unmix(vec2 left, vec2 right, vec2 val) {
+  return (val - left) / (right - left);
+}
+
 void main() {
-  vec2 playerUv = 
-  float distFromPlayer = distance(playerUv, vUv);
+  vec2 playerUv = unmix(PositionBounds.xy, PositionBounds.zw, PlayerPosition);
+  float distFromPlayer = distance(vUv, playerUv);
   vec4 target = texture2D(tDiffuse, vUv);
   vec4 source = texture2D(SourceImage, vUv);
-  gl_FragColor = mix(target, source, distFromPlayer);
+  gl_FragColor = mix(target, source, smoothstep(0.2, 0.05, distFromPlayer));
 }
 `;
 
