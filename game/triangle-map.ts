@@ -47,7 +47,7 @@ export default class TriangleMap {
     let position = new Vector2(this.width / 2, this.height / 2);
     let direction = new Vector2(0, 1);
     for (let i = 0; i < 250; ++i) {
-      const angle = Math.random() * Math.PI * 2;
+      const angle = (Math.random() - 0.5) * Math.PI;
       const distance = 5 + Math.random() * 20;
       direction.rotateAround(new Vector2(), angle);
       const next = direction.clone().multiplyScalar(distance).add(position);
@@ -60,10 +60,25 @@ export default class TriangleMap {
         );
         if (!hit) break;
         const [, , cx, cy] = hit;
-        console.log(hit);
         this.grid[cx * this.height + cy] = 0;
       }
       position = next;
+    }
+
+    for (let i = 0; i < 2; ++i) {
+      const toRemove = [];
+      for (let x = 5; x < this.width - 5; ++x) {
+        for (let y = 5; y < this.height - 5; ++y) {
+          const adjacent = this.getAdjacent(x, y);
+          const solid = this.grid[x * this.height + y] > 0;
+          if (!solid) {
+            toRemove.push(...adjacent);
+          }
+        }
+      }
+      for (const [x, y] of toRemove) {
+        this.grid[x * this.height + y] = 0;
+      }
     }
 
     this.generateMesh();
@@ -162,7 +177,7 @@ export default class TriangleMap {
   raycast(x1: number, y1: number, x2: number, y2: number) {
     const [tx1, ty1] = this.worldToTriangle(x1, y1);
     const [cx1, cy1] = this.triangleToCell(tx1, ty1);
-    if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1];
+    if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1, cx1, cy1];
     const [tx2, ty2] = this.worldToTriangle(x2, y2);
 
     const checked = new Set([`${cx1}_${cy1}`]);
