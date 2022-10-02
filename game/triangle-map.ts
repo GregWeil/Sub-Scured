@@ -44,9 +44,9 @@ export default class TriangleMap {
   private generateMap() {
     this.grid.fill(1);
 
-    let position = new Vector2(this.width / 2, this.height / 2);
+    let position = new Vector2(...this.worldToCell(0, 0));
     let direction = new Vector2(0, 1);
-    for (let i = 0; i < 250; ++i) {
+    for (let i = 0; i < 600; ++i) {
       const angle = (Math.random() - 0.5) * Math.PI;
       const distance = 5 + Math.random() * 20;
       direction.rotateAround(new Vector2(), angle);
@@ -65,13 +65,17 @@ export default class TriangleMap {
       position = next;
     }
 
-    for (let i = 0; i < 2; ++i) {
+    for (let i = 0; i < 10; ++i) {
       const toRemove = [];
       for (let x = 5; x < this.width - 5; ++x) {
         for (let y = 5; y < this.height - 5; ++y) {
           const adjacent = this.getAdjacent(x, y);
           const solid = this.grid[x * this.height + y] > 0;
-          if (!solid) {
+          if (solid) {
+            if (!adjacent.some(([x, y]) => this.grid[x * this.height + y] > 0)) {
+              toRemove.push([x, y]);
+            }
+          } else if (Math.random() < 0.5) {
             toRemove.push(...adjacent);
           }
         }

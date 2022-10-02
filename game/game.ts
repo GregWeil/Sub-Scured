@@ -17,7 +17,7 @@ export default class Game {
   constructor(renderer: WebGLRenderer) {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
-    this.map = new TriangleMap(this.scene, 100, 200, 15);
+    this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
