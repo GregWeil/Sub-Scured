@@ -1,4 +1,5 @@
 import {
+  DoubleSide,
   Mesh,
   PlaneGeometry,
   MeshBasicMaterial,
@@ -38,9 +39,11 @@ export default class RadarRenderer {
 
     this.renderScene = new Scene();
     this.renderPlane = new Mesh(
-      new PlaneGeometry(10, 10),
-      new MeshBasicMaterial({ color: 0xffffff })
+      new PlaneGeometry(2, 2),
+      new MeshBasicMaterial({ map: this.scratchTarget.texture })
     );
+    this.renderPlane.rotation.y = Math.PI;
+    this.renderPlane.rotation.z = Math.PI;
     this.renderScene.add(this.renderPlane);
     this.renderCamera = new OrthographicCamera(-1, 1, -1, 1, 1, 10);
     this.renderCamera.position.z = 5;
@@ -56,7 +59,6 @@ export default class RadarRenderer {
       this.pulseX = playerPosition.x;
       this.pulseY = playerPosition.y;
     }
-    this.renderPlane.rotateOnAxis(new Vector3(0, 1, 1).normalize(), dt / 1000);
   }
 
   render(renderer: WebGLRenderer) {
