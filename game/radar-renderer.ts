@@ -79,6 +79,7 @@ export default class RadarRenderer {
 
     this.screenComposer = new EffectComposer(renderer);
     this.screenOverview = new TexturePass(this.overviewComposer.readBuffer.texture);
+    this.screenComposer.addPass(this.screenOverview);
     this.screenTexture = new ShaderPass(VisibilityShader);
     this.screenComposer.addPass(this.screenTexture);
     this.screenComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
