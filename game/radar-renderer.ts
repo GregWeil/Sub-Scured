@@ -11,8 +11,7 @@ import {
   Vector3,
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { SMAAPass } from "three/examples/jsm/postprocessing/SMAAPass.js";
+import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -53,12 +52,10 @@ export default class RadarRenderer {
     this.renderCamera = new OrthographicCamera(-1, 1, -1, 1, 1, 10);
     this.renderCamera.position.z = 5;
     this.sceneComposer = new EffectComposer(renderer);
-    this.sceneComposer.addPass(
-      new RenderPass(this.game.scene, this.game.camera)
-    );
-    
-    this.sceneComposer.addPass(
-      new SMAAPass(renderer)
+    const renderPass = new TAARenderPass(this.game.scene, this.game.camera,backgroundColor,1)
+    renderPass.
+    this.sceneComposer.addPass(renderPass
+      
     );
 
     this.sound = new Howl({ src: [radarPing] });
@@ -75,7 +72,8 @@ export default class RadarRenderer {
   }
 
 resize(renderer:WebGLRenderer){
-      this.sceneComposer.setSize(renderer.getSize(new Vector2()));
+  const size=renderer.getSize(new Vector2())
+      this.sceneComposer.setSize(size.x,size.y);
       this.sceneComposer.setPixelRatio(renderer.getPixelRatio());
 }
 
