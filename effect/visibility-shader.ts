@@ -1,9 +1,15 @@
 import { Vector2, Vector4 } from "three";
 
-import { playerVisibilityRadius } from "../game/assets.ts";
+import {
+  playerVisibilityInnerRadius,
+  playerVisibilityOuterRadius,
+  radarPingSpeed,
+  radarPingThickness
+} from "../game/assets.ts";
 
 const defines = {
-  PLAYER_RADIUS: playerVisibilityRadius,
+  PLAYER_INNER_RADIUS: playerVisibilityInnerRadius,
+  PLAYER_OUTER_RADIUS: playerVisibilityOuterRadius,
 };
 
 const uniforms = {
@@ -38,16 +44,12 @@ vec4 blend(vec4 source, vec4 target) {
   return vec4(color, alpha);
 }
 
-vec2 unmix(vec2 left, vec2 right, vec2 val) {
-  return (val - left) / (right - left);
-}
-
 void main() {
-  vec2 playerUv = unmix(PositionBounds.xy, PositionBounds.zw, PlayerPosition);
-  float distFromPlayer = distance(vUv, playerUv);
+  vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
+  float distFromPlayer = distance(PlayerPosition, worldPos);
   vec4 target = texture2D(tDiffuse, vUv);
   vec4 source = texture2D(SourceImage, vUv);
-  gl_FragColor = mix(target, source, smoothstep(0.2, 0.05, distFromPlayer));
+  gl_FragColor = mix(target, source, smoothstep(float(PLAYER_OUTER_RADIUS), float(PLAYER_INNER_RADIUS), distFromPlayer));
 }
 `;
 

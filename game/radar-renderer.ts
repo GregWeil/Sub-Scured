@@ -133,9 +133,9 @@ export default class RadarRenderer {
       this.sceneComposer.readBuffer.texture;
     this.screenTexture.uniforms.PositionBounds.value.set(
       this.game.camera.position.x + this.game.camera.left,
-      this.game.camera.position.y + this.game.camera.top,
+      this.game.camera.position.y + this.game.camera.bottom,
       this.game.camera.position.x + this.game.camera.right,
-      this.game.camera.position.y + this.game.camera.bottom
+      this.game.camera.position.y + this.game.camera.top
     );
     this.screenTexture.uniforms.PlayerPosition.value.set(
       playerPosition.x,
