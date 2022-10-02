@@ -13,7 +13,10 @@ import Game from "./game";
 import Input from "./game/input";
 
 const renderer = new WebGLRenderer({ antialias: true });
-const resize = () => renderer.setSize(window.innerWidth, window.innerHeight);
+const resize = () => {
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+};
 window.addEventListener("resize", resize);
 resize();
 document.body.insertBefore(renderer.domElement, document.body.firstChild);
