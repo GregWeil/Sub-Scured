@@ -39,12 +39,13 @@ vec4 blend(vec4 source, vec4 target) {
 
 void main() {
   vec2 unused;
-  vec2 worldPos = mix(vec2(0.0, 0.0), mix(PositionBounds.xy, PositionBounds.zw, vUv), 0.8);
-  float noise1 = psrdnoise(worldPos * 0.01, vec2(0.0, 0.0), Time + 1.0, unused);
-  float noise2 = psrdnoise(worldPos * 0.1, vec2(0.0, 0.0), Time + 10.0, unused);
-  float noise3 = psrdnoise(worldPos * 0.4, vec2(0.0, 0.0), Time + 100.0, unused);
-  float noiseg = psrdnoise(worldPos * 0.4, vec2(0.0, 0.0), Time + 1000.0, unused);
-  vec3 waterColor = vec3(0.1, 0.01 + 0.05 * noiseg, 0.15 + noise1 * 0.05 + noise2 * 0.01 + noise3 * 0.01) + 0.1 * vec3(vUv, 0.0);
+  vec2 offset = -mix(PositionBounds.xy, PositionBounds.zw, 0.5);
+  vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
+  float noise1 = psrdnoise((worldPos + 0.5 * offset) * 0.01, vec2(0.0, 0.0), Time + 1.0, unused);
+  float noise2 = psrdnoise((worldPos + offset) * 0.1, vec2(0.0, 0.0), Time + 10.0, unused);
+  float noise3 = psrdnoise((worldPos + offset) * 0.4, vec2(0.0, 0.0), Time + 100.0, unused);
+  float noiseg = psrdnoise((worldPos + offset) * 0.4, vec2(0.0, 0.0), Time + 1000.0, unused);
+  vec3 waterColor = vec3(0.03, 0.01 + 0.05 * noiseg, 0.15 + noise1 * 0.05 + noise2 * 0.01 + noise3 * 0.01) + 0.1 * vec3(vUv, 0.0);
   gl_FragColor = blend(texture2D(tDiffuse, vUv), vec4(waterColor, 1.0));
 }
 `;
