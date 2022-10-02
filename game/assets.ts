@@ -16,4 +16,5 @@ export const radarPingFadeStart = 0;
 export const radarPingFadeEnd = 5;
 
 export const radarMapTransitionSpeed = 0.4;
-export const radarMapFadeSpeed = 0.2;
+export const radarMapFadeInterval = 0.1;
+export const radarMapFadeAmount = 0.01;

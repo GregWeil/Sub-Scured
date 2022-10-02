@@ -54,23 +54,14 @@ private turnAcc: number;
   
   turn(input: Input){
     const go = input.getHorizontal();
-    let direc = 0;
-    if (go === 1) {
-        direc = 1;
-      }else if(go === -1) {
-        direc = -1;
-      }
-    if (this.turnAcc < 5 && go) {
-      this.turnAcc += 0.01;
-    }else if (this.turnAcc >= 5 && go) {
-      this.turnAcc = 5;
-    }else if (!go && this.turnAcc > 0) {
-      this.turnAcc -= 0.01;
-    }else if (!go && this.turnAcc <= 0) {
-      this.turnAcc = 0;
+    this.turnAcc += go*0.1;
+    if(this.turnAcc>5)this.turnAcc=5;
+    if(this.turnAcc<-5)this.turnAcc=-5;
+    if(Math.abs(go)<0.5){
+      if (this.turnAcc>0)this.turnAcc -= 0.1; 
+      if (this.turnAcc<0)this.turnAcc += 0.1;
     }
-    console.log(this.turnAcc * direc);
-    return this.turnAcc * direc;
+    return this.turnAcc;
   }
 
   getPosition() {

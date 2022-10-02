@@ -26,7 +26,8 @@ import Game from "./game";
 import {
   radarPingSound,
   radarMapTransitionSpeed,
-  radarMapFadeSpeed,
+  radarMapFadeInterval,
+  radarMapFadeAmount,
 } from "./assets";
 import VisibilityShader from "../effect/visibility-shader";
 import WaterBackgroundShader from "../effect/water-background-shader";
@@ -44,6 +45,7 @@ export default class RadarRenderer {
   private overviewTarget2: WebGLRenderTarget;
   private overviewTargetQuad: FullScreenQuad;
   private overviewFadeQuad: FullScreenQuad;
+  private overviewFadeTimer: number;
   private overviewComposer: EffectComposer;
   private overviewScene: Scene;
   private overviewQuad: Mesh;
@@ -101,8 +103,13 @@ export default class RadarRenderer {
       })
     );
     this.overviewFadeQuad = new FullScreenQuad(
-      new MeshBasicMaterial({ color: 0x000000, blending: SubtractiveBlending })
+      new MeshBasicMaterial({
+        color: 0x000000,
+        opacity: radarMapFadeAmount,
+        transparent: true,
+      })
     );
+    this.overviewFadeTimer = 0;
     this.overviewScene = new Scene();
     this.overviewQuad = new Mesh(
       new PlaneGeometry(
@@ -193,10 +200,11 @@ export default class RadarRenderer {
     this.overviewTargetQuad.material.uniforms.TransitionAmount.value =
       getLerpFactor(radarMapTransitionSpeed, dt / 60);
     this.overviewTargetQuad.render(renderer);
-    this.overviewFadeQuad.material.color = new Color(0xffffff).multiplyScalar(
-      getLerpFactor(radarMapFadeSpeed, dt / 60)
-    );
-    this.overviewFadeQuad.render(renderer);
+    while (this.overviewFadeTimer > 0) {
+      this.overviewFadeTimer -= radarMapFadeInterval;
+      this.overviewFadeQuad.render(renderer);
+    }
+    this.overviewFadeTimer += dt / 1000;
     renderer.setRenderTarget(null);
 
     this.overviewQuad.material.map = this.overviewTarget1.texture;
