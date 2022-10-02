@@ -4,12 +4,16 @@ import {
   playerVisibilityInnerRadius,
   playerVisibilityOuterRadius,
   radarPingSpeed,
-  radarPingThickness
+  radarPingInnerThickness,
+  radarPingOuterThickness,
 } from "../game/assets.ts";
 
 const defines = {
   PLAYER_INNER_RADIUS: playerVisibilityInnerRadius,
   PLAYER_OUTER_RADIUS: playerVisibilityOuterRadius,
+  RADAR_SPEED: radarPingSpeed,
+  RADAR_INNER_THICKNESS: radarPingInnerThickness,
+  RADAR_OUTER_THICKNESS: radarPingOuterThickness,
 };
 
 const uniforms = {
@@ -17,6 +21,8 @@ const uniforms = {
   SourceImage: { value: null },
   PositionBounds: { value: new Vector4() },
   PlayerPosition: { value: new Vector2() },
+  RadarPosition: { value: new Vector2() },
+  RadarTime: { value: 0 },
 };
 
 const vertexShader = `
@@ -35,6 +41,8 @@ uniform sampler2D tDiffuse;
 uniform sampler2D SourceImage;
 uniform vec4 PositionBounds;
 uniform vec2 PlayerPosition;
+uniform vec2 RadarPosition;
+uniform float RadarTime;
 
 varying vec2 vUv;
 
@@ -47,9 +55,12 @@ vec4 blend(vec4 source, vec4 target) {
 void main() {
   vec2 worldPos = mix(PositionBounds.xy, PositionBounds.zw, vUv);
   float distFromPlayer = distance(PlayerPosition, worldPos);
+  float playerVisibility = smoothstep(float(PLAYER_OUTER_RADIUS), float(PLAYER_INNER_RADIUS), distFromPlayer);
+  float distFromRadar = distance(RadarPosition, worldPos);
+  float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(, abs(distFromRadar - (float(RADAR_SPEED) * RadarTime)));
   vec4 target = texture2D(tDiffuse, vUv);
   vec4 source = texture2D(SourceImage, vUv);
-  gl_FragColor = mix(target, source, smoothstep(float(PLAYER_OUTER_RADIUS), float(PLAYER_INNER_RADIUS), distFromPlayer));
+  gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility));
 }
 `;
 

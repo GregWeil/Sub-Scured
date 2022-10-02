@@ -9,5 +9,6 @@ export const radarPing = assetPath + "/bleepfinal.wav";
 export const playerVisibilityOuterRadius = 50;
 export const playerVisibilityInnerRadius = 25;
 
-export const radarPingSpeed = 25;
-export const radarPingThickness = 5;
+export const radarPingSpeed = 30;
+export const radarPingInnerThickness = 10;
+export const radarPingOuterThickness = 10;

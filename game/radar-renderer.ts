@@ -141,6 +141,11 @@ export default class RadarRenderer {
       playerPosition.x,
       playerPosition.y
     );
+    this.screenTexture.uniforms.RadarPosition.value.set(
+      this.pulseX,
+      this.pulseY
+    );
+    this.screenTexture.uniforms.RadarTime.value = this.timer;
 
     this.screenComposer.render(dt / 1000);
   }
