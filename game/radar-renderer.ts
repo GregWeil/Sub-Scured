@@ -203,8 +203,16 @@ export default class RadarRenderer {
     this.overviewTargetQuad.render(renderer);
     while (this.overviewFadeTimer > 0) {
       this.overviewFadeTimer -= radarMapFadeInterval;
-      this.overviewFadeQuad.uniforms.DeltaTime.value=radarMapFadeInterval;
-      
+      const tempOverviewTarget1 = this.overviewTarget1;
+      this.overviewTarget1 = this.overviewTarget2;
+      this.overviewTarget2 = tempOverviewTarget1;
+      renderer.setRenderTarget(this.overviewTarget1);
+      renderer.clear();
+      this.overviewFadeQuad.material.uniforms.tDiffuse.value =
+        this.overviewTarget2.texture;
+      this.overviewFadeQuad.material.uniforms.DeltaTime.value =
+        radarMapFadeInterval;
+      this.overviewFadeQuad.material.uniforms.Time.value = this.time;
       this.overviewFadeQuad.render(renderer);
     }
     this.overviewFadeTimer += dt / 1000;
