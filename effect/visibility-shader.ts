@@ -35,7 +35,8 @@ varying vec2 vUv;
 void main() {
   vec4 source = texture2D(SourceImage, vUv);
   vec4 target = texture2D(tDiffuse, vUv);
-  gl_FragColor = mix(target, source, source.a);
+  gl_FragColor.a = source.a + target.a * (1.0 - source.a);
+  gl_FragColor.rgb = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / gl_FragColor.a;
 }
 `;
 

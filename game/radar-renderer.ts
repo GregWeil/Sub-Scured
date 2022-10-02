@@ -1,6 +1,10 @@
 import {
   NearestFilter,
   OrthographicCamera,
+  PlaneGeometry,
+  MeshBasicMaterial,
+  Mesh
+  Scene,
   WebGLRenderTarget,
   WebGLRenderer,
   Vector2,
@@ -27,6 +31,8 @@ export default class RadarRenderer {
   private overviewCamera: OrthographicCamera;
   private overviewTarget: WebGLRenderTarget;
   private overviewComposer: EffectComposer;
+private overviewQuad: Mesh
+private overviewScene: Scene
 
   private sceneComposer: EffectComposer;
 
@@ -65,6 +71,11 @@ export default class RadarRenderer {
       new RenderPass(this.game.scene, this.overviewCamera)
     );
     this.overviewComposer.renderToScreen = false;
+    const overview
+    this.overviewQuad = new Mesh(new Plane(this.overviewCamera.right-this.overviewCamera.left))
+    this.overviewScene = new Scene();
+    
+    this.overviewScene
 
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new TAARenderPass(
