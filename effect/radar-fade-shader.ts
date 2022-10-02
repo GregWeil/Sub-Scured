@@ -35,9 +35,10 @@ ${PerlinNoise}
 void main() {
   vec2 unused;
   vec4 current = texture2D(tDiffuse, vUv);
-  float subtract = /*psrdnoise(vUv, vec2(0.0, 0.0), Time, unused)*/1.0 * float(FADE_SUBTRACT) * DeltaTime;
+  float subtract = psrdnoise(vUv * 100.0, vec2(0.0, 0.0), Time * 10.0, unused) * float(FADE_SUBTRACT) * DeltaTime;
   float amount = 1.0 - pow(1.0 - float(FADE_AMOUNT), DeltaTime);
   gl_FragColor = mix(texture2D(tDiffuse, vUv), vec4(0.0, 0.0, 0.0, 1.0), amount) - vec4(1.0, 1.0, 1.0, 0.0) * subtract;
+  gl_FragColor = clamp(gl_FragColor, vec4(0.0), vec4(1.0));
 }
 `;
 
