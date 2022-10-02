@@ -21,22 +21,9 @@ export default class Player {
     this.game.scene.add(this.mesh);
   }
 
-  update(dt: number, input: Input, ) {
-    const horizontal = input.getHorizontal();
-    const turnAcc = 0;
-    //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
-    const turn = this.mesh.rotateOnAxis(new Vector3(0, 0, 1).normalize(), (horizontal * dt) / 1000);
-    const vertical = input.getVertical();
-
-    console.log(impulseAcc);
-    this.mesh.position.y += (vertical * impulseAcc * dt) / 1000;
-    //this.mesh.translateOnAxis(turn, (vertical * impulseAcc * dt) / 1000);
-
-  }
-  
-
   impulse(input: Input){
-        let impulseAcc = 0;
+    let impulseAcc = 0;
+    const vertical = input.getVertical();
     if (impulseAcc < 50 && vertical) {
       impulseAcc += 5;
     }else if (impulseAcc >= 50 && vertical) {
@@ -44,9 +31,23 @@ export default class Player {
     }else if (!vertical && impulseAcc > 0) {
       impulseAcc -= 0.5;
     }
+    console.log(impulseAcc);
     return impulseAcc;
   }
 
+  update(dt: number, input: Input) {
+    const horizontal = input.getHorizontal();
+    const turnAcc = 0;
+    //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
+    const turn = this.mesh.rotateOnAxis(new Vector3(0, 0, 1).normalize(), (horizontal * dt) / 1000);
+    const vertical = input.getVertical();
+
+    //impulse();
+    this.mesh.position.y += (vertical * 50 * dt) / 1000;
+    //this.mesh.translateOnAxis(turn, (vertical * impulseAcc * dt) / 1000);
+
+  }
+  
   getPosition() {
     return this.mesh.position;
   }

@@ -54,19 +54,19 @@ export default class TriangleMap {
     let direction = new Vector2(0, 1);
     for (let i = 0; i < 100; ++i) {
       const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 10;
+      const distance = 5 + Math.random() * 20;
       direction.rotateAround(new Vector2(), angle);
       const next = direction.clone().multiplyScalar(distance).add(position);
       if (next.x < 0 || next.x >= this.width) continue;
       if (next.y < 0 || next.y >= this.height) continue;
-      let hit = this.raycast(
-        ...this.triangleToWorld(...this.cellToTriangle(position.x, position.y)),
-        ...this.triangleToWorld(...this.cellToTriangle(next.x, next.y))
-      );
-      console.log(hit);
-      if (hit) {
-        const [hitX, hitY] = hit;
-        this.grid[hitX * this.height + this.hitY] = 0;
+      for (let j = 0; j < 25; ++j) {
+        const hit = this.raycast(
+          ...this.cellToWorld(position.x, position.y),
+          ...this.cellToWorld(next.x, next.y)
+        );
+        if (!hit) break;
+        const [x, y] = this.worldToCell(hit);
+        this.grid[x * this.height + y] = 0;
       }
       position = next;
     }
@@ -125,6 +125,14 @@ export default class TriangleMap {
   private triangleToWorld(x: number, y: number): [number, number] {
     const [xo, yo] = this.getWorldOrigin();
     return [xo + x * this.size, yo + y * this.size];
+  }
+
+  private worldToCell(x: number, y: number): [number, number] {
+    return this.triangleToCell(...this.worldToTriangle(x, y));
+  }
+
+  private cellToWorld(x: number, y: number): [number, number] {
+    return this.triangleToWorld(...this.cellToTriangle(x, y));
   }
 
   private getTriangleVertices(x: number, y: number) {
