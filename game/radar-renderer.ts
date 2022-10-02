@@ -11,6 +11,7 @@ import {
   Vector3,
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
 import { Howl } from "howler";
 
@@ -23,6 +24,10 @@ export default class RadarRenderer {
   private pulseX: number;
   private pulseY: number;
 
+private overviewCamera:OrthographicCamera;
+private overviewTarget:WebGLRenderTarget;
+private overviewComposer: EffectComposer;
+
   private sceneComposer: EffectComposer;
 
   private sound: Howl;
@@ -33,6 +38,13 @@ export default class RadarRenderer {
     this.pulseX = 0;
     this.pulseY = 0;
     
+    const [x,y] = this.game.map.getWorldOrigin();
+    this.overviewCamera = new OrthographicCamera(x,y,-x,-y,0,100)
+    this.overviewCamera.position.z = 10;
+    this.overviewTarget = new WebGLRenderTarget(512,512);
+    this.overviewComposer = new EffectComposer(renderer,this.overviewTarget);
+    this.sceneComposer.addPass(new RenderPass(this.game.scene, this.overviewCamera));
+    
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new TAARenderPass(
       this.game.scene,
@@ -42,7 +54,6 @@ export default class RadarRenderer {
     );
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
-    this.sceneComposer.addPass(new GlitchPass());
 
     this.sound = new Howl({ src: [radarPing] });
   }
@@ -68,7 +79,7 @@ export default class RadarRenderer {
   }
 
   destructor() {
-    this.scratchTarget.dispose();
-    this.renderPlane.geometry.dispose();
+    this.overviewComposer.dispose();
+    this.sceneComposer.dispose();
   }
 }

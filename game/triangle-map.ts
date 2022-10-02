@@ -107,13 +107,6 @@ export default class TriangleMap {
     return [xo + x * this.size, yo + y * this.size];
   }
 
-  private getWorldOrigin(): [number, number] {
-    return [
-      (-this.width / 2 + 0.5) * this.size,
-      (-this.height / 4 + 0.5) * this.size,
-    ];
-  }
-
   private getTriangleVertices(x: number, y: number) {
     const [xc, yc] = this.cellToTriangle(x, y);
 
@@ -134,6 +127,13 @@ export default class TriangleMap {
   private getAdjacent(x: number, y: number) {
     const adjacent = [y % 4 < 2 ? x - 1 : x + 1, y % 2 === 0 ? y - 1 : y + 1];
     return [[x, y - 1], [x, y + 1], adjacent];
+  }
+
+  getWorldOrigin(): [number, number] {
+    return [
+      (-this.width / 2 + 0.5) * this.size,
+      (-this.height / 4 + 0.5) * this.size,
+    ];
   }
 
   raycast(x1: number, y1: number, x2: number, y2: number) {
