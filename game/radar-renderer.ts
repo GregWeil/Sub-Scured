@@ -10,8 +10,9 @@ import {
   Vector2,
   Vector3,
 } from "three";
-import {EffectComposer}from "three/examples/jsm/postprocessing/EffectComposer.js";
-import {RenderPass}from "three/examples/jsm/postprocessing/RenderPass.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -29,11 +30,11 @@ export default class RadarRenderer {
   private renderPlane: Mesh;
   private renderCamera: OrthographicCamera;
 
-private sceneComposer: EffectComposer;
+  private sceneComposer: EffectComposer;
 
   private sound: Howl;
 
-  constructor(game: Game,renderer:WebGLRenderer) {
+  constructor(game: Game, renderer: WebGLRenderer) {
     this.game = game;
     this.timer = 10;
     this.pulseX = 0;
@@ -52,7 +53,9 @@ private sceneComposer: EffectComposer;
     this.renderCamera = new OrthographicCamera(-1, 1, -1, 1, 1, 10);
     this.renderCamera.position.z = 5;
     this.sceneComposer = new EffectComposer(renderer);
-    this.sceneComposer.addPass(new RenderPass(this.game.scene,this.game.camera))
+    this.sceneComposer.addPass(
+      new TAARenderPass(this.game.scene, this.game.camera, backgroundColor, 1)
+    );
 
     this.sound = new Howl({ src: [radarPing] });
   }
@@ -67,7 +70,7 @@ private sceneComposer: EffectComposer;
     }
   }
 
-  render(renderer: WebGLRenderer,dt:number) {
+  render(renderer: WebGLRenderer, dt: number) {
     /*
     const resolution = renderer.getDrawingBufferSize(new Vector2());
     if (
@@ -86,7 +89,18 @@ private sceneComposer: EffectComposer;
     renderer.clear();
     renderer.render(this.renderScene, this.renderCamera);
     */
-    this.sceneComposer.render(dt/1000)
+    const size = renderer.getSize(new Vector2());
+    if (
+      this.sceneComposer.width !== size.x ||
+      this.sceneComposer.height !== size.y
+    ) {
+      this.scratchTarget.setSize(size);
+    }
+    const pixelRatio = renderer.getPixelRatio();
+    if (pixelRatio !== this.sceneComposer.pixelRatio) {
+      this.sceneComposer.setPixelRatio(pixelRatio);
+    }
+    this.sceneComposer.render(dt / 1000);
   }
 
   destructor() {

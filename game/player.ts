@@ -31,6 +31,7 @@ export default class Player {
     const vertical = input.getVertical();
     this.mesh.position.y += (vertical * 50 * dt) / 1000;
 
+    this.debug.children.forEach(mesh => mesh.geometry.dispose());
     this.debug.clear();
     const pointer = new Mesh(new SphereGeometry(5), new MeshNormalMaterial());
     [pointer.position.x, pointer.position.y] = input.getMouse();
