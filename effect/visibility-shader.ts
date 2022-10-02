@@ -32,17 +32,18 @@ uniform vec2 PlayerPosition;
 
 varying vec2 vUv;
 
-vec4 function blend(vec4 source, vec4 target) {
-  float a = source.a + target.a * (1.0 - source.a);
-  vec3 color = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / gl_FragColor.a;
-  
+vec4 blend(vec4 source, vec4 target) {
+  float alpha = source.a + target.a * (1.0 - source.a);
+  vec3 color = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / alpha;
+  return vec4(color, alpha);
 }
 
 void main() {
-  vec4 source = texture2D(SourceImage, vUv);
+  vec2 playerUv = 
+  float distFromPlayer = distance(playerUv, vUv);
   vec4 target = texture2D(tDiffuse, vUv);
-  gl_FragColor.a = source.a + target.a * (1.0 - source.a);
-  gl_FragColor.rgb = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / gl_FragColor.a;
+  vec4 source = texture2D(SourceImage, vUv);
+  gl_FragColor = mix(target, source, distFromPlayer);
 }
 `;
 

@@ -58,7 +58,7 @@ export default class RadarRenderer {
     );
     this.overviewCamera.position.z = 10;
     this.overviewCamera.updateProjectionMatrix();
-    this.overviewTarget = new WebGLRenderTarget(512, 512, {
+    this.overviewTarget = new WebGLRenderTarget(256, 256, {
       magFilter: NearestFilter,
     });
     this.overviewComposer = new EffectComposer(
@@ -122,11 +122,25 @@ export default class RadarRenderer {
   }
 
   render(renderer: WebGLRenderer, dt: number) {
+    Vector3 playerPosition = this.game.player.getPosition();
+    
     this.overviewComposer.render(dt / 1000);
+
     this.sceneComposer.render(dt / 1000);
+
     this.overviewQuad.material.map = this.overviewComposer.readBuffer.texture;
     this.screenTexture.uniforms.SourceImage.value =
       this.sceneComposer.readBuffer.texture;
+    this.screenTexture.uniforms.PositionBounds.value.set(
+      this.game.camera.left,
+      this.game.camera.top,
+      this.game.camera.right,
+      this.game.camera.bottom
+    );
+    this.screenTexture.uniforms.PlayerPosition.value.set(
+      playerPosition.x,playerPosition.y
+    )
+
     this.screenComposer.render(dt / 1000);
   }
 
