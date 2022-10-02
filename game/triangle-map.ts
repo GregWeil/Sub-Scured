@@ -44,32 +44,24 @@ export default class TriangleMap {
   private generateMap() {
     this.grid.fill(1);
 
-    for (let i = 0; i < 100; ++i) {
-      this.grid[
-        Math.floor(Math.random() * this.width) * this.height +
-          Math.floor(Math.random() * this.height)
-      ] = 0;
-    }
-
     let position = new Vector2(this.width / 2, this.height / 2);
     let direction = new Vector2(0, 1);
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 250; ++i) {
       const angle = Math.random() * Math.PI * 2;
       const distance = 5 + Math.random() * 20;
       direction.rotateAround(new Vector2(), angle);
       const next = direction.clone().multiplyScalar(distance).add(position);
-      if (next.x < 10 || next.x+10 >= this.width) continue;
-      if (next.y < 10 || next.y+10 >= this.height) continue;
-      for (let j = 0; j < 100; ++j) {
+      if (next.x < 10 || next.x + 10 >= this.width) continue;
+      if (next.y < 10 || next.y + 10 >= this.height) continue;
+      for (let j = 0; j < 1000; ++j) {
         const hit = this.raycast(
           ...this.cellToWorld(position.x, position.y),
           ...this.cellToWorld(next.x, next.y)
         );
         if (!hit) break;
-        const [x, y] = this.worldToCell(...hit);
-        [[x, y], ...this.getAdjacent(x, y)].forEach(([x, y]) => {
-          this.grid[x * this.height + y] = 0;
-        });
+        const [, , cx, cy] = hit;
+        console.log(hit);
+        this.grid[cx * this.height + cy] = 0;
       }
       position = next;
     }
@@ -196,7 +188,7 @@ export default class TriangleMap {
           hit = hits[i];
           hitDist = dist;
         }
-        return this.triangleToWorld(...hit);
+        return [...this.triangleToWorld(...hit), cx, cy];
       }
 
       for (const [acx, acy] of this.getAdjacent(cx, cy)) {

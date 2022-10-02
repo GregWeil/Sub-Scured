@@ -234,6 +234,9 @@ export default class RadarRenderer {
       this.game.camera
     );
     this.screenComposer.render(dt / 1000);
+    
+    renderer.clear();
+    renderer.render(this.game.scene, this.overviewCamera);
   }
 
   destructor() {
