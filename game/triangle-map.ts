@@ -132,7 +132,7 @@ export default class TriangleMap {
   getWorldOrigin(): [number, number] {
     return [
       (-this.width / 2 + 0.5) * this.size,
-      (-this.height / 4 + 0.5) * this.size,
+      (-this.height / 4 + 0.5) * this.size * triangleHeightFromSide,
     ];
   }
 

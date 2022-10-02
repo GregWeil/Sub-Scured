@@ -13,6 +13,7 @@ import {
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -39,14 +40,23 @@ export default class RadarRenderer {
     this.pulseY = 0;
 
     const [x, y] = this.game.map.getWorldOrigin();
-    this.overviewCamera = new OrthographicCamera(x, -x, y, -y, 0, 100);
+    const margin = 20;
+    this.overviewCamera = new OrthographicCamera(
+      x - margin,
+      margin - x,
+      y - margin,
+      margin - y,
+      0,
+      100
+    );
     this.overviewCamera.position.z = 10;
     this.overviewCamera.updateProjectionMatrix();
-    this.overviewTarget = new WebGLRenderTarget(512, 512);
+    this.overviewTarget = new WebGLRenderTarget(16, 16);
     this.overviewComposer = new EffectComposer(renderer, this.overviewTarget);
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
+    this.overviewComposer.addPass(new FilmPass(0.35, 0.025, 648, false))
 
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new TAARenderPass(
@@ -57,6 +67,7 @@ export default class RadarRenderer {
     );
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
+    this.sceneComposer.addPass(new FilmPass(0.35, 0.025, 648, false))
 
     this.sound = new Howl({ src: [radarPing] });
   }
