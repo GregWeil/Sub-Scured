@@ -1,6 +1,7 @@
 import {
   NearestFilter,
-  MultiplyBlending,
+  SubtractiveBlending,
+  Color,
   OrthographicCamera,
   PlaneGeometry,
   MeshBasicMaterial,
@@ -22,7 +23,11 @@ import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
-import { radarPingSound, radarMapTransitionSpeed, radarMapTransitionSpeed } from "./assets";
+import {
+  radarPingSound,
+  radarMapTransitionSpeed,
+  radarMapFadeSpeed,
+} from "./assets";
 import VisibilityShader from "../effect/visibility-shader";
 import WaterBackgroundShader from "../effect/water-background-shader";
 import { getLerpFactor } from "../util/math";
@@ -96,7 +101,7 @@ export default class RadarRenderer {
       })
     );
     this.overviewFadeQuad = new FullScreenQuad(
-      new MeshBasicMaterial({ color: 0x000000, opacity: 0, transparent: true })
+      new MeshBasicMaterial({ color: 0x000000, blending: SubtractiveBlending })
     );
     this.overviewScene = new Scene();
     this.overviewQuad = new Mesh(
@@ -188,7 +193,9 @@ export default class RadarRenderer {
     this.overviewTargetQuad.material.uniforms.TransitionAmount.value =
       getLerpFactor(radarMapTransitionSpeed, dt / 60);
     this.overviewTargetQuad.render(renderer);
-    this.overviewFadeQuad.material.color = new Color(0x111111).multiplyScalar(getLerpFactor(radarMapFadeSpeed,dt/60));
+    this.overviewFadeQuad.material.color = new Color(0xffffff).multiplyScalar(
+      getLerpFactor(radarMapFadeSpeed, dt / 60)
+    );
     this.overviewFadeQuad.render(renderer);
     renderer.setRenderTarget(null);
 

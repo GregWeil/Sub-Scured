@@ -55,26 +55,24 @@ private turnAcc: number;
   turn(input: Input){
     const go = input.getHorizontal();
     let direc = 0;
-    if (this.turnAcc < 5 && go) {
-      this.turnAcc += 0.1;
-      if (go === 1) {
+    if (go === 1) {
         direc = 1;
       }else {
         direc = -1;
       }
+    if (this.turnAcc < 5 && go) {
+      this.turnAcc += 0.01;
     }else if (this.turnAcc >= 5 && go) {
       this.turnAcc = 5;
-      if (go === 1) {
-        direc = 1;
-      }else {
-        direc = -1;
-      }
     }else if (!go && this.turnAcc > 0) {
       this.turnAcc -= 0.01;
+    }else if (!go && this.turnAcc <= 0) {
+      this.turnAcc = 0;
     }
-    //console.log(this.impulseAcc);
+    console.log(this.turnAcc * direc);
     return this.turnAcc * direc;
   }
+
   getPosition() {
     return this.mesh.position;
   }
