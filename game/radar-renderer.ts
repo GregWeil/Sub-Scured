@@ -28,7 +28,8 @@ import { getLerpFactor } from "../util/math";
 
 export default class RadarRenderer {
   private game: Game;
-  private timer: number;
+  private time: number;
+  private pulseTimer: number;
   private pulseX: number;
   private pulseY: number;
 
@@ -50,7 +51,8 @@ export default class RadarRenderer {
 
   constructor(game: Game, renderer: WebGLRenderer) {
     this.game = game;
-    this.timer = 10;
+    this.time = 0;
+    this.pulseTimer = 0;
     this.pulseX = 0;
     this.pulseY = 0;
 
@@ -106,10 +108,7 @@ export default class RadarRenderer {
     this.overviewScene.add(this.overviewQuad);
 
     this.sceneComposer = new EffectComposer(renderer);
-    const renderPass = new RenderPass(
-      this.game.scene,
-      this.game.camera
-    );
+    const renderPass = new RenderPass(this.game.scene, this.game.camera);
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
     this.sceneComposer.renderToScreen = false;
@@ -129,14 +128,15 @@ export default class RadarRenderer {
   }
 
   update(dt: number, playerPosition: Vector3) {
-    this.timer += dt / 1000;
-    if (this.timer >= 10) {
+    this.pulseTimer += dt / 1000;
+    if (this.pulseTimer >= 10) {
       this.sound.stop();
       this.sound.play();
-      this.timer = this.timer % 10;
+      this.pulseTimer = this.pulseTimer % 10;
       this.pulseX = playerPosition.x;
       this.pulseY = playerPosition.y;
     }
+    this.time += dt / 1000;
   }
 
   resize(renderer: WebGLRenderer) {
@@ -162,7 +162,7 @@ export default class RadarRenderer {
     const playerPosition = this.game.player.getPosition();
     uniforms.PlayerPosition.value.set(playerPosition.x, playerPosition.y);
     uniforms.RadarPosition.value.set(this.pulseX, this.pulseY);
-    uniforms.RadarTime.value = this.timer;
+    uniforms.RadarTime.value = this.pulseTimer;
   }
 
   render(renderer: WebGLRenderer, dt: number) {
@@ -194,6 +194,7 @@ export default class RadarRenderer {
       this.game.camera.position.x + this.game.camera.right,
       this.game.camera.position.y + this.game.camera.top
     );
+    this.screenBackground.uniforms.Time.value = this.time;
     this.applyShaderUniforms(
       this.screenVisibility.uniforms,
       this.sceneComposer.readBuffer,
