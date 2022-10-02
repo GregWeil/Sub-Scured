@@ -9,12 +9,14 @@ import {
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
+import { TexturePass } from "three/examples/jsm/postprocessing/TexturePass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
 import { backgroundColor, radarPing } from "./assets";
+import VisibilityShader from "../effect/visibility-shader";
 
 export default class RadarRenderer {
   private game: Game;
@@ -28,8 +30,9 @@ export default class RadarRenderer {
 
   private sceneComposer: EffectComposer;
 
-private screenTexture: TexturePass
-private screenComposer: EffectComposer;
+  private screenOverview: TexturePass
+  private screenTexture: ShaderPass;
+  private screenComposer: EffectComposer;
 
   private sound: Howl;
 
@@ -54,7 +57,10 @@ private screenComposer: EffectComposer;
     this.overviewTarget = new WebGLRenderTarget(512, 512, {
       magFilter: NearestFilter,
     });
-    this.overviewComposer = new EffectComposer(renderer, this.overviewTarget.clone());
+    this.overviewComposer = new EffectComposer(
+      renderer,
+      this.overviewTarget.clone()
+    );
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
@@ -70,9 +76,10 @@ private screenComposer: EffectComposer;
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
     this.sceneComposer.renderToScreen = false;
-    
+
     this.screenComposer = new EffectComposer(renderer);
-    this.screenTexture = new TexturePass(this.sceneComposer.readBuffer.texture);
+    this.screenOverview = new TexturePass(this.overviewComposer.readBuffer.texture);
+    this.screenTexture = new ShaderPass(VisibilityShader);
     this.screenComposer.addPass(this.screenTexture);
     this.screenComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
 
@@ -101,8 +108,11 @@ private screenComposer: EffectComposer;
   render(renderer: WebGLRenderer, dt: number) {
     this.overviewComposer.render(dt / 1000);
     this.sceneComposer.render(dt / 1000);
-    this.screenTexture.map = this.sceneComposer.readBuffer.texture;
-    this.screenComposer.render(dt/1000);
+    this.screenOverview.map =
+      this.overviewComposer.readBuffer.texture;
+    this.screenTexture.uniforms.SourceImage.value =
+      this.sceneComposer.readBuffer.texture;
+    this.screenComposer.render(dt / 1000);
   }
 
   destructor() {
