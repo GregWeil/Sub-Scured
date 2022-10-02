@@ -8,7 +8,7 @@ import {
   radarPingInnerThickness,
   radarPingOuterThickness,
   radarPingFadeStart,
-  radarPingFadeEnd
+  radarPingFadeEnd,
 } from "../game/assets.ts";
 
 const defines = {
@@ -29,6 +29,7 @@ const uniforms = {
   PlayerPosition: { value: new Vector2() },
   RadarPosition: { value: new Vector2() },
   RadarTime: { value: 0 },
+  TransitionAmount: { value: 1 },
 };
 
 const vertexShader = `
@@ -49,6 +50,7 @@ uniform vec4 PositionBounds;
 uniform vec2 PlayerPosition;
 uniform vec2 RadarPosition;
 uniform float RadarTime;
+uniform float TransitionAmount;
 
 varying vec2 vUv;
 
@@ -68,7 +70,7 @@ void main() {
   float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(RADAR_INNER_THICKNESS), distFromRadar / radarFade);
   vec4 target = texture2D(tDiffuse, vUv);
   vec4 source = texture2D(SourceImage, vUv);
-  gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility * radarFade));
+  gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility * radarFade) * TransitionAmount);
 }
 `;
 

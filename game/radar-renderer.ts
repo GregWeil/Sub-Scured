@@ -21,8 +21,9 @@ import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
-import { backgroundColor, radarPing } from "./assets";
+import { backgroundColor, radarPingSound, radarPingTransitionSpeed } from "./assets";
 import VisibilityShader from "../effect/visibility-shader";
+import { getLerpFactor } from "../util/math";
 
 export default class RadarRenderer {
   private game: Game;
@@ -114,7 +115,7 @@ export default class RadarRenderer {
     this.screenComposer.addPass(this.screenTexture);
     this.screenComposer.addPass(new FilmPass(0.35, 0.05, 648, false));
 
-    this.sound = new Howl({ src: [radarPing] });
+    this.sound = new Howl({ src: [radarPingSound] });
   }
 
   update(dt: number, playerPosition: Vector3) {
@@ -160,13 +161,15 @@ export default class RadarRenderer {
     this.overviewTarget1 = this.overviewTarget2;
     this.overviewTarget2 = tempOverviewTarget1;
     renderer.setRenderTarget(this.overviewTarget1);
-    this.overviewTargetQuad.material.uniforms.tDiffuse.value = this.overviewTarget2.texture
+    this.overviewTargetQuad.material.uniforms.tDiffuse.value =
+      this.overviewTarget2.texture;
     this.applyShaderUniforms(
       this.overviewTargetQuad.material.uniforms,
       this.overviewComposer.readBuffer,
       this.overviewCamera
     );
-    this.overviewTargetQuad.material.uniforms.RadarTime.value -= 0.1;
+    this.overviewTargetQuad.material.uniforms.TransitionAmount.value =
+      getLerpFactor(radarPingTransitionSpeed, dt / 60);
     this.overviewTargetQuad.render(renderer);
     renderer.setRenderTarget(null);
 
