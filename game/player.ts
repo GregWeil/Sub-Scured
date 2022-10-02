@@ -17,7 +17,6 @@ private turnAcc: number;
 
   constructor(game: Game) {
     this.game = game;
-    const geometry = new BoxGeometry(10, 10, 10);
     const material = new MeshNormalMaterial();
     this.mesh = new Mesh(geometry, material);
     this.game.scene.add(this.mesh);
@@ -55,8 +54,8 @@ private turnAcc: number;
   turn(input: Input){
     const go = input.getHorizontal();
     this.turnAcc += go*0.1;
-    if(this.turnAcc>5)this.turnAcc=5;
-    if(this.turnAcc<-5)this.turnAcc=-5;
+    if(this.turnAcc>3)this.turnAcc=3;
+    if(this.turnAcc<-3)this.turnAcc=-3;
     if(Math.abs(go)<0.5){
       if (this.turnAcc>0)this.turnAcc -= 0.1; 
       if (this.turnAcc<0)this.turnAcc += 0.1;
