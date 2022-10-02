@@ -16,12 +16,6 @@ const renderer = new WebGLRenderer({
   antialias: true,
   preserveDrawingBuffer: true,
 });
-const resize = () => {
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-};
-window.addEventListener("resize", resize);
-resize();
 document.body.insertBefore(renderer.domElement, document.body.firstChild);
 renderer.autoClear = false;
 renderer.clear();
@@ -31,6 +25,14 @@ document.body.appendChild(stats.domElement);
 
 const input = new Input(renderer.domElement);
 const game = new Game(renderer);
+
+const resize = () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  game.resize(renderer);
+};
+window.addEventListener("resize", resize);
+resize();
 
 let timeLast = 0;
 renderer.setAnimationLoop((time) => {

@@ -34,6 +34,10 @@ export default class Game {
     this.overlay.update(this.camera.position);
     this.radar.update(dt, this.player.getPosition());
   }
+  
+  resize(renderer:WebGLRenderer){
+    this.radar.resize(renderer);
+  }
 
   render(renderer: WebGLRenderer,dt:number) {
     const size = renderer.getSize(new Vector2()).divideScalar(2);

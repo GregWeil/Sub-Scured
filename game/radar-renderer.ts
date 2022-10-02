@@ -11,8 +11,8 @@ import {
   Vector3,
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { SMAAPass } from "three/examples/jsm/postprocessing/SMAAPass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -54,7 +54,11 @@ export default class RadarRenderer {
     this.renderCamera.position.z = 5;
     this.sceneComposer = new EffectComposer(renderer);
     this.sceneComposer.addPass(
-      new TAARenderPass(this.game.scene, this.game.camera, backgroundColor, 1)
+      new RenderPass(this.game.scene, this.game.camera)
+    );
+    
+    this.sceneComposer.addPass(
+      new SMAAPass(renderer)
     );
 
     this.sound = new Howl({ src: [radarPing] });
@@ -69,6 +73,11 @@ export default class RadarRenderer {
       this.pulseY = playerPosition.y;
     }
   }
+
+resize(renderer:WebGLRenderer){
+      this.sceneComposer.setSize(renderer.getSize(new Vector2()));
+      this.sceneComposer.setPixelRatio(renderer.getPixelRatio());
+}
 
   render(renderer: WebGLRenderer, dt: number) {
     /*
@@ -89,17 +98,6 @@ export default class RadarRenderer {
     renderer.clear();
     renderer.render(this.renderScene, this.renderCamera);
     */
-    const size = renderer.getSize(new Vector2());
-    if (
-      this.sceneComposer.width !== size.x ||
-      this.sceneComposer.height !== size.y
-    ) {
-      this.scratchTarget.setSize(size);
-    }
-    const pixelRatio = renderer.getPixelRatio();
-    if (pixelRatio !== this.sceneComposer.pixelRatio) {
-      this.sceneComposer.setPixelRatio(pixelRatio);
-    }
     this.sceneComposer.render(dt / 1000);
   }
 
