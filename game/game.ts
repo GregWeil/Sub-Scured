@@ -24,7 +24,6 @@ export default class Game {
   }
 
   update(dt: number, input: Input) {
-    this.map.update(dt, input);
     this.player.update(dt, input);
     this.camera.position.lerp(
       this.player.getPosition(),

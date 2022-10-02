@@ -23,7 +23,6 @@ export default class TriangleMap {
   private grid: Uint8Array;
   private group: Group;
   private mesh: Mesh | null;
-  private picker: Mesh;
 
   constructor(scene: Scene, width: number, height: number, size: number) {
     this.width = width;
@@ -37,11 +36,6 @@ export default class TriangleMap {
     scene.add(this.group);
     this.mesh = null;
     this.generateMap();
-    this.picker = new Mesh(
-      new SphereGeometry(3),
-      new MeshBasicMaterial({ color: 0xff0000 })
-    );
-    //scene.add(this.picker);
   }
 
   private generateMap() {
@@ -177,16 +171,6 @@ export default class TriangleMap {
     }
 
     return null;
-  }
-
-  update(dt: number, input: Input) {
-    const cellPos = this.triangleToCell(
-      ...this.worldToTriangle(...input.getMouse())
-    );
-    const [x, y] = this.triangleToWorld(...this.cellToTriangle(...cellPos));
-    this.picker.position.x = x;
-    this.picker.position.y = y;
-    this.picker.position.z = 1;
   }
 
   destructor() {
