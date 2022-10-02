@@ -7,7 +7,7 @@ import {
   Vector3,
 } from "three";
 
-import { overlayColor } from "./constants";
+import { overlayColor } from "./assets";
 
 export default class GridOverlay {
   private mesh: Mesh;

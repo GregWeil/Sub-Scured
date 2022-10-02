@@ -10,7 +10,7 @@ import {
 } from "three";
 
 import Input from "./input";
-import { terrainColor } from "./constants";
+import { terrainColor } from "./assets";
 import { lerp, unlerp, distance } from "../util/math";
 import { raycast } from "../util/collide";
 
