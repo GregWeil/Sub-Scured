@@ -23,6 +23,8 @@ const resize = () => {
 window.addEventListener("resize", resize);
 resize();
 document.body.insertBefore(renderer.domElement, document.body.firstChild);
+renderer.autoClear = false;
+renderer.clear();
 
 const stats = Stats();
 document.body.appendChild(stats.domElement);
