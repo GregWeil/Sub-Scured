@@ -1,5 +1,6 @@
 import {
   NearestFilter,
+  MultiplyBlending,
   OrthographicCamera,
   PlaneGeometry,
   MeshBasicMaterial,
@@ -21,7 +22,7 @@ import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
-import { radarPingSound, radarMapTransitionSpeed } from "./assets";
+import { radarPingSound, radarMapTransitionSpeed, radarMapTransitionSpeed } from "./assets";
 import VisibilityShader from "../effect/visibility-shader";
 import WaterBackgroundShader from "../effect/water-background-shader";
 import { getLerpFactor } from "../util/math";
@@ -37,6 +38,7 @@ export default class RadarRenderer {
   private overviewTarget1: WebGLRenderTarget;
   private overviewTarget2: WebGLRenderTarget;
   private overviewTargetQuad: FullScreenQuad;
+  private overviewFadeQuad: FullScreenQuad;
   private overviewComposer: EffectComposer;
   private overviewScene: Scene;
   private overviewQuad: Mesh;
@@ -92,6 +94,9 @@ export default class RadarRenderer {
         uniforms: UniformsUtils.clone(VisibilityShader.uniforms),
         defines: { ...VisibilityShader.defines },
       })
+    );
+    this.overviewFadeQuad = new FullScreenQuad(
+      new MeshBasicMaterial({ color: 0x000000, opacity: 0, transparent: true })
     );
     this.overviewScene = new Scene();
     this.overviewQuad = new Mesh(
@@ -167,10 +172,10 @@ export default class RadarRenderer {
 
   render(renderer: WebGLRenderer, dt: number) {
     this.overviewComposer.render(dt / 1000);
+
     const tempOverviewTarget1 = this.overviewTarget1;
     this.overviewTarget1 = this.overviewTarget2;
     this.overviewTarget2 = tempOverviewTarget1;
-
     renderer.setRenderTarget(this.overviewTarget1);
     renderer.clear();
     this.overviewTargetQuad.material.uniforms.tDiffuse.value =
@@ -183,6 +188,8 @@ export default class RadarRenderer {
     this.overviewTargetQuad.material.uniforms.TransitionAmount.value =
       getLerpFactor(radarMapTransitionSpeed, dt / 60);
     this.overviewTargetQuad.render(renderer);
+    this.overviewFadeQuad.material.color = new Color(0x111111).multiplyScalar(getLerpFactor(radarMapFadeSpeed,dt/60));
+    this.overviewFadeQuad.render(renderer);
     renderer.setRenderTarget(null);
 
     this.overviewQuad.material.map = this.overviewTarget1.texture;
@@ -207,6 +214,7 @@ export default class RadarRenderer {
     this.overviewTarget1.dispose();
     this.overviewTarget2.dispose();
     this.overviewTargetQuad.dispose();
+    this.overviewFadeQuad.dispose();
     this.overviewComposer.dispose();
     this.overviewQuad.geometry.dispose();
     this.sceneComposer.dispose();

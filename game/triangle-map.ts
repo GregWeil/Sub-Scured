@@ -1,6 +1,7 @@
 import {
   BufferGeometry,
   BufferAttribute,
+  Color,
   Mesh,
   MeshBasicMaterial,
   SphereGeometry,

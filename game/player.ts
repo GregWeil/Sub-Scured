@@ -29,7 +29,8 @@ private turnAcc: number;
   update(dt: number, input: Input) {
     const horizontal = input.getHorizontal();
     //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
-    this.mesh.rotateOnAxis(new Vector3(0, 0, 1).normalize(), (horizontal * dt) / 1000);
+    let direction = this.turn(input);
+    this.mesh.rotateOnAxis(new Vector3(0, 0, 1).normalize(), (direction * dt) / 1000);
     const vertical = input.getVertical();
 
     let acc = this.impulse(input);
@@ -47,21 +48,32 @@ private turnAcc: number;
     }else if (!go && this.impulseAcc > 0) {
       this.impulseAcc -= 0.5;
     }
-    console.log(this.impulseAcc);
+    //console.log(this.impulseAcc);
     return this.impulseAcc;
   }
   
   turn(input: Input){
     const go = input.getHorizontal();
-    if (this.turnAcc < 50 && go) {
-      this.turnAcc += 5;
-    }else if (this.turnAcc >= 50 && go) {
-      this.impulseAcc = 50;
-    }else if (!go && this.impulseAcc > 0) {
-      this.impulseAcc -= 0.5;
+    let direc = 0;
+    if (this.turnAcc < 5 && go) {
+      this.turnAcc += 0.1;
+      if (go === 1) {
+        direc = 1;
+      }else {
+        direc = -1;
+      }
+    }else if (this.turnAcc >= 5 && go) {
+      this.turnAcc = 5;
+      if (go === 1) {
+        direc = 1;
+      }else {
+        direc = -1;
+      }
+    }else if (!go && this.turnAcc > 0) {
+      this.turnAcc -= 0.01;
     }
-    console.log(this.impulseAcc);
-    return this.impulseAcc;
+    //console.log(this.impulseAcc);
+    return this.turnAcc * direc;
   }
   getPosition() {
     return this.mesh.position;
