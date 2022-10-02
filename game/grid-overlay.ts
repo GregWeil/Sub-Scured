@@ -58,5 +58,6 @@ export default class GridOverlay {
 
   destructor() {
     this.mesh.removeFromParent();
+    this.mesh.geometry.dispose();
   }
 }

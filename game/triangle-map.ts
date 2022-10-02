@@ -22,6 +22,7 @@ export default class TriangleMap {
   private size: number;
   private grid: Uint8Array;
   private group: Group;
+  private mesh: Mesh | null;
   private picker: Mesh;
 
   constructor(scene: Scene, width: number, height: number, size: number) {
@@ -34,6 +35,7 @@ export default class TriangleMap {
     this.group.scale.x = this.size;
     this.group.scale.y = this.size;
     scene.add(this.group);
+    this.mesh = null;
     this.generateMap();
     this.picker = new Mesh(
       new SphereGeometry(3),
@@ -62,6 +64,10 @@ export default class TriangleMap {
       }
     }
 
+    if (this.mesh) {
+      this.mesh.geometry.dispose();
+      this.mesh = null;
+    }
     this.group.clear();
     if (vertices.length > 0) {
       const geometry = new BufferGeometry();
@@ -70,8 +76,8 @@ export default class TriangleMap {
         new BufferAttribute(new Float32Array(vertices), 3)
       );
       const material = new MeshBasicMaterial({ color: terrainColor });
-      const mesh = new Mesh(geometry, material);
-      this.group.add(mesh);
+      this.mesh = new Mesh(geometry, material);
+      this.group.add(this.mesh);
     }
   }
 
@@ -185,6 +191,7 @@ export default class TriangleMap {
 
   destructor() {
     this.group.removeFromParent();
+    this.mesh.geometry.dispose();
     this.picker.removeFromParent();
   }
 }
