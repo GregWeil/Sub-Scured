@@ -11,6 +11,7 @@ import {
   Vector3,
 } from "three";
 import {EffectComposer}from "three/examples/jsm/postprocessing/EffectComposer.js";
+import {RenderPass}from "three/examples/jsm/postprocessing/RenderPass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -32,7 +33,7 @@ private sceneComposer: EffectComposer;
 
   private sound: Howl;
 
-  constructor(game: Game) {
+  constructor(game: Game,renderer:WebGLRenderer) {
     this.game = game;
     this.timer = 10;
     this.pulseX = 0;
@@ -51,6 +52,7 @@ private sceneComposer: EffectComposer;
     this.renderCamera = new OrthographicCamera(-1, 1, -1, 1, 1, 10);
     this.renderCamera.position.z = 5;
     this.sceneComposer = new EffectComposer(renderer);
+    this.sceneComposer.addPass(new RenderPass(this.game.scene,this.game.camera))
 
     this.sound = new Howl({ src: [radarPing] });
   }
