@@ -20,7 +20,8 @@
     "@types/three": "^0.144.0",
     "@types/node": "^14.18.31",
     "segment-intersection": "^0.0.1",
-    "howler": "^2.2.3"
+    "howler": "^2.2.3",
+    "@types/howler": "^2.2.7"
   },
   "engines": {
     "node": "14.x"

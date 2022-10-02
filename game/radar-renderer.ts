@@ -1,4 +1,9 @@
-import { WebGLRenderer, Vector3 } from "three";
+import {
+  OrthographicCamera,
+  WebGLRenderTarget,
+  WebGLRenderer,
+  Vector3,
+} from "three";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -6,8 +11,12 @@ import { backgroundColor, radarPing } from "./assets";
 
 export default class RadarRenderer {
   private game: Game;
-  private sound: Howl;
   private timer: number;
+
+  private fullTarget: WebGLRenderTarget;
+  private fullCamera: OrthographicCamera;
+
+  private sound: Howl;
 
   constructor(game: Game) {
     this.game = game;
@@ -24,7 +33,8 @@ export default class RadarRenderer {
   }
 
   render(renderer: WebGLRenderer) {
-    renderer.clear(backgroundColor);
+    renderer.setClearColor(0xffffff);
+    //renderer.clear();
     renderer.render(this.game.scene, this.game.camera);
   }
 }

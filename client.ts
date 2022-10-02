@@ -12,7 +12,10 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import Game from "./game";
 import Input from "./game/input";
 
-const renderer = new WebGLRenderer({ antialias: true });
+const renderer = new WebGLRenderer({
+  antialias: true,
+  preserveDrawingBuffer: true,
+});
 const resize = () => {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
