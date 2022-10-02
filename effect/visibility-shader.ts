@@ -32,6 +32,12 @@ uniform vec2 PlayerPosition;
 
 varying vec2 vUv;
 
+vec4 function blend(vec4 source, vec4 target) {
+  float a = source.a + target.a * (1.0 - source.a);
+  vec3 color = (source.rgb * source.a + target.rgb * target.a * (1.0 - source.a)) / gl_FragColor.a;
+  
+}
+
 void main() {
   vec4 source = texture2D(SourceImage, vUv);
   vec4 target = texture2D(tDiffuse, vUv);

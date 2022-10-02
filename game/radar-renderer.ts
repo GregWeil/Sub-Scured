@@ -3,7 +3,7 @@ import {
   OrthographicCamera,
   PlaneGeometry,
   MeshBasicMaterial,
-  Mesh
+  Mesh,
   Scene,
   WebGLRenderTarget,
   WebGLRenderer,
@@ -13,7 +13,6 @@ import {
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
-import { TexturePass } from "three/examples/jsm/postprocessing/TexturePass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
 import { Howl } from "howler";
@@ -31,12 +30,11 @@ export default class RadarRenderer {
   private overviewCamera: OrthographicCamera;
   private overviewTarget: WebGLRenderTarget;
   private overviewComposer: EffectComposer;
-private overviewQuad: Mesh
-private overviewScene: Scene
+  private overviewScene: Scene;
+  private overviewQuad: Mesh;
 
   private sceneComposer: EffectComposer;
 
-  private screenOverview: TexturePass
   private screenTexture: ShaderPass;
   private screenComposer: EffectComposer;
 
@@ -71,17 +69,22 @@ private overviewScene: Scene
       new RenderPass(this.game.scene, this.overviewCamera)
     );
     this.overviewComposer.renderToScreen = false;
-    const overview
-    this.overviewQuad = new Mesh(new Plane(this.overviewCamera.right-this.overviewCamera.left))
     this.overviewScene = new Scene();
-    
-    this.overviewScene
+    this.overviewQuad = new Mesh(
+      new PlaneGeometry(
+        this.overviewCamera.right - this.overviewCamera.left,
+        this.overviewCamera.bottom - this.overviewCamera.top
+      ),
+      new MeshBasicMaterial({ map: this.overviewComposer.readBuffer.texture })
+    );
+    this.overviewQuad.rotation.set(0, Math.PI, Math.PI);
+    this.overviewScene.add(this.overviewQuad);
 
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new TAARenderPass(
       this.game.scene,
       this.game.camera,
-      backgroundColor,
+      0x000000,
       0
     );
     renderPass.sampleLevel = 2;
@@ -89,8 +92,9 @@ private overviewScene: Scene
     this.sceneComposer.renderToScreen = false;
 
     this.screenComposer = new EffectComposer(renderer);
-    this.screenOverview = new TexturePass(this.overviewComposer.readBuffer.texture);
-    this.screenComposer.addPass(this.screenOverview);
+    this.screenComposer.addPass(
+      new RenderPass(this.overviewScene, this.game.camera)
+    );
     this.screenTexture = new ShaderPass(VisibilityShader);
     this.screenComposer.addPass(this.screenTexture);
     this.screenComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
@@ -120,8 +124,7 @@ private overviewScene: Scene
   render(renderer: WebGLRenderer, dt: number) {
     this.overviewComposer.render(dt / 1000);
     this.sceneComposer.render(dt / 1000);
-    this.screenOverview.map =
-      this.overviewComposer.readBuffer.texture;
+    this.overviewQuad.material.map = this.overviewComposer.readBuffer.texture;
     this.screenTexture.uniforms.SourceImage.value =
       this.sceneComposer.readBuffer.texture;
     this.screenComposer.render(dt / 1000);
@@ -130,6 +133,7 @@ private overviewScene: Scene
   destructor() {
     this.overviewTarget.dispose();
     this.overviewComposer.dispose();
+    this.overviewQuad.geometry.dispose();
     this.sceneComposer.dispose();
     this.screenComposer.dispose();
   }
