@@ -30,6 +30,7 @@ import {
   radarMapFadeAmount,
 } from "./assets";
 import VisibilityShader from "../effect/visibility-shader";
+import RadarFadeShader from "../effect/radar-fade-shader";
 import WaterBackgroundShader from "../effect/water-background-shader";
 import { getLerpFactor } from "../util/math";
 
@@ -103,10 +104,10 @@ export default class RadarRenderer {
       })
     );
     this.overviewFadeQuad = new FullScreenQuad(
-      new MeshBasicMaterial({
-        color: 0x000000,
-        opacity: radarMapFadeAmount,
-        transparent: true,
+      new ShaderMaterial({
+        ...RadarFadeShader,
+        uniforms: UniformsUtils.clone(RadarFadeShader.uniforms),
+        defines: { ...RadarFadeShader.defines },
       })
     );
     this.overviewFadeTimer = 0;
@@ -202,6 +203,8 @@ export default class RadarRenderer {
     this.overviewTargetQuad.render(renderer);
     while (this.overviewFadeTimer > 0) {
       this.overviewFadeTimer -= radarMapFadeInterval;
+      this.overviewFadeQuad.uniforms.DeltaTime.value=radarMapFadeInterval;
+      
       this.overviewFadeQuad.render(renderer);
     }
     this.overviewFadeTimer += dt / 1000;
