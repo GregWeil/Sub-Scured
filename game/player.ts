@@ -31,6 +31,8 @@ private turnAcc: number;
 
 
   update(dt: number, input: Input) {
+    const prevPosition = this.mesh.position.clone();
+    
     const horizontal = input.getHorizontal();
     //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
     let direction = this.turn(input);
@@ -41,16 +43,17 @@ private turnAcc: number;
     //this.mesh.position.y += (acc * dt) / 1000;
     this.mesh.translateOnAxis(new Vector3(0, 1, 0).normalize(), (acc * dt) / 1000);
 
+    this.map.map.raycast(prevPosition, this.mesh.position.x,this.mesh.position.y)
   }
 
   impulse(input: Input){
     const go = input.getVertical();
-    if (this.impulseAcc < 50 && go) {
-      this.impulseAcc += 1;
-    }else if (this.impulseAcc >= 50 && go) {
-      this.impulseAcc = 50;
+    if (this.impulseAcc < 80 && go) {
+      this.impulseAcc += 0.5;
+    }else if (this.impulseAcc >= 80 && go) {
+      this.impulseAcc = 80;
     }else if (!go && this.impulseAcc > 0) {
-      this.impulseAcc -= 0.5;
+      this.impulseAcc -= 0.2;
     }
     //console.log(this.impulseAcc);
     return this.impulseAcc;
@@ -59,11 +62,11 @@ private turnAcc: number;
   turn(input: Input){
     const go = input.getHorizontal();
     this.turnAcc += go*0.1;
-    if(this.turnAcc>3)this.turnAcc=3;
-    if(this.turnAcc<-3)this.turnAcc=-3;
+    if(this.turnAcc>1)this.turnAcc=1;
+    if(this.turnAcc<-1)this.turnAcc=-1;
     if(Math.abs(go)<0.5){
-      if (this.turnAcc>0)this.turnAcc -= 0.1; 
-      if (this.turnAcc<0)this.turnAcc += 0.1;
+      if (this.turnAcc>0)this.turnAcc -= 0.06; 
+      if (this.turnAcc<0)this.turnAcc += 0.06;
     }
     return this.turnAcc;
   }

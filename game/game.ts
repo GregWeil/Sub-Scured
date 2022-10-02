@@ -6,15 +6,21 @@ import {
   Vector2,
   WebGLRenderer,
 } from "three";
+import { Howl } from "howler";
 
 import Player from "./player";
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
 import Input from "./input";
 import RadarRenderer from "./radar-renderer";
-import { lightColor } from "./assets";
+import { music, lightColor } from "./assets";
 
 import { getLerpFactor } from "../util/math";
+
+const Music = new Howl({
+  src: [music],
+  loop: true,
+});
 
 export default class Game {
   scene: Scene;
@@ -23,6 +29,7 @@ export default class Game {
   map: TriangleMap;
   player: Player;
   overlay: GridOverlay;
+  playingMusic: number;
 
   constructor(renderer: WebGLRenderer) {
     this.scene = new Scene();
@@ -34,6 +41,7 @@ export default class Game {
     this.player = new Player(this);
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
+    this.playingMusic = Music.play();
   }
 
   update(dt: number, input: Input) {
@@ -60,5 +68,9 @@ export default class Game {
     this.camera.bottom = scale * size.y;
     this.camera.updateProjectionMatrix();
     this.radar.render(renderer, dt);
+  }
+
+  destructor() {
+    Music.stop(this.music);
   }
 }
