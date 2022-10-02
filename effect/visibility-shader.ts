@@ -70,7 +70,7 @@ void main() {
   float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(RADAR_INNER_THICKNESS) * radarFade, distFromRadar);
   vec4 target = texture2D(tDiffuse, vUv);
   vec4 source = texture2D(SourceImage, vUv);
-  gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility * pow(radarFade, 5.0)) * TransitionAmount);
+  gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility * pow(radarFade, 3.0)) * TransitionAmount);
 }
 `;
 

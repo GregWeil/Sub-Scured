@@ -21,11 +21,7 @@ import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
-import {
-  backgroundColor,
-  radarPingSound,
-  radarMapTransitionSpeed,
-} from "./assets";
+import { radarPingSound, radarMapTransitionSpeed } from "./assets";
 import VisibilityShader from "../effect/visibility-shader";
 import WaterBackgroundShader from "../effect/water-background-shader";
 import { getLerpFactor } from "../util/math";
@@ -73,19 +69,18 @@ export default class RadarRenderer {
     this.overviewTarget1 = new WebGLRenderTarget(256, 256, {
       magFilter: NearestFilter,
     });
+    renderer.setClearColor(0x000000, 1);
+    renderer.setRenderTarget(this.overviewTarget1);
+    renderer.clear();
+    renderer.setRenderTarget(null);
+    renderer.setClearColor(0x000000, 0);
     this.overviewTarget2 = this.overviewTarget1.clone();
     this.overviewComposer = new EffectComposer(
       renderer,
       this.overviewTarget1.clone()
     );
     this.overviewComposer.addPass(
-      new RenderPass(
-        this.game.scene,
-        this.overviewCamera,
-        undefined,
-        0x000000,
-        0
-      )
+      new RenderPass(this.game.scene, this.overviewCamera)
     );
     this.overviewComposer.addPass(new FilmPass(0.5, 0, 0, true));
     this.overviewComposer.renderToScreen = false;
@@ -102,18 +97,16 @@ export default class RadarRenderer {
         this.overviewCamera.right - this.overviewCamera.left,
         this.overviewCamera.bottom - this.overviewCamera.top
       ),
-      new MeshBasicMaterial({ map: this.overviewTarget1.texture })
+      new MeshBasicMaterial({
+        map: this.overviewTarget1.texture,
+        transparent: true,
+      })
     );
     this.overviewQuad.rotation.set(0, Math.PI, Math.PI);
     this.overviewScene.add(this.overviewQuad);
 
     this.sceneComposer = new EffectComposer(renderer);
-    const renderPass = new TAARenderPass(
-      this.game.scene,
-      this.game.camera,
-      0x000000,
-      0
-    );
+    const renderPass = new TAARenderPass(this.game.scene, this.game.camera);
     renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
     this.sceneComposer.renderToScreen = false;
