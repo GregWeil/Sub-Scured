@@ -12,7 +12,7 @@ const assetPath =
 export const playerModel = assetPath + "/submarine.gltf";
 
 export const playerVisibilityOuterRadius = 50;
-export const playerVisibilityInnerRadius = 25;
+export const playerVisibilityInnerRadius = 30;
 
 export const radarPingSound = assetPath + "/bleepfinal.wav";
 export const radarPingSpeed = 150;
@@ -24,5 +24,5 @@ export const radarPingFadeEnd = 5;
 
 export const radarMapTransitionSpeed = 0.4;
 export const radarMapFadeInterval = 0.05;
-export const radarMapFadeAmount = 0.1;
-export const radarMapFadeSubtract = 0.1;
+export const radarMapFadeAmount = 0.2;
+export const radarMapFadeSubtract = 0.3;
