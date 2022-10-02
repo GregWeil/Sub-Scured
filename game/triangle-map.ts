@@ -57,9 +57,9 @@ export default class TriangleMap {
       const distance = 5 + Math.random() * 20;
       direction.rotateAround(new Vector2(), angle);
       const next = direction.clone().multiplyScalar(distance).add(position);
-      if (next.x < 0 || next.x >= this.width) continue;
-      if (next.y < 0 || next.y >= this.height) continue;
-      for (let j = 0; j < 50; ++j) {
+      if (next.x < 10 || next.x+10 >= this.width) continue;
+      if (next.y < 10 || next.y+10 >= this.height) continue;
+      for (let j = 0; j < 100; ++j) {
         const hit = this.raycast(
           ...this.cellToWorld(position.x, position.y),
           ...this.cellToWorld(next.x, next.y)
