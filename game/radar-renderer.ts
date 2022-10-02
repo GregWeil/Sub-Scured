@@ -79,7 +79,13 @@ export default class RadarRenderer {
       this.overviewTarget1.clone()
     );
     this.overviewComposer.addPass(
-      new RenderPass(this.game.scene, this.overviewCamera)
+      new RenderPass(
+        this.game.scene,
+        this.overviewCamera,
+        undefined,
+        0x000000,
+        0
+      )
     );
     this.overviewComposer.addPass(new FilmPass(0.5, 0, 0, true));
     this.overviewComposer.renderToScreen = false;
@@ -115,9 +121,13 @@ export default class RadarRenderer {
     this.screenComposer = new EffectComposer(renderer);
     this.screenBackground = new ShaderPass(WaterBackgroundShader);
     this.screenComposer.addPass(this.screenBackground);
-    this.screenComposer.addPass(
-      new RenderPass(this.overviewScene, this.game.camera)
+    const screenOverviewPass = new RenderPass(
+      this.overviewScene,
+      this.game.camera
     );
+    screenOverviewPass.clear = false;
+    screenOverviewPass.clearDepth = true;
+    this.screenComposer.addPass(screenOverviewPass);
     this.screenComposer.addPass(new FilmPass(0.8, 0.2, 648, false));
     this.screenVisibility = new ShaderPass(VisibilityShader);
     this.screenComposer.addPass(this.screenVisibility);
@@ -191,7 +201,7 @@ export default class RadarRenderer {
       this.game.camera.position.y + this.game.camera.top
     );
     this.applyShaderUniforms(
-      this.screenVisiblity.uniforms,
+      this.screenVisibility.uniforms,
       this.sceneComposer.readBuffer,
       this.game.camera
     );
