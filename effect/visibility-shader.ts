@@ -65,7 +65,7 @@ void main() {
   float radarRadius = (float(RADAR_SPEED) + float(RADAR_ACCELERATION) * RadarTime / 2.0) * RadarTime;
   float distFromRadar = abs(distance(RadarPosition, worldPos) - radarRadius);
   float radarFade = smoothstep(float(RADAR_FADE_END), float(RADAR_FADE_START), RadarTime);
-  float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(RADAR_INNER_THICKNESS) * radarFade, distFromRadar);
+  float radarVisibility = smoothstep(float(RADAR_OUTER_THICKNESS), float(RADAR_INNER_THICKNESS), distFromRadar / radarFade);
   vec4 target = texture2D(tDiffuse, vUv);
   vec4 source = texture2D(SourceImage, vUv);
   gl_FragColor = mix(target, source, max(playerVisibility, radarVisibility * radarFade));

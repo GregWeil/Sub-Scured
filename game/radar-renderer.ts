@@ -68,6 +68,7 @@ export default class RadarRenderer {
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
+    this.overviewComposer.addPass(new FilmPass(0.5, 0, 0, true));
     this.overviewComposer.renderToScreen = false;
     this.overviewScene = new Scene();
     this.overviewQuad = new Mesh(
@@ -95,9 +96,10 @@ export default class RadarRenderer {
     this.screenComposer.addPass(
       new RenderPass(this.overviewScene, this.game.camera)
     );
+    this.screenComposer.addPass(new FilmPass(0.8, 0.2, 648, false));
     this.screenTexture = new ShaderPass(VisibilityShader);
     this.screenComposer.addPass(this.screenTexture);
-    this.screenComposer.addPass(new FilmPass(0.35, 0.025, 648, false));
+    this.screenComposer.addPass(new FilmPass(0.35, 0.05, 648, false));
 
     this.sound = new Howl({ src: [radarPing] });
   }
@@ -128,6 +130,7 @@ export default class RadarRenderer {
 
     this.sceneComposer.render(dt / 1000);
 
+    this.overviewQuad.material.map = this.overviewComposer.readBuffer.texture;
     this.screenTexture.uniforms.SourceImage.value =
       this.sceneComposer.readBuffer.texture;
     this.screenTexture.uniforms.PositionBounds.value.set(
