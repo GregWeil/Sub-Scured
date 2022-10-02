@@ -3,11 +3,12 @@ import {
   OrthographicCamera,
   PlaneGeometry,
   MeshBasicMaterial,
+  ShaderMaterial,
   Mesh,
   Scene,
   WebGLRenderTarget,
   WebGLRenderer,
-  UniformsUtils
+  UniformsUtils,
   Vector2,
   Vector3,
 } from "three";
@@ -16,7 +17,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
-import { FellScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
+import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -30,7 +31,7 @@ export default class RadarRenderer {
   private pulseY: number;
 
   private overviewCamera: OrthographicCamera;
-  private overviewTarget: WebGLRenderTarget;
+  private overviewTarget1: WebGLRenderTarget;
   private overviewTargetQuad: FullScreenQuad;
   private overviewComposer: EffectComposer;
   private overviewScene: Scene;
@@ -74,7 +75,11 @@ export default class RadarRenderer {
     this.overviewComposer.addPass(new FilmPass(0.5, 0, 0, true));
     this.overviewComposer.renderToScreen = false;
     this.overviewTargetQuad = new FullScreenQuad(
-      new ShaderMaterial({ map: this.overviewComposer.readBuffer.texture })
+      new ShaderMaterial({
+        ...VisibilityShader,
+        uniforms: UniformsUtils.clone(VisibilityShader.uniforms),
+        defines: { ...VisibilityShader.defines },
+      })
     );
     this.overviewScene = new Scene();
     this.overviewQuad = new Mesh(
@@ -141,21 +146,23 @@ export default class RadarRenderer {
       camera.position.x + camera.right,
       camera.position.y + camera.top
     );
+    const playerPosition = this.game.player.getPosition();
     uniforms.PlayerPosition.value.set(playerPosition.x, playerPosition.y);
     uniforms.RadarPosition.value.set(this.pulseX, this.pulseY);
     uniforms.RadarTime.value = this.timer;
   }
 
   render(renderer: WebGLRenderer, dt: number) {
-    const playerPosition = this.game.player.getPosition();
-
     this.overviewComposer.render(dt / 1000);
+    renderer.setRenderTarget(this.overviewTarget);
+    this.overviewTargetQuad.material.uniforms.tDiffuse = this.overviewTarget.texture
     this.applyShaderUniforms(
       this.overviewTargetQuad.material.uniforms,
       this.overviewComposer.readBuffer,
       this.overviewCamera
     );
     this.overviewTargetQuad.render(renderer);
+    renderer.setRenderTarget(null);
 
     this.sceneComposer.render(dt / 1000);
 
