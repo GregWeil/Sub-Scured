@@ -42,31 +42,35 @@ export default class TriangleMap {
 
   private generateMap() {
     this.grid.fill(1);
-    
-    let x = Math.floor(Math.random() * this.width);
-    let y = Math.floor(Math.random()*this.height);
-    let position = new Vector2(x,y);
-    let direction = new Vector2(0,1);
-    for(let i = 0; i < 3;++i){
-      const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 25;
-      direction.rotateAround(new Vector2(),angle)
-      
-      let nextX = x;
-      let nextY= y;
-      do{
-      let hit = this.raycast(
-        this.triangleToWorld(...this.cellToTriangle(x,y)),
-        this.triangleToWorld(...this.cellToTriangle(nextX,nextY)));
-        if (hit){
-          const [hitX,hitY]=hit;
-          this.grid[hitX*this.height+hitY]=0;
-        }
-      }while (hit);
-      x=nextX;
-      y=nextY;
+
+    for (let i = 0; i < 100; ++i) {
+      this.grid[
+        Math.floor(Math.random() * this.width) * this.height +
+          Math.floor(Math.random() * this.height)
+      ] = 0;
     }
-    
+
+    let position = new Vector2(this.width / 2, this.height / 2);
+    let direction = new Vector2(0, 1);
+    for (let i = 0; i < 100; ++i) {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * 10;
+      direction.rotateAround(new Vector2(), angle);
+      const next = direction.clone().multiplyScalar(distance).add(position);
+      if (next.x < 0 || next.x >= this.width) continue;
+      if (next.y < 0 || next.y >= this.height) continue;
+      let hit = this.raycast(
+        ...this.triangleToWorld(...this.cellToTriangle(position.x, position.y)),
+        ...this.triangleToWorld(...this.cellToTriangle(next.x, next.y))
+      );
+      console.log(hit);
+      if (hit) {
+        const [hitX, hitY] = hit;
+        this.grid[hitX * this.height + this.hitY] = 0;
+      }
+      position = next;
+    }
+
     this.generateMesh();
   }
 
