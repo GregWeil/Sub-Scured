@@ -1,24 +1,22 @@
 import {
-  BoxGeometry,
-  SphereGeometry,
-  MeshNormalMaterial,
-  Mesh,
   Group,
   Vector3,
 } from "three";
+
 import Game from "./game";
 import Input from "./input";
+import{ModelLoader,playerModel}from './assets'
 
 export default class Player {
   private game: Game;
-  private mesh: Mesh;
+  private mesh: Group;
 private impulseAcc:number;
 private turnAcc: number;
 
   constructor(game: Game) {
     this.game = game;
-    const material = new MeshNormalMaterial();
-    this.mesh = new Mesh(geometry, material);
+    this.mesh = new Group();
+    ModelLoader.load(playerModel,gltf=>this.mesh.add(gltf.scene));
     this.game.scene.add(this.mesh);
     this.impulseAcc=0;
     this.turnAcc=0;
