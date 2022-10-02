@@ -32,6 +32,7 @@ export default class RadarRenderer {
 
   private overviewCamera: OrthographicCamera;
   private overviewTarget1: WebGLRenderTarget;
+  private overviewTarget2: WebGLRenderTarget;
   private overviewTargetQuad: FullScreenQuad;
   private overviewComposer: EffectComposer;
   private overviewScene: Scene;
@@ -62,12 +63,13 @@ export default class RadarRenderer {
     );
     this.overviewCamera.position.z = 10;
     this.overviewCamera.updateProjectionMatrix();
-    this.overviewTarget = new WebGLRenderTarget(256, 256, {
+    this.overviewTarget1 = new WebGLRenderTarget(256, 256, {
       magFilter: NearestFilter,
     });
+    this.overviewTarget2 = this.overviewTarget1.clone();
     this.overviewComposer = new EffectComposer(
       renderer,
-      this.overviewTarget.clone()
+      this.overviewTarget1.clone()
     );
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
@@ -87,7 +89,7 @@ export default class RadarRenderer {
         this.overviewCamera.right - this.overviewCamera.left,
         this.overviewCamera.bottom - this.overviewCamera.top
       ),
-      new MeshBasicMaterial({ map: this.overviewTarget.texture })
+      new MeshBasicMaterial({ map: this.overviewTarget1.texture })
     );
     this.overviewQuad.rotation.set(0, Math.PI, Math.PI);
     this.overviewScene.add(this.overviewQuad);
@@ -154,16 +156,21 @@ export default class RadarRenderer {
 
   render(renderer: WebGLRenderer, dt: number) {
     this.overviewComposer.render(dt / 1000);
-    renderer.setRenderTarget(this.overviewTarget);
-    this.overviewTargetQuad.material.uniforms.tDiffuse = this.overviewTarget.texture
+    const tempOverviewTarget1 = this.overviewTarget1;
+    this.overviewTarget1 = this.overviewTarget2;
+    this.overviewTarget2 = tempOverviewTarget1;
+    renderer.setRenderTarget(this.overviewTarget1);
+    this.overviewTargetQuad.material.uniforms.tDiffuse.value = this.overviewTarget2.texture
     this.applyShaderUniforms(
       this.overviewTargetQuad.material.uniforms,
       this.overviewComposer.readBuffer,
       this.overviewCamera
     );
+    this.overviewTargetQuad.material.uniforms.RadarTime.value -= 0.1;
     this.overviewTargetQuad.render(renderer);
     renderer.setRenderTarget(null);
 
+    this.overviewQuad.material.map = this.overviewTarget1.texture;
     this.sceneComposer.render(dt / 1000);
 
     this.applyShaderUniforms(
@@ -175,7 +182,8 @@ export default class RadarRenderer {
   }
 
   destructor() {
-    this.overviewTarget.dispose();
+    this.overviewTarget1.dispose();
+    this.overviewTarget2.dispose();
     this.overviewTargetQuad.dispose();
     this.overviewComposer.dispose();
     this.overviewQuad.geometry.dispose();
