@@ -3,13 +3,13 @@ import Player from "./player";
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
 import Input from "./input";
-import RadarRenderer from './radar-renderer'
+import RadarRenderer from "./radar-renderer";
 import { getLerpFactor } from "../util/math";
 
 export default class Game {
   scene: Scene;
   camera: OrthographicCamera;
-  radar:RadarRenderer;
+  radar: RadarRenderer;
   map: TriangleMap;
   player: Player;
   overlay: GridOverlay;
@@ -17,7 +17,7 @@ export default class Game {
   constructor() {
     this.scene = new Scene();
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 1, 100);
-    this.radar=new RadarRenderer(this);
+    this.radar = new RadarRenderer(this);
     this.map = new TriangleMap(this.scene, 100, 200, 15);
     this.player = new Player(this);
     this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);

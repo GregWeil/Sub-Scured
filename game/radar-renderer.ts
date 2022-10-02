@@ -38,8 +38,8 @@ export default class RadarRenderer {
 
     this.renderScene = new Scene();
     this.renderPlane = new Mesh(
-      new PlaneGeometry(1, 1),
-      new MeshBasicMaterial({ color:0xffffff })
+      new PlaneGeometry(10, 10),
+      new MeshBasicMaterial({ color: 0xffffff })
     );
     this.renderScene.add(this.renderPlane);
     this.renderCamera = new OrthographicCamera(-1, 1, -1, 1, 1, 10);
@@ -56,6 +56,7 @@ export default class RadarRenderer {
       this.pulseX = playerPosition.x;
       this.pulseY = playerPosition.y;
     }
+    this.renderPlane.rotateOnAxis(new Vector3(0, 1, 1).normalize(), dt / 1000);
   }
 
   render(renderer: WebGLRenderer) {
@@ -66,12 +67,12 @@ export default class RadarRenderer {
     ) {
       this.scratchTarget.setSize(resolution.x, resolution.y);
     }
-    renderer.setTarget(this.scratchTarget);
+    renderer.setRenderTarget(this.scratchTarget);
     renderer.setClearColor(backgroundColor);
     renderer.clear();
     renderer.render(this.game.scene, this.game.camera);
 
-    renderer.setTarget(null);
+    renderer.setRenderTarget(null);
     renderer.setClearColor(0x000000);
     renderer.clear();
     renderer.render(this.renderScene, this.renderCamera);
@@ -79,5 +80,6 @@ export default class RadarRenderer {
 
   destructor() {
     this.scratchTarget.dispose();
+    this.renderPlane.geometry.dispose();
   }
 }
