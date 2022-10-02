@@ -21,8 +21,13 @@ import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { Howl } from "howler";
 
 import Game from "./game";
-import { backgroundColor, radarPingSound, radarPingTransitionSpeed } from "./assets";
+import {
+  backgroundColor,
+  radarPingSound,
+  radarMapTransitionSpeed,
+} from "./assets";
 import VisibilityShader from "../effect/visibility-shader";
+import WaterBackgroundShader from "../effect/water-background-shader";
 import { getLerpFactor } from "../util/math";
 
 export default class RadarRenderer {
@@ -41,7 +46,8 @@ export default class RadarRenderer {
 
   private sceneComposer: EffectComposer;
 
-  private screenTexture: ShaderPass;
+  private screenBackground: ShaderPass;
+  private screenVisibility: ShaderPass;
   private screenComposer: EffectComposer;
 
   private sound: Howl;
@@ -107,12 +113,14 @@ export default class RadarRenderer {
     this.sceneComposer.renderToScreen = false;
 
     this.screenComposer = new EffectComposer(renderer);
+    this.screenBackground = new ShaderPass(WaterBackgroundShader);
+    this.screenComposer.addPass(this.screenBackground);
     this.screenComposer.addPass(
       new RenderPass(this.overviewScene, this.game.camera)
     );
     this.screenComposer.addPass(new FilmPass(0.8, 0.2, 648, false));
-    this.screenTexture = new ShaderPass(VisibilityShader);
-    this.screenComposer.addPass(this.screenTexture);
+    this.screenVisibility = new ShaderPass(VisibilityShader);
+    this.screenComposer.addPass(this.screenVisibility);
     this.screenComposer.addPass(new FilmPass(0.35, 0.05, 648, false));
 
     this.sound = new Howl({ src: [radarPingSound] });
@@ -169,15 +177,21 @@ export default class RadarRenderer {
       this.overviewCamera
     );
     this.overviewTargetQuad.material.uniforms.TransitionAmount.value =
-      getLerpFactor(radarPingTransitionSpeed, dt / 60);
+      getLerpFactor(radarMapTransitionSpeed, dt / 60);
     this.overviewTargetQuad.render(renderer);
     renderer.setRenderTarget(null);
 
     this.overviewQuad.material.map = this.overviewTarget1.texture;
     this.sceneComposer.render(dt / 1000);
 
+    this.screenBackground.uniforms.PositionBounds.value.set(
+      this.game.camera.position.x + this.game.camera.left,
+      this.game.camera.position.y + this.game.camera.bottom,
+      this.game.camera.position.x + this.game.camera.right,
+      this.game.camera.position.y + this.game.camera.top
+    );
     this.applyShaderUniforms(
-      this.screenTexture.uniforms,
+      this.screenVisiblity.uniforms,
       this.sceneComposer.readBuffer,
       this.game.camera
     );
