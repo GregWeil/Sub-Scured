@@ -32,19 +32,42 @@ canvas {
 }
 
 .box {
+  display: inline-block;
+  font-family: VectrX, sans-serif;
+  line-height: 1.5;
   color: lime;
   background: black;
   border: 0.3vh lime solid;
   border-radius: 0.3vh;
+  padding: 0 1vh;
 }
 
-#start {
+.fullscreen-button {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+}
+
+#start .box {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 20vh;
-  height: 10vh;
+  font-size: 5vh;
+}
+
+#restart .box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5vh;
 }
 
 .score-container {
@@ -54,12 +77,9 @@ canvas {
 }
 
 .score {
-  display: inline-block;
   min-width: 10vh;
-  padding: 0 1vh;
   text-align: right;
   font-size: 4vh;
-  color: lime;
   background: black;
   border: 0.3vh lime solid;
   border-radius: 0.3vh;

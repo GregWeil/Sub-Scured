@@ -36,7 +36,7 @@ resize();
 
 game.render(renderer, 0);
 document.getElementById("start").addEventListener("click",event=>{
-  event.target.remove();
+  document.getElementById("start").remove();
 let timeLast = 0;
 renderer.setAnimationLoop((time) => {
   if (timeLast) {
