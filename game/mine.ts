@@ -34,7 +34,7 @@ export default class Mine {
     const playerPosition = this.game.player.getPosition();
     const prevPosition = this.mesh.position.clone();
 
-    if (this.mesh.position.distanceTo(playerPosition) < Infinity) {
+    if (this.mesh.position.distanceTo(playerPosition) < 500) {
       this.velocity.add(
         playerPosition
           .clone()

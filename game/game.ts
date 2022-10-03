@@ -19,7 +19,7 @@ import RadarRenderer from "./radar-renderer";
 import Debris from "./debris";
 import { music, lightColor } from "./assets";
 
-import { getLerpFactor } from "../util/math";
+import { distance, lerp, getLerpFactor } from "../util/math";
 
 const Music = new Howl({
   src: [music],
@@ -37,6 +37,7 @@ export default class Game {
   mines: Mine[];
   overlay: GridOverlay;
   playingMusic: number;
+  time: number;
   gameover: boolean;
 
   constructor(renderer: WebGLRenderer) {
@@ -48,17 +49,24 @@ export default class Game {
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
     this.debris = [];
-    this.mines = [new Mine(this, new Vector3(0, -100, 0))];
+    this.mines = [];
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
+    this.time = 0;
     this.gameover = false;
   }
 
   update(dt: number, input: Input) {
-    if (!this.gameover) this.player.update(dt, input);
-    this.debris.forEach((debris) => debris.update(dt));
+    if (!this.gameover) {
+      this.time += dt / 1000;
+      this.player.update(dt, input);
+    }
+    while (this.mines.length < Math.log(this.time)*10) {
+      this.spawnMine();
+    }
     this.mines.forEach((mine) => mine.update(dt));
+    this.debris.forEach((debris) => debris.update(dt));
     this.camera.position.lerp(
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
@@ -83,8 +91,20 @@ export default class Game {
     this.radar.render(renderer, dt);
   }
 
+  spawnMine() {
+    const { x: playerX, y: playerY } = this.player.getPosition();
+    const [originX, originY] = this.map.getWorldOrigin();
+    for (let i = 0; i < 100; ++i) {
+      const x = lerp(originX, -originX, Math.random()*0.8+0.1);
+      const y = lerp(originY, -originY, Math.random()*0);
+      if (distance(x, y, playerX, playerY) < 1000) continue;
+      if (this.map.raycast(x, y, x, y)) continue;
+      this.mines.push(new Mine(this, new Vector3(x, y, 0)));
+    }
+  }
+
   end() {
-    if(this.gameover)return;
+    if (this.gameover) return;
     this.gameover = true;
     this.light.color = new Color(0xff0000);
     this.player.die();
