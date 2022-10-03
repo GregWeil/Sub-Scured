@@ -47,7 +47,8 @@ export default class Game {
     this.scene = new Scene();
     this.light = new DirectionalLight(lightColor, 1);
     this.scene.add(this.light);
-    this.light.position.set(-6, -6, 4);
+    this.light.position.set(6, 6, 4);
+    this.scene.add(new AmbientLight(0xffffff))
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);

@@ -7,7 +7,17 @@ import { ModelLoader, mineModel, mineExplosionSound } from "./assets";
 import { getLerpFactor } from "../util/math";
 
 const MineModel = new Promise((resolve, reject) =>
-  ModelLoader.load(mineModel, resolve, null, reject)
+  ModelLoader.load(
+    mineModel,
+    (gltf) => {
+      gltf.scene.traverse((child) => {
+        if (child.material) child.material.metalness = 0;
+      });
+      resolve(gltf);
+    },
+    null,
+    reject
+  )
 );
 const ExplosionSound = new Howl({ src: [mineExplosionSound] });
 
@@ -16,7 +26,7 @@ export default class Mine {
   private mesh: Group;
   private velocity: Vector2;
   private alerted: boolean;
-private rotationDirection: number;
+  private rotationDirection: number;
 
   constructor(game: Game, position: Vector3) {
     this.game = game;
@@ -54,7 +64,13 @@ private rotationDirection: number;
 
     this.velocity.multiplyScalar(1 - getLerpFactor(0.3, dt / 1000));
     this.mesh.position.add(this.velocity.clone().multiplyScalar(dt / 1000));
-    this.mesh.rotation.z += 0.1 * Math.log(this.velocity.x) * dt / 1000;
+    if (this.velocity.x !== 0) {
+      this.mesh.rotation.z +=
+        0.1 *
+        Math.sign(this.velocity.x) *
+        Math.log(Math.abs(this.velocity.x)) *
+        (dt / 1000);
+    }
 
     if (
       this.game.map.raycast(
