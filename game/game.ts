@@ -13,6 +13,7 @@ import { Howl } from "howler";
 import Input from "./input";
 import Player from "./player";
 import Mine from "./mine";
+import Treasure from "./treasure";
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
 import RadarRenderer from "./radar-renderer";
@@ -35,6 +36,7 @@ export default class Game {
   player: Player;
   debris: Debris[];
   mines: Mine[];
+  treasure: Treasure[];
   overlay: GridOverlay;
   playingMusic: number;
   time: number;
@@ -50,6 +52,7 @@ export default class Game {
     this.player = new Player(this);
     this.debris = [];
     this.mines = [];
+    this.treasure = [];
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
@@ -64,6 +67,9 @@ export default class Game {
     }
     while (this.mines.length < Math.log(this.time) * 10) {
       this.spawnMine();
+    }
+    while (this.treasure.length < 10) {
+      this.spawnTreasure();
     }
     this.mines.forEach((mine) => mine.update(dt));
     this.debris.forEach((debris) => debris.update(dt));
@@ -90,6 +96,10 @@ export default class Game {
     this.camera.updateProjectionMatrix();
     this.radar.render(renderer, dt);
   }
+  
+  private getSpawnPoint(distFromPlayer:number) {
+    
+  }
 
   spawnMine() {
     const { x: playerX, y: playerY } = this.player.getPosition();
@@ -102,6 +112,10 @@ export default class Game {
       if (this.map.raycast(x, y - 1, x, y + 1)) continue;
       this.mines.push(new Mine(this, new Vector3(x, y, 0)));
     }
+  }
+  
+  spawnTreasure() {
+    
   }
 
   end() {

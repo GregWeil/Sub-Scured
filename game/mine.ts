@@ -37,7 +37,7 @@ export default class Mine {
     const playerPosition = this.game.player.getPosition();
     const prevPosition = this.mesh.position.clone();
 
-    if (this.alerted) {
+    if (this.alerted && !this.game.gameover) {
       this.velocity.add(
         playerPosition
           .clone()
@@ -66,8 +66,9 @@ export default class Mine {
     }
 
     let shouldExplode = false;
-    for (const mine of this.game.mines.slice()) {
-      if(mine===this)continue
+    for (const mine of this.game.mines.slice(
+      this.game.mines.indexOf(this) + 1
+    )) {
       if (this.mesh.position.distanceTo(mine.mesh.position) < 40) {
         shouldExplode = true;
         mine.explode();
