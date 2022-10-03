@@ -22,7 +22,11 @@ export default class Debris {
     this.mesh = new Mesh(Geometry, new MeshStandardMaterial({ metalness: 0 }));
     this.game.scene.add(this.mesh);
     this.mesh.position.copy(position);
-    this.mesh.rotation.set(Math.random(), Math.random(), Math.random());
+    this.mesh.rotation.set(
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2
+    );
     this.velocity = new Vector3(0, 16 + Math.random() * 32, 0).applyAxisAngle(
       new Vector3(0, 0, 1),
       Math.random() * Math.PI * 2
