@@ -11,7 +11,7 @@ const MineModel = new Promise((resolve, reject) =>
     mineModel,
     (gltf) => {
       gltf.scene.traverse((child) => {
-        if (child.material) child.material.metalness = 0.8;
+        if (child.material) child.material.metalness = 0.6;
       });
       resolve(gltf);
     },

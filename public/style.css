@@ -31,10 +31,14 @@ canvas {
   background: black;
 }
 
-#score {
+.score-container{
   position: absolute;
   bottom: 1vh;
-  right: 2vh;
+  right: 1vh;
+}
+
+.score {
+  display: inline-block;
   min-width: 10vh;
   padding: 0 1vh;
   text-align: right;
@@ -45,6 +49,16 @@ canvas {
   border-radius: 0.3vh;
 }
 
-#score:empty {
+.score:empty {
   display: none;
+}
+
+#best {
+  color: yellow;
+  border-color: yellow;
+}
+
+#best::before {
+  content: "TOP";
+  font-size: 1vh;
 }

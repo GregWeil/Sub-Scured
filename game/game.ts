@@ -42,6 +42,7 @@ export default class Game {
   playingMusic: number;
   time: number;
   score: number;
+  best:number;
   gameover: boolean;
 
   constructor(renderer: WebGLRenderer) {
@@ -62,6 +63,10 @@ export default class Game {
     this.playingMusic = Music.play();
     this.time = 0;
     this.score = 0;
+    this.best=Number(window.localStorage.getItem('best'))||0
+    if(this.best>0){
+    document.getElementById("best").innerText = this.best;
+    }
     this.gameover = false;
   }
 
@@ -132,6 +137,11 @@ export default class Game {
   givePoint() {
     this.score += 1;
     document.getElementById("score").innerText = this.score;
+    if(this.score>this.best){
+      window.localStorage.setItem('best',this.score);
+    document.getElementById("best").innerText = this.score;
+    document.getElementById("score").innerText = '';
+    }
   }
 
   end() {
