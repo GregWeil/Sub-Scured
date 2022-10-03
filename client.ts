@@ -34,6 +34,9 @@ const resize = () => {
 window.addEventListener("resize", resize);
 resize();
 
+game.render(renderer, 0);
+document.getElementById("start").addEventListener("click",event=>{
+  event.target.remove();
 let timeLast = 0;
 renderer.setAnimationLoop((time) => {
   if (timeLast) {
@@ -46,5 +49,6 @@ renderer.setAnimationLoop((time) => {
   timeLast = time;
   stats.update();
 });
+},{once:true});
 
 console.log("Hello world!");

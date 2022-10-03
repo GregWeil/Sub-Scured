@@ -31,7 +31,23 @@ canvas {
   background: black;
 }
 
-.score-container{
+.box {
+  color: lime;
+  background: black;
+  border: 0.3vh lime solid;
+  border-radius: 0.3vh;
+}
+
+#start {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20vh;
+  height: 10vh;
+}
+
+.score-container {
   position: absolute;
   bottom: 1vh;
   right: 1vh;

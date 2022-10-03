@@ -149,6 +149,7 @@ export default class Game {
     this.light.color = new Color(0xff0000);
     this.ambient.color = new Color(0xff0000);
     this.player.die();
+    window.setTimeout(() => window.location.reload(), 3000);
   }
 
   destructor() {
