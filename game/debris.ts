@@ -24,11 +24,11 @@ export default class Debris {
     scene.add(this.mesh);
     this.mesh.position.copy(position);
     this.mesh.rotation.set(Math.random(), Math.random(), Math.random());
-    this.velocity = new Vector3(0, 4 + Math.random() * 4, 0).applyAxisAngle(
+    this.velocity = new Vector3(0, 16 + Math.random() * 32, 0).applyAxisAngle(
       new Vector3(0, 0, 1),
       Math.random() * Math.PI * 2
     );
-    this.angularVelocity = new Vector3(1, 1, 1).multiplyScalar(0.1);
+    this.angularVelocity = new Vector3(1, 1, 1).multiplyScalar(0.3);
   }
 
   update(dt: number) {
@@ -37,6 +37,6 @@ export default class Debris {
     this.mesh.rotateY((this.angularVelocity.y * dt) / 1000);
     this.mesh.rotateZ((this.angularVelocity.z * dt) / 1000);
 
-    this.velocity.multiplyScalar(1 - getLerpFactor(0.1, dt / 1000));
+    this.velocity.multiplyScalar(1 - getLerpFactor(0.5, dt / 1000));
   }
 }

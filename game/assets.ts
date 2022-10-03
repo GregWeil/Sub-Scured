@@ -12,6 +12,7 @@ const assetPath =
 export const music = assetPath + '/Level3.mp3'
 
 export const playerModel = assetPath + "/submarine.gltf";
+export const playerDeathSound = assetPath+"/awooga.wav";
 
 export const playerVisibilityOuterRadius = 80;
 export const playerVisibilityInnerRadius = 30;

@@ -48,7 +48,7 @@ export default class Game {
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
     this.playerDebris = [];
-    this.mines = [new Mine(this)];
+    this.mines = [new Mine(this,new Vector3(0,100,0))];
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();

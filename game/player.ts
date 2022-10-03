@@ -2,7 +2,11 @@ import { Group, Vector3 } from "three";
 
 import Game from "./game";
 import Input from "./input";
-import { ModelLoader, playerModel } from "./assets";
+import { ModelLoader, playerModel ,playerDeathSound} from "./assets";
+
+const DeathSound = new Howl({
+  src:[]
+})
 
 export default class Player {
   private game: Game;
