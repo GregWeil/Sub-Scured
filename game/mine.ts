@@ -8,6 +8,8 @@ export default class Mine {
   private game: Game;
   private mesh: Group;
 
+  private velocity: Vector2;
+
   constructor(game: Game, position: Vector3) {
     this.game = game;
     this.mesh = new Group();
@@ -21,15 +23,27 @@ export default class Mine {
       group.rotation.set(-Math.PI / 2, Math.PI, 0);
     });
     this.mesh.position.copy(position);
+    this.velocity = new Vector3();
   }
 
   update(dt: number) {
-    const playerPosition = this.game.player.getPosition()
-    
-    //move towards player
-    
+    const playerPosition = this.game.player.getPosition();
+
+    if (this.mesh.position.distanceTo(playerPosition) < Infinity) {
+      this.velocity.add(
+        playerPosition
+          .clone()
+          .sub(this.mesh.position)
+          .normalize()
+          .multiplyScalar(5 * dt/1000)
+      );
+      this.velocity.z = 0;
+    }
+    this.mesh.position.add(this.velocity.clone().multiplyScalar(dt/1000));
+    console.log(this.mesh.position)
+
     //check for wall collision
-    
+
     const playerPositions = [
       this.game.player.mesh.localToWorld(new Vector3(0, 20, 0)),
       playerPosition,

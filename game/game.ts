@@ -86,18 +86,7 @@ export default class Game {
   end() {
     this.gameover = true;
     this.light.color = new Color(0xff0000);
-    const front = this.player.mesh.localToWorld(new Vector3(0, 20, 0));
-    const back = this.player.mesh.localToWorld(new Vector3(0, -20, 0));
-    for (let i = 0; i < 16; ++i) {
-      this.playerDebris.push(
-        new Debris(
-          this.scene,
-          this.map,
-          front.clone().lerp(back, Math.random())
-        )
-      );
-    }
-    this.player.mesh.visible = false;
+    this.player.die();
   }
 
   destructor() {

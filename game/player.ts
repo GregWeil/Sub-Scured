@@ -1,12 +1,14 @@
 import { Group, Vector3 } from "three";
+import { Howl } from "howler";
 
 import Game from "./game";
 import Input from "./input";
-import { ModelLoader, playerModel ,playerDeathSound} from "./assets";
+import Debris from "./debris";
+import { ModelLoader, playerModel, playerDeathSound } from "./assets";
 
 const DeathSound = new Howl({
-  src:[]
-})
+  src: [playerDeathSound],
+});
 
 export default class Player {
   private game: Game;
@@ -86,6 +88,22 @@ export default class Player {
 
   getPosition() {
     return this.mesh.position;
+  }
+
+  die() {
+    DeathSound.play();
+    this.mesh.visible = false;
+    const front = this.mesh.localToWorld(new Vector3(0, 20, 0));
+    const back = this.mesh.localToWorld(new Vector3(0, -20, 0));
+    for (let i = 0; i < 16; ++i) {
+      this.game.playerDebris.push(
+        new Debris(
+          this.game.scene,
+          this.game.map,
+          front.clone().lerp(back, Math.random())
+        )
+      );
+    }
   }
 
   destructor() {
