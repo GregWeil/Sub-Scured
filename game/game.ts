@@ -67,7 +67,7 @@ export default class Game {
     if (this.mines.length < Math.log(this.time) * 10) {
       this.spawnMine();
     }
-    if (this.treasure.length < 1000) {
+    if (this.treasure.length < 10) {
       this.spawnTreasure();
     }
     }

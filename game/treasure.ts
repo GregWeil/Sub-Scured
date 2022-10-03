@@ -11,7 +11,7 @@ import Game from "./game";
 import { treasureCollectSound } from "./assets";
 import { getLerpFactor } from "../util/math";
 
-const Geometry = new DodecahedronGeometry(10);
+const Geometry = new DodecahedronGeometry(20);
 const CollectSound = new Howl({ src: [treasureCollectSound] });
 
 export default class Treasure {
@@ -33,14 +33,18 @@ export default class Treasure {
         this.game.player.mesh.localToWorld(new Vector3(0, -20, 0)),
       ];
       for (const position of playerPositions) {
-        if (this.mesh.position.distanceTo(position) < 20) {
+        if (this.mesh.position.distanceTo(position) < 15) {
           this.collect();
           return;
         }
       }
     }
-    this.mesh.rotateX(dt/1000);
-    this.mesh.rotateY(dt/1000)
+    this.mesh.rotateX(dt / 1000);
+    this.mesh.rotateY(dt / 1000);
+    this.mesh.rotateZ(dt / 1000);
+    this.mesh.scale.setLength(
+      Math.max(Math.sin(this.game.time * 2) / 3 + 1, 1)
+    );
   }
 
   collect() {

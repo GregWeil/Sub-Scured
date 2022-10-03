@@ -1,5 +1,10 @@
 /* a minimalist set of CSS resets */
 
+@font-face {
+  font-family: asdf;
+  src: url(https://cdn.glitch.global/f2e558c1-0728-4f7a-8020-854d50f81021/VectrX.otf);
+}
+
 /* default to border-box */
 html {
   box-sizing: border-box;
