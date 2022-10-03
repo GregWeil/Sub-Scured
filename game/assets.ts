@@ -31,3 +31,4 @@ export const radarMapFadeAmount = 0.1;
 export const radarMapFadeSubtract = 0.3;
 
 export const mineModel = assetPath + "/mine.gltf"
+export const mineExplosionSound = assetPath+"/mine.wav";

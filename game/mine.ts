@@ -1,9 +1,12 @@
 import { Scene, Group, Vector2, Vector3 } from "three";
+import { Howl } from "howler";
 
 import Game from "./game";
 import Debris from "./debris";
-import { ModelLoader, mineModel } from "./assets";
+import { ModelLoader, mineModel, mineExplosionSound } from "./assets";
 import { getLerpFactor } from "../util/math";
+
+const ExplosionSound = new Howl({ src: [mineExplosionSound] });
 
 export default class Mine {
   private game: Game;
@@ -29,6 +32,7 @@ export default class Mine {
 
   update(dt: number) {
     const playerPosition = this.game.player.getPosition();
+    const prevPosition = this.mesh.position.clone();
 
     if (this.mesh.position.distanceTo(playerPosition) < Infinity) {
       this.velocity.add(
@@ -36,15 +40,23 @@ export default class Mine {
           .clone()
           .sub(this.mesh.position)
           .normalize()
-          .multiplyScalar((5 * dt) / 1000)
+          .multiplyScalar((25 * dt) / 1000)
       );
       this.velocity.z = 0;
     }
-    this.velocity.multiplyScalar(1 - getLerpFactor(0.01, dt / 1000));
+    this.velocity.multiplyScalar(1 - getLerpFactor(0.3, dt / 1000));
     this.mesh.position.add(this.velocity.clone().multiplyScalar(dt / 1000));
-    console.log(this.velocity)
 
-    //check for wall collision
+    if (
+      this.game.map.raycast(
+        prevPosition.x,
+        prevPosition.y,
+        this.mesh.position.x,
+        this.mesh.position.y
+      )
+    ) {
+      this.explode();
+    }
 
     const playerPositions = [
       this.game.player.mesh.localToWorld(new Vector3(0, 20, 0)),
@@ -61,8 +73,9 @@ export default class Mine {
   }
 
   explode() {
+    ExplosionSound.play();
     for (let i = 0; i < 64; ++i) {
-      this.game.playerDebris.push(
+      this.game.debris.push(
         new Debris(
           this.game.scene,
           this.game.map,

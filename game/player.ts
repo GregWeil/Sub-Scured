@@ -76,9 +76,9 @@ export default class Player {
 
   turn(input: Input) {
     const go = input.getHorizontal();
-    this.turnAcc += go * 0.1;
-    if (this.turnAcc > 1) this.turnAcc = 1;
-    if (this.turnAcc < -1) this.turnAcc = -1;
+    this.turnAcc += go * 0.2;
+    if (this.turnAcc > 2) this.turnAcc = 2;
+    if (this.turnAcc < -2) this.turnAcc = -2;
     if (Math.abs(go) < 0.5) {
       if (this.turnAcc > 0) this.turnAcc -= 0.06;
       if (this.turnAcc < 0) this.turnAcc += 0.06;

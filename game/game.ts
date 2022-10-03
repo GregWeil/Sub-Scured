@@ -12,7 +12,7 @@ import { Howl } from "howler";
 
 import Input from "./input";
 import Player from "./player";
-import Mine from './mine'
+import Mine from "./mine";
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
 import RadarRenderer from "./radar-renderer";
@@ -33,7 +33,7 @@ export default class Game {
   radar: RadarRenderer;
   map: TriangleMap;
   player: Player;
-  playerDebris: Debris[];
+  debris: Debris[];
   mines: Mine[];
   overlay: GridOverlay;
   playingMusic: number;
@@ -47,8 +47,8 @@ export default class Game {
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
-    this.playerDebris = [];
-    this.mines = [new Mine(this,new Vector3(0,100,0))];
+    this.debris = [];
+    this.mines = [new Mine(this, new Vector3(0, -100, 0))];
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
@@ -57,7 +57,7 @@ export default class Game {
 
   update(dt: number, input: Input) {
     if (!this.gameover) this.player.update(dt, input);
-    this.playerDebris.forEach((debris) => debris.update(dt));
+    this.debris.forEach((debris) => debris.update(dt));
     this.mines.forEach((mine) => mine.update(dt));
     this.camera.position.lerp(
       this.player.getPosition(),
@@ -84,6 +84,7 @@ export default class Game {
   }
 
   end() {
+    if(this.gameover)return;
     this.gameover = true;
     this.light.color = new Color(0xff0000);
     this.player.die();
