@@ -42,7 +42,7 @@ export default class Game {
   playingMusic: number;
   time: number;
   score: number;
-  best:number;
+  best: number;
   gameover: boolean;
 
   constructor(renderer: WebGLRenderer) {
@@ -63,9 +63,9 @@ export default class Game {
     this.playingMusic = Music.play();
     this.time = 0;
     this.score = 0;
-    this.best=Number(window.localStorage.getItem('best'))||0
-    if(this.best>0){
-    document.getElementById("best").innerText = this.best;
+    this.best = Number(window.localStorage.getItem("best")) || 0;
+    if (this.best > 0) {
+      document.getElementById("best").innerText = this.best;
     }
     this.gameover = false;
   }
@@ -74,7 +74,7 @@ export default class Game {
     if (!this.gameover) {
       this.time += dt / 1000;
       this.player.update(dt, input);
-      if (this.mines.length < Math.log(this.time) * 10) {
+      if (this.mines.length < Math.log(this.score) * 20 + 10) {
         this.spawnMine();
       }
       if (this.treasure.length < 10) {
@@ -137,9 +137,9 @@ export default class Game {
   givePoint() {
     this.score += 1;
     document.getElementById("score").innerText = this.score;
-    if(this.score>this.best){
-      window.localStorage.setItem('best',this.score);
-    document.getElementById("best").innerText = this.score;
+    if (this.score > this.best) {
+      window.localStorage.setItem("best", this.score);
+      document.getElementById("best").innerText = this.score;
     }
   }
 
