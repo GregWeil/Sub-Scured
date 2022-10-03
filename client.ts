@@ -37,11 +37,11 @@ resize();
 let timeLast = 0;
 renderer.setAnimationLoop((time) => {
   if (timeLast) {
-    const dt = min(time - timeLast, 1000/10)
+    const dt = Math.min(time - timeLast, 1000 / 15);
     input.before(game.camera);
     game.update(dt, input);
     input.after();
-    game.render(renderer, time - timeLast);
+    game.render(renderer, dt);
   }
   timeLast = time;
   stats.update();
