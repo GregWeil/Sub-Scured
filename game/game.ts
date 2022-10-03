@@ -34,6 +34,7 @@ export default class Game {
   map: TriangleMap;
   player: Player;
   playerDebris: Debris[];
+  mines: Mine[];
   overlay: GridOverlay;
   playingMusic: number;
   gameover: boolean;
@@ -46,8 +47,8 @@ export default class Game {
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
-    const mine = new Mine(this);
     this.playerDebris = [];
+    this.mines = [new Mine(this)];
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
@@ -57,6 +58,7 @@ export default class Game {
   update(dt: number, input: Input) {
     if (!this.gameover) this.player.update(dt, input);
     this.playerDebris.forEach((debris) => debris.update(dt));
+    this.mines.forEach((mine) => mine.update(dt));
     this.camera.position.lerp(
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
