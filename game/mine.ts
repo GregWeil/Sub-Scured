@@ -6,6 +6,9 @@ import Debris from "./debris";
 import { ModelLoader, mineModel, mineExplosionSound } from "./assets";
 import { getLerpFactor } from "../util/math";
 
+const MineModel = new Promise((resolve, reject) =>
+  ModelLoader.load(mineModel, resolve, null, reject)
+)
 const ExplosionSound = new Howl({ src: [mineExplosionSound] });
 
 export default class Mine {
@@ -18,9 +21,8 @@ export default class Mine {
     this.game = game;
     this.mesh = new Group();
     this.game.scene.add(this.mesh);
-    ModelLoader.load(mineModel, (gltf) => {
-      const group = new Group();
-      group.add(gltf.scene);
+    MineModel.then((gltf) => {
+      const group = gltf.scene.clone(true);
       this.mesh.add(group);
       group.position.set(0, 0, 0);
       group.scale.set(20, 20, 20);

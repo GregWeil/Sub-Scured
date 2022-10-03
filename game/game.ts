@@ -95,10 +95,11 @@ export default class Game {
     const { x: playerX, y: playerY } = this.player.getPosition();
     const [originX, originY] = this.map.getWorldOrigin();
     for (let i = 0; i < 100; ++i) {
-      const x = lerp(originX, -originX, Math.random()*0.8+0.1);
-      const y = lerp(originY, -originY, Math.random()*0);
-      if (distance(x, y, playerX, playerY) < 1000) continue;
-      if (this.map.raycast(x, y, x, y)) continue;
+      const x = lerp(originX, -originX, Math.random());
+      const y = lerp(originY, -originY, Math.random());
+      if (distance(x, y, playerX, playerY) < 750) continue;
+      if (this.map.raycast(x-1, y, x+1, y)) continue;
+      if (this.map.raycast(x, y-1, x, y+1)) continue;
       this.mines.push(new Mine(this, new Vector3(x, y, 0)));
     }
   }
