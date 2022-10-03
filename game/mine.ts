@@ -16,6 +16,7 @@ export default class Mine {
   private mesh: Group;
   private velocity: Vector2;
   private alerted: boolean;
+private rotationDirection: number;
 
   constructor(game: Game, position: Vector3) {
     this.game = game;
@@ -29,6 +30,7 @@ export default class Mine {
       group.rotation.set(-Math.PI / 2, Math.PI, 0);
     });
     this.mesh.position.copy(position);
+    this.mesh.rotation.z = Math.random() * Math.PI;
     this.velocity = new Vector3();
     this.alerted = false;
   }
@@ -52,6 +54,7 @@ export default class Mine {
 
     this.velocity.multiplyScalar(1 - getLerpFactor(0.3, dt / 1000));
     this.mesh.position.add(this.velocity.clone().multiplyScalar(dt / 1000));
+    this.mesh.rotation.z += 0.1 * Math.log(this.velocity.x) * dt / 1000;
 
     if (
       this.game.map.raycast(
