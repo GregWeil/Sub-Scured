@@ -31,6 +31,7 @@ export default class Game {
   scene: Scene;
   camera: OrthographicCamera;
   light: DirectionalLight;
+  ambient: AmbientLight;
   radar: RadarRenderer;
   map: TriangleMap;
   player: Player;
@@ -40,7 +41,7 @@ export default class Game {
   overlay: GridOverlay;
   playingMusic: number;
   time: number;
-  score:number;
+  score: number;
   gameover: boolean;
 
   constructor(renderer: WebGLRenderer) {
@@ -48,7 +49,8 @@ export default class Game {
     this.light = new DirectionalLight(lightColor, 1);
     this.scene.add(this.light);
     this.light.position.set(6, 6, 4);
-    this.scene.add(new AmbientLight(0xffffff))
+    this.ambient = new AmbientLight(lightColor, 0.5);
+    this.scene.add(this.ambient);
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
@@ -67,12 +69,12 @@ export default class Game {
     if (!this.gameover) {
       this.time += dt / 1000;
       this.player.update(dt, input);
-    if (this.mines.length < Math.log(this.time) * 10) {
-      this.spawnMine();
-    }
-    if (this.treasure.length < 10) {
-      this.spawnTreasure();
-    }
+      if (this.mines.length < Math.log(this.time) * 10) {
+        this.spawnMine();
+      }
+      if (this.treasure.length < 10) {
+        this.spawnTreasure();
+      }
     }
     this.treasure.forEach((treasure) => treasure.update(dt));
     this.mines.forEach((mine) => mine.update(dt));
@@ -126,16 +128,17 @@ export default class Game {
     if (!position) return;
     this.treasure.push(new Treasure(this, new Vector3(...position, 0)));
   }
-  
+
   givePoint() {
     this.score += 1;
-    document.getElementById('score').innerText = this.score;
+    document.getElementById("score").innerText = this.score;
   }
 
   end() {
     if (this.gameover) return;
     this.gameover = true;
     this.light.color = new Color(0xff0000);
+    this.ambient.color = new Color(0xff0000);
     this.player.die();
   }
 

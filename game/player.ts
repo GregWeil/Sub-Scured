@@ -20,6 +20,9 @@ export default class Player {
     this.game = game;
     this.mesh = new Group();
     ModelLoader.load(playerModel, (gltf) => {
+      gltf.scene.traverse((child) => {
+        //if (child.material) child.material.metalness = 0;
+      });
       const group = new Group();
       group.add(gltf.scene);
       this.mesh.add(group);

@@ -19,7 +19,7 @@ export default class Debris {
 
   constructor(game: Game, position: Vector3) {
     this.game = game;
-    this.mesh = new Mesh(Geometry, new MeshStandardMaterial());
+    this.mesh = new Mesh(Geometry, new MeshStandardMaterial({ metalness: 0 }));
     this.game.scene.add(this.mesh);
     this.mesh.position.copy(position);
     this.mesh.rotation.set(Math.random(), Math.random(), Math.random());
