@@ -97,7 +97,7 @@ export default class Game {
     for (let i = 0; i < 100; ++i) {
       const x = lerp(originX, -originX, Math.random());
       const y = lerp(originY, -originY, Math.random());
-      if (distance(x, y, playerX, playerY) < 750) continue;
+      if (distance(x, y, playerX, playerY) < 300) continue;
       if (this.map.raycast(x-1, y, x+1, y)) continue;
       if (this.map.raycast(x, y-1, x, y+1)) continue;
       this.mines.push(new Mine(this, new Vector3(x, y, 0)));

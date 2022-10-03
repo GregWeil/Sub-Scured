@@ -96,10 +96,9 @@ export default class Player {
     const front = this.mesh.localToWorld(new Vector3(0, 20, 0));
     const back = this.mesh.localToWorld(new Vector3(0, -20, 0));
     for (let i = 0; i < 16; ++i) {
-      this.game.playerDebris.push(
+      this.game.debris.push(
         new Debris(
-          this.game.scene,
-          this.game.map,
+          this.game,
           front.clone().lerp(back, Math.random())
         )
       );

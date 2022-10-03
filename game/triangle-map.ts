@@ -191,6 +191,7 @@ export default class TriangleMap {
     const [cx1, cy1] = this.triangleToCell(tx1, ty1);
     if (this.grid[cx1 * this.height + cy1] > 0) return [x1, y1, cx1, cy1];
     const [tx2, ty2] = this.worldToTriangle(x2, y2);
+    if (tx1 === tx2 && ty1 === ty2) return null;
 
     const checked = new Set([`${cx1}_${cy1}`]);
     const queue = this.getAdjacent(cx1, cy1);

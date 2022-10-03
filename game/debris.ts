@@ -6,22 +6,21 @@ import {
   Vector3,
 } from "three";
 
-import TriangleMap from "./triangle-map";
+import Game from "./game";
 import { getLerpFactor } from "../util/math";
 
+const Geometry = new ConeGeometry(5, 10, 3);
+
 export default class Debris {
-  private map: TriangleMap;
+  private game: Game;
   private mesh: Mesh;
   private velocity: Vector3;
   private angularVelocity: Vector3;
 
-  constructor(scene: Scene, map: TriangleMap, position: Vector3) {
-    this.map = map;
-    this.mesh = new Mesh(
-      new ConeGeometry(5, 10, 3),
-      new MeshStandardMaterial()
-    );
-    scene.add(this.mesh);
+  constructor(game: Game, position: Vector3) {
+    this.game = game;
+    this.mesh = new Mesh(Geometry, new MeshStandardMaterial());
+    this.game.scene.add(this.mesh);
     this.mesh.position.copy(position);
     this.mesh.rotation.set(Math.random(), Math.random(), Math.random());
     this.velocity = new Vector3(0, 16 + Math.random() * 32, 0).applyAxisAngle(
@@ -38,5 +37,14 @@ export default class Debris {
     this.mesh.rotateZ((this.angularVelocity.z * dt) / 1000);
 
     this.velocity.multiplyScalar(1 - getLerpFactor(0.5, dt / 1000));
+
+    if (this.mesh.position.distanceTo(this.game.player.getPosition()) > 500) {
+      this.destructor();
+    }
+  }
+
+  destructor() {
+    this.game.debris = this.game.debris.filter((debris) => debris !== this);
+    this.mesh.removeFromParent();
   }
 }
