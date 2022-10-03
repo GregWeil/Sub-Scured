@@ -45,6 +45,12 @@ export default class TriangleMap {
     this.grid.fill(1);
 
     let position = new Vector2(...this.worldToCell(0, 0));
+    for (let x = position.x - 10; x < position.x + 10; ++x) {
+      for (let y = position.y - 30; y < position.y + 30; ++y) {
+        this.grid[x * this.height + y] = 0;
+      }
+    }
+
     let direction = new Vector2(0, 1);
     for (let i = 0; i < 600; ++i) {
       const angle = (Math.random() - 0.5) * Math.PI;
@@ -72,7 +78,9 @@ export default class TriangleMap {
           const adjacent = this.getAdjacent(x, y);
           const solid = this.grid[x * this.height + y] > 0;
           if (solid) {
-            if (!adjacent.some(([x, y]) => this.grid[x * this.height + y] > 0)) {
+            if (
+              !adjacent.some(([x, y]) => this.grid[x * this.height + y] > 0)
+            ) {
               toRemove.push([x, y]);
             }
           } else if (Math.random() < 0.5) {

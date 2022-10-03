@@ -1,4 +1,3 @@
-
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
 export const ModelLoader = new GLTFLoader();
@@ -29,3 +28,5 @@ export const radarMapTransitionSpeed = 0.75;
 export const radarMapFadeInterval = 0.05;
 export const radarMapFadeAmount = 0.1;
 export const radarMapFadeSubtract = 0.3;
+
+export const mineModel = assetPath + "/mine.gltf"
