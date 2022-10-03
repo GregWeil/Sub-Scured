@@ -76,7 +76,7 @@ export default class RadarRenderer {
       0,
       100
     );
-    this.overviewCamera.position.z = 10;
+    this.overviewCamera.position.z = 50;
     this.overviewCamera.updateProjectionMatrix();
     this.overviewTarget1 = new WebGLRenderTarget(128, 128, {
       magFilter: NearestFilter,
@@ -234,7 +234,7 @@ export default class RadarRenderer {
       this.game.camera
     );
     this.screenComposer.render(dt / 1000);
-    
+
     //renderer.clear();
     //renderer.render(this.game.scene, this.overviewCamera);
   }

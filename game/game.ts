@@ -12,6 +12,7 @@ import { Howl } from "howler";
 
 import Input from "./input";
 import Player from "./player";
+import Mine from './mine'
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
 import RadarRenderer from "./radar-renderer";
@@ -45,6 +46,7 @@ export default class Game {
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
+    const mine = new Mine(this);
     this.playerDebris = [];
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
