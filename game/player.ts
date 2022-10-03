@@ -9,6 +9,7 @@ export default class Player {
   private mesh: Group;
   private impulseAcc: number;
   private turnAcc: number;
+  private dead: boolean;
 
   constructor(game: Game) {
     this.game = game;
@@ -24,35 +25,38 @@ export default class Player {
     this.game.scene.add(this.mesh);
     this.impulseAcc = 0;
     this.turnAcc = 0;
+    this.dead = false;
   }
 
   update(dt: number, input: Input) {
-    const prevPosition = this.mesh.localToWorld(new Vector3(0, 1, 0));
+    const prevPosition = this.mesh.localToWorld(new Vector3(0, 0, 0));
 
-    const horizontal = input.getHorizontal();
-    //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
-    let direction = this.turn(input);
-    this.mesh.rotateOnAxis(
-      new Vector3(0, 0, 1).normalize(),
-      (direction * dt) / 1000
-    );
-    const vertical = input.getVertical();
+    if (!this.dead) {
+      const horizontal = input.getHorizontal();
+      //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
+      let direction = this.turn(input);
+      this.mesh.rotateOnAxis(
+        new Vector3(0, 0, 1).normalize(),
+        (direction * dt) / 1000
+      );
+      const vertical = input.getVertical();
 
-    let acc = this.impulse(input);
-    //this.mesh.position.y += (acc * dt) / 1000;
-    this.mesh.translateOnAxis(
-      new Vector3(0, 1, 0).normalize(),
-      (acc * dt) / 1000
-    );
+      let acc = this.impulse(input);
+      //this.mesh.position.y += (acc * dt) / 1000;
+      this.mesh.translateOnAxis(
+        new Vector3(0, 1, 0).normalize(),
+        (acc * dt) / 1000
+      );
+    }
 
-    const currentPosition = this.mesh.localToWorld(new Vector3(0, 1, 0));
+    const currentPosition = this.mesh.localToWorld(new Vector3(0, 16, 0));
     const hit = this.game.map.raycast(
       prevPosition.x,
       prevPosition.y,
       currentPosition.x,
       currentPosition.y
     );
-    //if (hit) console.log(hit);
+    if (hit) this.die();
   }
 
   impulse(input: Input) {
@@ -82,6 +86,12 @@ export default class Player {
 
   getPosition() {
     return this.mesh.position;
+  }
+
+  die() {
+    if (this.dead) return;
+    this.dead = true;
+    this.game.radar.pulseTimer = -Infinity;
   }
 
   destructor() {
