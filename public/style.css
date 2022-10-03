@@ -1,7 +1,7 @@
 /* a minimalist set of CSS resets */
 
 @font-face {
-  font-family: asdf;
+  font-family: VectrX;
   src: url(https://cdn.glitch.global/f2e558c1-0728-4f7a-8020-854d50f81021/VectrX.otf);
 }
 
@@ -20,7 +20,7 @@ html {
 /* adjust typography defaults */
 body {
   margin: 1rem;
-  font-family: sans-serif;
+  font-family: VectrX, sans-serif;
   line-height: 1.5;
 }
 
@@ -29,4 +29,19 @@ canvas {
   top: 0;
   left: 0;
   background: black;
+}
+
+#score {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  min-width: 50px;
+  padding: 2px 10px;
+  text-align: center;
+  color: lime;
+  background: black;
+}
+
+#score:empty {
+  display: none;
 }

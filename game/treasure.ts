@@ -49,6 +49,7 @@ export default class Treasure {
 
   collect() {
     CollectSound.play();
+    this.game.givePoint();
     this.destructor();
   }
 

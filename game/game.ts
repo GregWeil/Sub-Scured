@@ -40,6 +40,7 @@ export default class Game {
   overlay: GridOverlay;
   playingMusic: number;
   time: number;
+  score:number;
   gameover: boolean;
 
   constructor(renderer: WebGLRenderer) {
@@ -57,6 +58,7 @@ export default class Game {
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
     this.time = 0;
+    this.score = 0;
     this.gameover = false;
   }
 
@@ -122,6 +124,11 @@ export default class Game {
     const position = this.getSpawnPoint(500);
     if (!position) return;
     this.treasure.push(new Treasure(this, new Vector3(...position, 0)));
+  }
+  
+  givePoint() {
+    this.score += 1;
+    document.getElementById('score').innerText = this.score;
   }
 
   end() {
