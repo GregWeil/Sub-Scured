@@ -3,6 +3,7 @@ import { Scene, Group, Vector2, Vector3 } from "three";
 import Game from "./game";
 import Debris from "./debris";
 import { ModelLoader, mineModel } from "./assets";
+import { getLerpFactor } from "../util/math";
 
 export default class Mine {
   private game: Game;
@@ -35,12 +36,13 @@ export default class Mine {
           .clone()
           .sub(this.mesh.position)
           .normalize()
-          .multiplyScalar(5 * dt/1000)
+          .multiplyScalar((5 * dt) / 1000)
       );
       this.velocity.z = 0;
     }
-    this.mesh.position.add(this.velocity.clone().multiplyScalar(dt/1000));
-    console.log(this.mesh.position)
+    this.velocity.multiplyScalar(1 - getLerpFactor(0.01, dt / 1000));
+    this.mesh.position.add(this.velocity.clone().multiplyScalar(dt / 1000));
+    console.log(this.velocity)
 
     //check for wall collision
 

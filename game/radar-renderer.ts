@@ -78,7 +78,7 @@ export default class RadarRenderer {
     );
     this.overviewCamera.position.z = 50;
     this.overviewCamera.updateProjectionMatrix();
-    this.overviewTarget1 = new WebGLRenderTarget(128, 128, {
+    this.overviewTarget1 = new WebGLRenderTarget(192, 192, {
       magFilter: NearestFilter,
     });
     renderer.setClearColor(0x000000, 1);
