@@ -34,21 +34,27 @@ const resize = () => {
 window.addEventListener("resize", resize);
 resize();
 
+let started = false;
 game.render(renderer, 0);
-document.getElementById("start").addEventListener("click",event=>{
-  document.getElementById("start").remove();
+document.getElementById("start").addEventListener("click", (event) => {
+  document.body.classList.remove("title");
+  started = true;
+});
+document.getElementById("restart").addEventListener("click", (event) => {
+  window.location.reload();
+});
+
 let timeLast = 0;
 renderer.setAnimationLoop((time) => {
-  if (timeLast) {
+  if (timeLast && started) {
     const dt = Math.min(time - timeLast, 1000 / 15);
     input.before(game.camera);
-    game.update(dt, input);
+    if (started) game.update(dt, input);
     input.after();
     game.render(renderer, dt);
   }
   timeLast = time;
   stats.update();
 });
-},{once:true});
 
 console.log("Hello world!");

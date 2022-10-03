@@ -62,12 +62,20 @@ canvas {
   font-size: 5vh;
 }
 
+body:not(.title) #start {
+  display: none;
+}
+
 #restart .box {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   font-size: 5vh;
+}
+
+body:not(.dead) #restart {
+  display: none;
 }
 
 .score-container {

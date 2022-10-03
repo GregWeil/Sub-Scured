@@ -149,7 +149,10 @@ export default class Game {
     this.light.color = new Color(0xff0000);
     this.ambient.color = new Color(0xff0000);
     this.player.die();
-    window.setTimeout(() => window.location.reload(), 3000);
+    window.setTimeout(() => {
+      document.body.classList.add("dead");
+      document.getElementById("restart").focus();
+    }, 1000);
   }
 
   destructor() {
