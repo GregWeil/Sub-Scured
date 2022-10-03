@@ -30,6 +30,7 @@ export default class Game {
   player: Player;
   overlay: GridOverlay;
   playingMusic: number;
+  gameover:boolean
 
   constructor(renderer: WebGLRenderer) {
     this.scene = new Scene();
@@ -42,10 +43,11 @@ export default class Game {
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
+    this.gameover=false;
   }
 
   update(dt: number, input: Input) {
-    this.player.update(dt, input);
+    if(!this.gameover)this.player.update(dt, input);
     this.camera.position.lerp(
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
@@ -68,6 +70,11 @@ export default class Game {
     this.camera.bottom = scale * size.y;
     this.camera.updateProjectionMatrix();
     this.radar.render(renderer, dt);
+  }
+  
+  end() {
+    this.gameover=true;
+    
   }
 
   destructor() {

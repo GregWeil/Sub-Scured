@@ -147,7 +147,7 @@ export default class RadarRenderer {
 
   update(dt: number, playerPosition: Vector3) {
     this.pulseTimer += dt / 1000;
-    if (this.pulseTimer >= 10) {
+    if (this.pulseTimer >= 10 && !this.game.gameover) {
       this.sound.stop();
       this.sound.play();
       this.pulseTimer = this.pulseTimer % 10;
