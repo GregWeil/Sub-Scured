@@ -1,4 +1,5 @@
 import {
+  Color,
   OrthographicCamera,
   Scene,
   AmbientLight,
@@ -25,29 +26,30 @@ const Music = new Howl({
 export default class Game {
   scene: Scene;
   camera: OrthographicCamera;
+  light: DirectionalLight;
   radar: RadarRenderer;
   map: TriangleMap;
   player: Player;
   overlay: GridOverlay;
   playingMusic: number;
-  gameover:boolean
+  gameover: boolean;
 
   constructor(renderer: WebGLRenderer) {
     this.scene = new Scene();
-    const light = new DirectionalLight(lightColor, 1);
-    this.scene.add(light);
-    light.position.set(-0.1, -0.1, -1);
+    this.light = new DirectionalLight(lightColor, 1);
+    this.scene.add(this.light);
+    this.light.position.set(-0.1, -0.1, -1);
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
-    this.gameover=false;
+    this.gameover = false;
   }
 
   update(dt: number, input: Input) {
-    if(!this.gameover)this.player.update(dt, input);
+    if (!this.gameover) this.player.update(dt, input);
     this.camera.position.lerp(
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
@@ -71,10 +73,10 @@ export default class Game {
     this.camera.updateProjectionMatrix();
     this.radar.render(renderer, dt);
   }
-  
+
   end() {
-    this.gameover=true;
-    
+    this.gameover = true;
+    this.light.color = new Color(0xff0000);
   }
 
   destructor() {
