@@ -46,7 +46,7 @@ export default class Mine {
           .multiplyScalar((25 * dt) / 1000)
       );
       this.velocity.z = 0;
-    } else if (this.mesh.position.distanceTo(playerPosition) < 100) {
+    } else if (this.mesh.position.distanceTo(playerPosition) < 150) {
       this.alerted = true;
     }
 
@@ -62,6 +62,20 @@ export default class Mine {
       )
     ) {
       this.explode();
+      return;
+    }
+
+    let shouldExplode = false;
+    for (const mine of this.game.mines.slice()) {
+      if(mine===this)continue
+      if (this.mesh.position.distanceTo(mine.mesh.position) < 40) {
+        shouldExplode = true;
+        mine.explode();
+      }
+    }
+    if (shouldExplode) {
+      this.explode();
+      return;
     }
 
     const playerPositions = [
@@ -73,7 +87,7 @@ export default class Mine {
       if (this.mesh.position.distanceTo(position) < 20) {
         this.explode();
         this.game.end();
-        break;
+        return;
       }
     }
   }
