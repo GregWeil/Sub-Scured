@@ -64,13 +64,14 @@ export default class Game {
     if (!this.gameover) {
       this.time += dt / 1000;
       this.player.update(dt, input);
-    }
-    while (this.mines.length < Math.log(this.time) * 10) {
+    if (this.mines.length < Math.log(this.time) * 10) {
       this.spawnMine();
     }
-    while (this.treasure.length < 10) {
+    if (this.treasure.length < 1000) {
       this.spawnTreasure();
     }
+    }
+    this.treasure.forEach((treasure) => treasure.update(dt));
     this.mines.forEach((mine) => mine.update(dt));
     this.debris.forEach((debris) => debris.update(dt));
     this.camera.position.lerp(
@@ -96,26 +97,31 @@ export default class Game {
     this.camera.updateProjectionMatrix();
     this.radar.render(renderer, dt);
   }
-  
-  private getSpawnPoint(distFromPlayer:number) {
-    
+
+  private getSpawnPoint(minDistFromPlayer: number) {
+    const { x: playerX, y: playerY } = this.player.getPosition();
+    const [originX, originY] = this.map.getWorldOrigin();
+    for (let i = 0; i < 1000; ++i) {
+      const x = lerp(originX, -originX, Math.random());
+      const y = lerp(originY, -originY, Math.random());
+      if (distance(x, y, playerX, playerY) < minDistFromPlayer) continue;
+      if (this.map.raycast(x - 1, y, x + 1, y)) continue;
+      if (this.map.raycast(x, y - 1, x, y + 1)) continue;
+      return [x, y];
+    }
+    return null;
   }
 
   spawnMine() {
-    const { x: playerX, y: playerY } = this.player.getPosition();
-    const [originX, originY] = this.map.getWorldOrigin();
-    for (let i = 0; i < 100; ++i) {
-      const x = lerp(originX, -originX, Math.random());
-      const y = lerp(originY, -originY, Math.random());
-      if (distance(x, y, playerX, playerY) < 300) continue;
-      if (this.map.raycast(x - 1, y, x + 1, y)) continue;
-      if (this.map.raycast(x, y - 1, x, y + 1)) continue;
-      this.mines.push(new Mine(this, new Vector3(x, y, 0)));
-    }
+    const position = this.getSpawnPoint(300);
+    if (!position) return;
+    this.mines.push(new Mine(this, new Vector3(...position, 0)));
   }
-  
+
   spawnTreasure() {
-    
+    const position = this.getSpawnPoint(500);
+    if (!position) return;
+    this.treasure.push(new Treasure(this, new Vector3(...position, 0)));
   }
 
   end() {

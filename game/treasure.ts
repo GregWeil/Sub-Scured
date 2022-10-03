@@ -1,4 +1,10 @@
-import {  Mesh, DodecahedronGeometry,Vector2, Vector3 } from "three";
+import {
+  DodecahedronGeometry,
+  Mesh,
+  MeshNormalMaterial,
+  Vector2,
+  Vector3,
+} from "three";
 import { Howl } from "howler";
 
 import Game from "./game";
@@ -14,22 +20,27 @@ export default class Treasure {
 
   constructor(game: Game, position: Vector3) {
     this.game = game;
-    this.mesh = new Mesh(Geometry,new MeshStandardMaterial());
+    this.mesh = new Mesh(Geometry, new MeshNormalMaterial());
+    this.game.scene.add(this.mesh);
     this.mesh.position.copy(position);
   }
 
   update(dt: number) {
-    const playerPositions = [
-      this.game.player.mesh.localToWorld(new Vector3(0, 20, 0)),
-      playerPosition,
-      this.game.player.mesh.localToWorld(new Vector3(0, -20, 0)),
-    ];
-    for (const position of playerPositions) {
-      if (this.mesh.position.distanceTo(position) < 5) {
-        this.collect()
-        return;
+    if (!this.game.gameover) {
+      const playerPositions = [
+        this.game.player.mesh.localToWorld(new Vector3(0, 20, 0)),
+        this.game.player.getPosition(),
+        this.game.player.mesh.localToWorld(new Vector3(0, -20, 0)),
+      ];
+      for (const position of playerPositions) {
+        if (this.mesh.position.distanceTo(position) < 20) {
+          this.collect();
+          return;
+        }
       }
     }
+    this.mesh.rotateX(dt/1000);
+    this.mesh.rotateY(dt/1000)
   }
 
   collect() {
@@ -39,6 +50,8 @@ export default class Treasure {
 
   destructor() {
     this.mesh.removeFromParent();
-    this.game.treasure = this.game.treasure.filter((treasure) => treasure !== this);
+    this.game.treasure = this.game.treasure.filter(
+      (treasure) => treasure !== this
+    );
   }
 }
