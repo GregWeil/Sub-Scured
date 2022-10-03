@@ -5,6 +5,7 @@ import {
   AmbientLight,
   DirectionalLight,
   Vector2,
+  Vector3,
   WebGLRenderer,
 } from "three";
 import { Howl } from "howler";
@@ -81,11 +82,18 @@ export default class Game {
   end() {
     this.gameover = true;
     this.light.color = new Color(0xff0000);
-    for (let i = 0; i < 9; ++i) {
+    const front = this.player.mesh.localToWorld(new Vector3(0, 20, 0));
+    const back = this.player.mesh.localToWorld(new Vector3(0, -20, 0));
+    for (let i = 0; i < 16; ++i) {
       this.playerDebris.push(
-        new Debris(this.scene, this.map, this.player.getPosition())
+        new Debris(
+          this.scene,
+          this.map,
+          front.clone().lerp(back, Math.random())
+        )
       );
     }
+    this.player.mesh.visible = false;
   }
 
   destructor() {
