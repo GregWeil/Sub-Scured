@@ -140,7 +140,6 @@ export default class Game {
     if(this.score>this.best){
       window.localStorage.setItem('best',this.score);
     document.getElementById("best").innerText = this.score;
-    document.getElementById("score").innerText = '';
     }
   }
 

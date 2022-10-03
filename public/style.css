@@ -53,6 +53,12 @@ canvas {
   display: none;
 }
 
+.score::before {
+  font-size: 1.2vh;
+  vertical-align: text-top;
+  padding-right: 1vh;
+}
+
 #best {
   color: yellow;
   border-color: yellow;
@@ -60,5 +66,8 @@ canvas {
 
 #best::before {
   content: "TOP";
-  font-size: 1vh;
+}
+
+#score::before {
+  content: "SCORE";
 }
