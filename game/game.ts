@@ -9,11 +9,12 @@ import {
 } from "three";
 import { Howl } from "howler";
 
+import Input from "./input";
 import Player from "./player";
 import TriangleMap from "./triangle-map";
 import GridOverlay from "./grid-overlay";
-import Input from "./input";
 import RadarRenderer from "./radar-renderer";
+import Debris from "./debris";
 import { music, lightColor } from "./assets";
 
 import { getLerpFactor } from "../util/math";
@@ -30,6 +31,7 @@ export default class Game {
   radar: RadarRenderer;
   map: TriangleMap;
   player: Player;
+  playerDebris: Debris[];
   overlay: GridOverlay;
   playingMusic: number;
   gameover: boolean;
@@ -42,6 +44,7 @@ export default class Game {
     this.camera = new OrthographicCamera(-1, 1, -1, 1, 0, 100);
     this.map = new TriangleMap(this.scene, 200, 400, 15);
     this.player = new Player(this);
+    this.playerDebris = [];
     //this.overlay = new GridOverlay(this.scene, 1000, 1000, 15, 1);
     this.radar = new RadarRenderer(this, renderer);
     this.playingMusic = Music.play();
@@ -50,6 +53,7 @@ export default class Game {
 
   update(dt: number, input: Input) {
     if (!this.gameover) this.player.update(dt, input);
+    this.playerDebris.forEach((debris) => debris.update(dt));
     this.camera.position.lerp(
       this.player.getPosition(),
       getLerpFactor(0.9, dt / 1000)
@@ -77,6 +81,11 @@ export default class Game {
   end() {
     this.gameover = true;
     this.light.color = new Color(0xff0000);
+    for (let i = 0; i < 9; ++i) {
+      this.playerDebris.push(
+        new Debris(this.scene, this.map, this.player.getPosition())
+      );
+    }
   }
 
   destructor() {
