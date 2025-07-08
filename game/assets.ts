@@ -6,10 +6,9 @@ export const overlayColor = 0x115630;
 export const terrainColor = 0x04fb06;
 export const lightColor = 0x55ff55;
 
-const assetPath =
-  "https://cdn.glitch.global/f2e558c1-0728-4f7a-8020-854d50f81021";
+const assetPath = "/assets";
 
-export const music = assetPath + '/Level3.mp3'
+export const music = assetPath + "/Level3.mp3";
 
 export const playerModel = assetPath + "/submarine.gltf";
 export const playerDeathSound = assetPath+"/awooga.wav";
@@ -31,7 +30,7 @@ export const radarMapFadeAmount = 0.1;
 export const radarMapFadeSubtract = 0.3;
 export const radarMapFadeSubtractReverse = 0.9;
 
-export const mineModel = assetPath + "/mine.gltf"
-export const mineExplosionSound = assetPath+"/mine.wav";
+export const mineModel = assetPath + "/mine.gltf";
+export const mineExplosionSound = assetPath + "/mine.wav";
 
-export const treasureCollectSound=assetPath+"/treasure.wav";
+export const treasureCollectSound = assetPath + "/treasure.wav";
