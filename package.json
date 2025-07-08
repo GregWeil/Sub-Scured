@@ -1,7 +1,7 @@
 {
-  "name": "glitch-mvp-node",
+  "name": "submarines",
   "version": "0.1.0",
-  "description": "A simple Node app built on fastify, instantly up and running.",
+  "description": "Use the arrow keys to navigate, using your sonar's latent image to collect treasure and avoid mines.",
   "main": "server.js",
   "scripts": {
     "typescript": "tsc --noEmit",
@@ -27,7 +27,7 @@
     "node": "14.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/glitch-mvp-node"
+    "url": "https://glitch.com/edit/#!/submarines"
   },
   "license": "MIT",
   "keywords": [
