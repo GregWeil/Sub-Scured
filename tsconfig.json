@@ -4,7 +4,11 @@
     "target": "es2019",
     "strict": true
   },
-  "files": ["client.ts", "server.ts"],
-  "exclude": ["node_modules"],
+  "files": [
+    "client.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "skipLibCheck": true
 }
