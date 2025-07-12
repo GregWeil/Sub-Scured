@@ -5,7 +5,7 @@
     "strict": true
   },
   "files": [
-    "client.ts"
+    "src/client.ts"
   ],
   "exclude": [
     "node_modules"

@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Use the arrow keys to navigate, using your sonar's latent image to collect treasure and avoid mines.",
   "scripts": {
-    "build": "rm -r build && cp -r public build && tsc --noEmit && esbuild client.ts --bundle --outdir=build",
-    "serve": "esbuild client.ts --bundle --serve --servedir=public"
+    "build": "rsync -a --delete static/ build && tsc --noEmit && esbuild src/client.ts --bundle --outdir=build",
+    "serve": "esbuild src/client.ts --bundle --serve --servedir=static"
   },
   "dependencies": {
     "handlebars": "^4.7.7",
