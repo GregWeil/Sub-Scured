@@ -1,5 +1,5 @@
 import PerlinNoise from "./perlin-noise";
-import { radarMapFadeAmount, radarMapFadeSubtract, radarMapFadeSubtractReverse } from "../game/assets.ts";
+import { radarMapFadeAmount, radarMapFadeSubtract, radarMapFadeSubtractReverse } from "../game/assets";
 
 const defines = {
   FADE_AMOUNT: radarMapFadeAmount,

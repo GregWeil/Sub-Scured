@@ -233,6 +233,5 @@ export default class TriangleMap {
   destructor() {
     this.group.removeFromParent();
     this.mesh?.geometry.dispose();
-    this.picker.removeFromParent();
   }
 }

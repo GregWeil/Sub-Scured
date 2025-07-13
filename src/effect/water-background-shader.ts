@@ -1,7 +1,6 @@
-import { Vector2, Vector4 } from "three";
+import { Vector4 } from "three";
 
 import PerlinNoise from "./perlin-noise";
-import {} from "../game/assets.ts";
 
 const defines = {};
 

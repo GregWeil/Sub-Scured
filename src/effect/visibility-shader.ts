@@ -9,7 +9,7 @@ import {
   radarPingOuterThickness,
   radarPingFadeStart,
   radarPingFadeEnd,
-} from "../game/assets.ts";
+} from "../game/assets";
 
 const defines = {
   PLAYER_INNER_RADIUS: playerVisibilityInnerRadius,

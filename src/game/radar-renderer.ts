@@ -16,7 +16,6 @@ import {
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { TAARenderPass } from "three/examples/jsm/postprocessing/TAARenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
 import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
@@ -44,11 +43,14 @@ export default class RadarRenderer {
   private overviewCamera: OrthographicCamera;
   private overviewTarget1: WebGLRenderTarget;
   private overviewTarget2: WebGLRenderTarget;
+  private overviewTargetMaterial: ShaderMaterial;
   private overviewTargetQuad: FullScreenQuad;
+  private overviewFadeMaterial: ShaderMaterial;
   private overviewFadeQuad: FullScreenQuad;
   private overviewFadeTimer: number;
   private overviewComposer: EffectComposer;
   private overviewScene: Scene;
+  private overviewMaterial: MeshBasicMaterial;
   private overviewQuad: Mesh;
 
   private sceneComposer: EffectComposer;
@@ -94,40 +96,38 @@ export default class RadarRenderer {
     this.overviewComposer.addPass(
       new RenderPass(this.game.scene, this.overviewCamera)
     );
-    this.overviewComposer.addPass(new FilmPass(0.6, 0, 0, false));
+    this.overviewComposer.addPass(new FilmPass(0.6, 0, 0, 0));
     this.overviewComposer.renderToScreen = false;
-    this.overviewTargetQuad = new FullScreenQuad(
-      new ShaderMaterial({
-        ...VisibilityShader,
-        uniforms: UniformsUtils.clone(VisibilityShader.uniforms),
-        defines: { ...VisibilityShader.defines },
-      })
-    );
-    this.overviewFadeQuad = new FullScreenQuad(
-      new ShaderMaterial({
-        ...RadarFadeShader,
-        uniforms: UniformsUtils.clone(RadarFadeShader.uniforms),
-        defines: { ...RadarFadeShader.defines },
-      })
-    );
+    this.overviewTargetMaterial = new ShaderMaterial({
+      ...VisibilityShader,
+      uniforms: UniformsUtils.clone(VisibilityShader.uniforms),
+      defines: { ...VisibilityShader.defines },
+    });
+    this.overviewTargetQuad = new FullScreenQuad(this.overviewTargetMaterial);
+    this.overviewFadeMaterial = new ShaderMaterial({
+      ...RadarFadeShader,
+      uniforms: UniformsUtils.clone(RadarFadeShader.uniforms),
+      defines: { ...RadarFadeShader.defines },
+    });
+    this.overviewFadeQuad = new FullScreenQuad(this.overviewFadeMaterial);
     this.overviewFadeTimer = 0;
     this.overviewScene = new Scene();
+    this.overviewMaterial = new MeshBasicMaterial({
+      map: this.overviewTarget1.texture,
+      transparent: true,
+    });
     this.overviewQuad = new Mesh(
       new PlaneGeometry(
         this.overviewCamera.right - this.overviewCamera.left,
         this.overviewCamera.bottom - this.overviewCamera.top
       ),
-      new MeshBasicMaterial({
-        map: this.overviewTarget1.texture,
-        transparent: true,
-      })
+      this.overviewMaterial
     );
     this.overviewQuad.rotation.set(0, Math.PI, Math.PI);
     this.overviewScene.add(this.overviewQuad);
 
     this.sceneComposer = new EffectComposer(renderer);
     const renderPass = new RenderPass(this.game.scene, this.game.camera);
-    renderPass.sampleLevel = 2;
     this.sceneComposer.addPass(renderPass);
     this.sceneComposer.renderToScreen = false;
 
@@ -135,12 +135,12 @@ export default class RadarRenderer {
     this.screenComposer.addPass(
       new RenderPass(this.overviewScene, this.game.camera)
     );
-    this.screenComposer.addPass(new FilmPass(0.8, 0.2, 648, false));
+    this.screenComposer.addPass(new FilmPass(0.8, 0.2, 648, 0));
     this.screenVisibility = new ShaderPass(VisibilityShader);
     this.screenComposer.addPass(this.screenVisibility);
     this.screenBackground = new ShaderPass(WaterBackgroundShader);
     this.screenComposer.addPass(this.screenBackground);
-    this.screenComposer.addPass(new FilmPass(0.35, 0.05, 648, false));
+    this.screenComposer.addPass(new FilmPass(0.35, 0.05, 648, 0));
 
     this.sound = new Howl({ src: [radarPingSound] });
   }
@@ -191,14 +191,14 @@ export default class RadarRenderer {
     this.overviewTarget2 = tempOverviewTarget1;
     renderer.setRenderTarget(this.overviewTarget1);
     renderer.clear();
-    this.overviewTargetQuad.material.uniforms.tDiffuse.value =
+    this.overviewTargetMaterial.uniforms.tDiffuse.value =
       this.overviewTarget2.texture;
     this.applyShaderUniforms(
-      this.overviewTargetQuad.material.uniforms,
+      this.overviewTargetMaterial.uniforms,
       this.overviewComposer.readBuffer,
       this.overviewCamera
     );
-    this.overviewTargetQuad.material.uniforms.TransitionAmount.value =
+    this.overviewTargetMaterial.uniforms.TransitionAmount.value =
       getLerpFactor(radarMapTransitionSpeed, dt / 60);
     this.overviewTargetQuad.render(renderer);
     while (this.overviewFadeTimer > 0) {
@@ -208,17 +208,17 @@ export default class RadarRenderer {
       this.overviewTarget2 = tempOverviewTarget1;
       renderer.setRenderTarget(this.overviewTarget1);
       renderer.clear();
-      this.overviewFadeQuad.material.uniforms.tDiffuse.value =
+      this.overviewFadeMaterial.uniforms.tDiffuse.value =
         this.overviewTarget2.texture;
-      this.overviewFadeQuad.material.uniforms.DeltaTime.value =
+      this.overviewFadeMaterial.uniforms.DeltaTime.value =
         radarMapFadeInterval;
-      this.overviewFadeQuad.material.uniforms.Time.value = this.time;
+      this.overviewFadeMaterial.uniforms.Time.value = this.time;
       this.overviewFadeQuad.render(renderer);
     }
     this.overviewFadeTimer += dt / 1000;
     renderer.setRenderTarget(null);
 
-    this.overviewQuad.material.map = this.overviewTarget1.texture;
+    this.overviewMaterial.map = this.overviewTarget1.texture;
     this.sceneComposer.render(dt / 1000);
 
     this.screenBackground.uniforms.PositionBounds.value.set(
@@ -234,9 +234,6 @@ export default class RadarRenderer {
       this.game.camera
     );
     this.screenComposer.render(dt / 1000);
-
-    //renderer.clear();
-    //renderer.render(this.game.scene, this.overviewCamera);
   }
 
   destructor() {
@@ -244,9 +241,9 @@ export default class RadarRenderer {
     this.overviewTarget2.dispose();
     this.overviewTargetQuad.dispose();
     this.overviewFadeQuad.dispose();
-    this.overviewComposer.dispose();
+    //this.overviewComposer.dispose();
     this.overviewQuad.geometry.dispose();
-    this.sceneComposer.dispose();
-    this.screenComposer.dispose();
+    //this.sceneComposer.dispose();
+    //this.screenComposer.dispose();
   }
 }

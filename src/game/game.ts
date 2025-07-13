@@ -15,7 +15,7 @@ import Player from "./player";
 import Mine from "./mine";
 import Treasure from "./treasure";
 import TriangleMap from "./triangle-map";
-import GridOverlay from "./grid-overlay";
+//import GridOverlay from "./grid-overlay";
 import RadarRenderer from "./radar-renderer";
 import Debris from "./debris";
 import { music, lightColor } from "./assets";
@@ -38,7 +38,7 @@ export default class Game {
   debris: Debris[];
   mines: Mine[];
   treasure: Treasure[];
-  overlay: GridOverlay;
+  //overlay: GridOverlay;
   playingMusic: number;
   time: number;
   score: number;
@@ -65,7 +65,7 @@ export default class Game {
     this.score = 0;
     this.best = Number(window.localStorage.getItem("best")) || 0;
     if (this.best > 0) {
-      document.getElementById("best").innerText = this.best;
+      document.getElementById("best")!.innerText = this.best.toString();
     }
     this.gameover = false;
   }
@@ -136,10 +136,10 @@ export default class Game {
 
   givePoint() {
     this.score += 1;
-    document.getElementById("score").innerText = this.score;
+    document.getElementById("score")!.innerText = this.score.toString();
     if (this.score > this.best) {
-      window.localStorage.setItem("best", this.score);
-      document.getElementById("best").innerText = this.score;
+      window.localStorage.setItem("best", JSON.stringify(this.score));
+      document.getElementById("best")!.innerText = this.score.toString();
     }
   }
 
@@ -151,11 +151,11 @@ export default class Game {
     this.player.die();
     window.setTimeout(() => {
       document.body.classList.add("dead");
-      document.getElementById("restart").focus();
+      document.getElementById("restart")!.focus();
     }, 1000);
   }
 
   destructor() {
-    Music.stop(this.music);
+    Music.stop(this.playingMusic);
   }
 }

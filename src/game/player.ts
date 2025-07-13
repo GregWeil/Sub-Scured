@@ -20,9 +20,6 @@ export default class Player {
     this.game = game;
     this.mesh = new Group();
     ModelLoader.load(playerModel, (gltf) => {
-      gltf.scene.traverse((child) => {
-        //if (child.material) child.material.metalness = 0;
-      });
       const group = new Group();
       group.add(gltf.scene);
       this.mesh.add(group);
@@ -38,17 +35,13 @@ export default class Player {
   update(dt: number, input: Input) {
     const prevPosition = this.mesh.localToWorld(new Vector3(0, 0, 0));
 
-    const horizontal = input.getHorizontal();
-    //this.mesh.position.x += (horizontal * 50 * dt) / 1000;
     let direction = this.turn(input);
     this.mesh.rotateOnAxis(
       new Vector3(0, 0, 1).normalize(),
       (direction * dt) / 1000
     );
-    const vertical = input.getVertical();
 
     let acc = this.impulse(input);
-    //this.mesh.position.y += (acc * dt) / 1000;
     this.mesh.translateOnAxis(
       new Vector3(0, 1, 0).normalize(),
       (acc * dt) / 1000
@@ -73,7 +66,6 @@ export default class Player {
     } else if (!go && this.impulseAcc > 0) {
       this.impulseAcc -= 0.2;
     }
-    //console.log(this.impulseAcc);
     return this.impulseAcc;
   }
 
@@ -91,6 +83,10 @@ export default class Player {
 
   getPosition() {
     return this.mesh.position;
+  }
+
+  localToWorld(position: Vector3) {
+    return this.mesh.localToWorld(position);
   }
 
   die() {

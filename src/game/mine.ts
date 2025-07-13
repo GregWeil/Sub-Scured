@@ -1,21 +1,27 @@
-import { Scene, Group, Vector2, Vector3 } from "three";
+import { Group, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { Howl } from "howler";
 
 import Game from "./game";
 import Debris from "./debris";
-import { ModelLoader, mineModel, mineExplosionSound } from "./assets";
+import { GLTF, ModelLoader, mineModel, mineExplosionSound } from "./assets";
 import { getLerpFactor } from "../util/math";
 
-const MineModel = new Promise((resolve, reject) =>
+const MineModel = new Promise<GLTF>((resolve, reject) =>
   ModelLoader.load(
     mineModel,
     (gltf) => {
       gltf.scene.traverse((child) => {
-        if (child.material) child.material.metalness = 0.6;
+        if (child.type !== "Mesh") return;
+        const mesh = child as Mesh;
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        for (const material of materials) {
+          if (material.type !== "MeshStandardMaterial") continue;
+          (material as MeshStandardMaterial).metalness = 0.6;
+        }
       });
       resolve(gltf);
     },
-    null,
+    undefined,
     reject
   )
 );
@@ -24,9 +30,8 @@ const ExplosionSound = new Howl({ src: [mineExplosionSound] });
 export default class Mine {
   private game: Game;
   private mesh: Group;
-  private velocity: Vector2;
+  private velocity: Vector3;
   private alerted: boolean;
-  private rotationDirection: number;
 
   constructor(game: Game, position: Vector3) {
     this.game = game;
@@ -99,9 +104,9 @@ export default class Mine {
     }
 
     const playerPositions = [
-      this.game.player.mesh.localToWorld(new Vector3(0, 20, 0)),
+      this.game.player.localToWorld(new Vector3(0, 20, 0)),
       playerPosition,
-      this.game.player.mesh.localToWorld(new Vector3(0, -20, 0)),
+      this.game.player.localToWorld(new Vector3(0, -20, 0)),
     ];
     for (const position of playerPositions) {
       if (this.mesh.position.distanceTo(position) < 20) {

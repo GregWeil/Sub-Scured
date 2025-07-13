@@ -1,12 +1,4 @@
-import {
-  OrthographicCamera,
-  Scene,
-  WebGLRenderer,
-  BoxGeometry,
-  MeshNormalMaterial,
-  Mesh,
-  Vector3,
-} from "three";
+import { WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 
 import Game from "./game";
@@ -36,11 +28,11 @@ resize();
 
 let started = false;
 game.render(renderer, 0);
-document.getElementById("start").addEventListener("click", (event) => {
+document.getElementById("start")!.addEventListener("click", () => {
   document.body.classList.remove("title");
   started = true;
 });
-document.getElementById("restart").addEventListener("click", (event) => {
+document.getElementById("restart")!.addEventListener("click", () => {
   window.location.reload();
 });
 

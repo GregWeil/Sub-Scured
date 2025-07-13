@@ -1,4 +1,5 @@
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+export { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 export const ModelLoader = new GLTFLoader();
 
