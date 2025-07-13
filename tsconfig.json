@@ -2,13 +2,12 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "target": "es2019",
-    "strict": true
+    "strict": true,
   },
   "files": [
     "src/client.ts"
   ],
   "exclude": [
     "node_modules"
-  ],
-  "skipLibCheck": true
+  ]
 }

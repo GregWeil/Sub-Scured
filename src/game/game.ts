@@ -24,7 +24,7 @@ import { distance, lerp, getLerpFactor } from "../util/math";
 
 const Music = new Howl({
   src: [music],
-  loop: true,
+  loop: true
 });
 
 export default class Game {

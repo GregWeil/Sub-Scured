@@ -1,7 +1,5 @@
 import {
   NearestFilter,
-  SubtractiveBlending,
-  Color,
   OrthographicCamera,
   PlaneGeometry,
   MeshBasicMaterial,
