@@ -10,8 +10,16 @@
     <script src="/build/client.js" type="application/javascript" defer></script>
   </head>
   <body class="title">
-    <button id="start" class="fullscreen-button" autofocus><div class="box">START</div></button>
-    <button id="restart" class="fullscreen-button" autofocus><div class="box">RETRY</div></button>
+    <button id="start" class="fullscreen-button" autofocus>
+      <img src="/assets/title.png" class="splash" />
+      <div class="instructions">
+        <p>W or [^] for thrust<br>A&#47D or [&#60]&#47[&#62] to turn</p>
+        <p><div class="box">START</div></p>
+      </div>
+    </button>
+    <button id="restart" class="fullscreen-button" autofocus>
+      <div class="box">RETRY</div>
+    </button>
     <div class="score-container">
       <div id="score" class="score box"></div>
       <div id="best" class="score box"></div>

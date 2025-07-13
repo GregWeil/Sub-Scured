@@ -45,21 +45,43 @@ canvas {
 .fullscreen-button {
   position: absolute;
   left: 0;
-  right: 0;
+  right: 0;page
   top: 0;
   bottom: 0;
   width: 100%;
   height: 100%;
   background: none;
   border: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+#start .splash {
+  display: block;
+  position: relative;
+  top: clamp(-32.5vh, calc(50vh - 40vw), 0px);
+  width: 100%;
+  max-height: 165%;
+  object-fit: contain;
+}
+
+#start .instructions {
+  position: absolute;
+  bottom: 50%;
+  right: 20%;
+  text-align: right;
+  font-family: VectrX, sans-serif;
+  letter-spacing:0.1em;
+  font-weight: bold;
+  font-size: 4vh;
+  line-height: 1.5;
+  color: lime;
 }
 
 #start .box {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   font-size: 5vh;
+  cursor: pointer;
 }
 
 body:not(.title) #start {
@@ -72,6 +94,7 @@ body:not(.title) #start {
   top: 50%;
   transform: translate(-50%, -50%);
   font-size: 5vh;
+  cursor: pointer;
 }
 
 body:not(.dead) #restart {
