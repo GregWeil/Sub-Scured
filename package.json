@@ -3,19 +3,17 @@
   "version": "0.1.0",
   "description": "Use the arrow keys to navigate, using your sonar's latent image to collect treasure and avoid mines.",
   "scripts": {
-    "build": "rsync -a --delete static/ build && tsc --noEmit && esbuild src/client.ts --bundle --outdir=build",
-    "serve": "esbuild src/client.ts --bundle --serve --servedir=static"
+    "build": "tsc --noEmit && esbuild src/client.ts --bundle --outdir=public/build",
+    "serve": "esbuild src/client.ts --bundle --outdir=public/build --serve --servedir=public"
   },
   "dependencies": {
-    "handlebars": "^4.7.7",
-    "esbuild": "^0.15.10",
-    "three": "^0.145.0",
-    "typescript": "^4.8.4",
+    "@types/howler": "^2.2.7",
     "@types/three": "^0.144.0",
-    "@types/node": "^14.18.31",
-    "segment-intersection": "^0.0.1",
+    "esbuild": "^0.25.6",
     "howler": "^2.2.3",
-    "@types/howler": "^2.2.7"
+    "segment-intersection": "^0.0.1",
+    "three": "^0.145.0",
+    "typescript": "^4.8.4"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/submarines"
