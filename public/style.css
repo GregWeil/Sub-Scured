@@ -31,6 +31,33 @@ canvas {
   background: black;
 }
 
+#fullscreen {
+  display: inline-block;
+  position: absolute;
+  left: 1vh;
+  bottom: 1vh;
+  border: none;
+  background: none;
+  color: yellow;
+  font-size: 4vh;
+  cursor: pointer;
+}
+
+#fullscreen .label {
+  font-family: VectrX, sans-serif;
+  font-size: 3vh;
+}
+
+#fullscreen:not(:hover) .label {
+  display: none;
+}
+
+@media all and (display-mode: fullscreen) {
+  #fullscreen {
+    display: none;
+  }
+}
+
 .box {
   display: inline-block;
   font-family: VectrX, sans-serif;
