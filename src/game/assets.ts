@@ -7,7 +7,7 @@ export const overlayColor = 0x115630;
 export const terrainColor = 0x04fb06;
 export const lightColor = 0x55ff55;
 
-const assetPath = "/assets";
+const assetPath = "assets";
 
 export const music = assetPath + "/Level3.mp3";
 
