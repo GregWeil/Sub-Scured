@@ -5,7 +5,11 @@ import Game from "./game";
 import Input from "./game/input";
 
 document.getElementById("fullscreen")!.addEventListener("click", () => {
-  document.body.requestFullscreen({ navigationUI: "hide" });
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    document.body.requestFullscreen({ navigationUI: "hide" });
+  }
 });
 
 const renderer = new WebGLRenderer({
